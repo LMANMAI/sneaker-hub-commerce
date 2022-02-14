@@ -9,6 +9,7 @@ const Header = () => {
       justifyContent="space-between"
       alignItems="center"
       padding={8}
+      as="nav"
     >
       <Stack direction="row" spacing={12} alignItems="center">
         <Image src={logo} />
