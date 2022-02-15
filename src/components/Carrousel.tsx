@@ -2,12 +2,14 @@ import { Image, Stack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 interface ICarrouselProps {
-  images: string[];
+  images?: string[];
 }
 const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
-  const [selectedimage, setSelectedImage] = useState<string>(images[0]);
+  const [selectedimage, setSelectedImage] = useState<string>();
   useEffect(() => {
-    setSelectedImage(images[0]);
+    if (images !== undefined) {
+      setSelectedImage(images[0]);
+    }
   }, [images]);
   return (
     <Stack alignItems="center" marginY={5}>
