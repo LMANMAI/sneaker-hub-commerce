@@ -2,7 +2,7 @@ import { Image, Stack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 interface ICarrouselProps {
-  images: string[] | undefined;
+  images: string[];
 }
 const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
   const [selectedimage, setSelectedImage] = useState<string>(images[0]);

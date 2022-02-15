@@ -13,5 +13,5 @@ export interface ISneaker {
 }
 
 export interface IProps {
-  sneaker: ISneaker | undefined;
+  sneaker?: ISneaker;
 }

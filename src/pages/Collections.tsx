@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Stack, Grid, GridItem, Image } from "@chakra-ui/react";
+import { Grid, GridItem, Image } from "@chakra-ui/react";
 import { Link, Route, Routes } from "react-router-dom";
 import { BodyContent } from "../components";
 import { ISneaker } from "../interfaces";
