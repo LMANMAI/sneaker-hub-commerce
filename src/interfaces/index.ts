@@ -15,3 +15,9 @@ export interface ISneaker {
 export interface IProps {
   sneaker?: ISneaker;
 }
+export interface ISneakerState {
+  sneakers: ISneaker[];
+  basket: ISneaker[];
+  sneakerActive: ISneaker | null;
+  total: number;
+}

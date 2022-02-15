@@ -7,9 +7,7 @@ const RoutesComponent = () => {
     <Routes>
       <Route path="/*" element={<Collections />} />
       <Route path="/Collections" element={<Collections />} />
-      <Route path="/Collections/*" element={<Collections />} />
-      <Route path="/Men" element={<div>MenPage</div>} />
-      <Route path="/Woman" element={<div>WomanPage</div>} />
+      <Route path="/Collections/:sneakername" element={<BodyContent />} />
       <Route path="/Contact" element={<div>ContactPage</div>} />
       <Route path="*" element={<div>NotFound</div>} />
     </Routes>
