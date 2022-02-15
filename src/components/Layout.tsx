@@ -1,9 +1,10 @@
+import { Box } from "@chakra-ui/react";
 import React from "react";
 interface ILayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 const Layout: React.FC<ILayoutProps> = ({ children }) => {
-  return <div>{children}</div>;
+  return <Box minHeight="70vh">{children}</Box>;
 };
 
 export default Layout;

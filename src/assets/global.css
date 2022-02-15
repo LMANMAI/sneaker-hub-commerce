@@ -1,0 +1,17 @@
+*,
+body,
+html {
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+  padding: 2rem 0;
+} /*
+a:hover {
+  border-bottom: 3px solid red;
+  margin-bottom: -3px;
+} */
+
+.active {
+  border-bottom: 3px solid red;
+}

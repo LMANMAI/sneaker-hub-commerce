@@ -1,12 +1,15 @@
-import { Header, BodyContent, Footer } from "./components";
+import { Header, Layout, Footer } from "./components";
 import { Container, Stack, StackDivider } from "@chakra-ui/react";
-import Layout from "./components/Layout";
+import RoutesComponent from "./routes/Routes";
+import "./assets/global.css";
 function App() {
   return (
     <Container maxWidth="container.lg">
       <Stack spacing={0} divider={<StackDivider />}>
         <Header />
-        <BodyContent />
+        <Layout>
+          <RoutesComponent />
+        </Layout>
         <Footer />
       </Stack>
     </Container>
