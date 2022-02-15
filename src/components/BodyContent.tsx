@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Badge,
   Heading,
@@ -9,26 +10,24 @@ import {
 } from "@chakra-ui/react";
 import CartIcon from "../icons/Cart";
 import { Carrousel } from "./";
-
-import Image1 from "../assets/image-product-1.jpg";
-import Image2 from "../assets/image-product-2.jpg";
-import Image3 from "../assets/image-product-3.jpg";
-import Image4 from "../assets/image-product-4.jpg";
-
-const BodyContent = () => {
+import { IProps } from "../interfaces";
+import { useParams } from "react-router-dom";
+const BodyContent: React.FC<IProps> = ({ sneaker }) => {
+  const params = useParams();
+  console.log(params);
   return (
     <Stack
       marginTop={6}
       minHeight="80vh"
-      direction="row"
+      direction={{ base: "column", md: "row" }}
       alignItems="center"
       justifyContent="center"
     >
       <Box flex={1}>
-        <Carrousel images={[Image1, Image2, Image3, Image4]} />
+        <Carrousel images={sneaker?.imgs} />
       </Box>
 
-      <Stack flex={1} spacing={6}>
+      <Stack flex={1} spacing={6} textAlign={{ base: "center", md: "initial" }}>
         <Stack>
           <Text
             textTransform="uppercase"
@@ -39,7 +38,7 @@ const BodyContent = () => {
           >
             Sneaker Company
           </Text>
-          <Heading>Fall limited edition sneakers</Heading>
+          <Heading>{sneaker?.name}</Heading>
         </Stack>
         <Text color="gray.400">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quam
@@ -91,7 +90,7 @@ const BodyContent = () => {
             </Button>
             <Input
               alignItems="center"
-              value="0"
+              defaultValue="0"
               textAlign="center"
               minWidth={12}
               justifyContent="center"

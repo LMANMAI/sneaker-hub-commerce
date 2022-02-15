@@ -4,7 +4,7 @@ import RoutesComponent from "./routes/Routes";
 import "./assets/global.css";
 function App() {
   return (
-    <Container maxWidth="container.lg">
+    <Container maxWidth="container.lg" overflow="hidden">
       <Stack spacing={0} divider={<StackDivider />}>
         <Header />
         <Layout>

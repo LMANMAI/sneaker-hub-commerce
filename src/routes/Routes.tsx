@@ -5,8 +5,9 @@ import { BodyContent } from "../components";
 const RoutesComponent = () => {
   return (
     <Routes>
-      <Route path="/" element={<BodyContent />} />
+      <Route path="/*" element={<Collections />} />
       <Route path="/Collections" element={<Collections />} />
+      <Route path="/Collections/*" element={<Collections />} />
       <Route path="/Men" element={<div>MenPage</div>} />
       <Route path="/Woman" element={<div>WomanPage</div>} />
       <Route path="/Contact" element={<div>ContactPage</div>} />

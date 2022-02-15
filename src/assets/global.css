@@ -5,13 +5,18 @@ html {
 }
 a {
   text-decoration: none;
-  padding: 2rem 0;
-} /*
-a:hover {
-  border-bottom: 3px solid red;
-  margin-bottom: -3px;
-} */
+  padding: 10px 0;
+  font-weight: bold;
+  border: none;
+  border-color: transparent;
+}
 
-.active {
-  border-bottom: 3px solid red;
+@media (min-width: 768px) {
+  a {
+    text-decoration: none;
+    padding: 2rem 0;
+  }
+  .active {
+    border-bottom: 3px solid hsl(26, 100%, 55%);
+  }
 }
