@@ -185,7 +185,7 @@ const Header = () => {
           spacing={2}
           zIndex="99"
         >
-          {basket.length > 0 &&
+          {basket.length > 0 ? (
             basket.map((sneaker, index) => (
               <Stack direction="row" alignItems="center" key={index}>
                 <Image w="40px" h="40px" src={sneaker.posterPathImage} />
@@ -200,9 +200,16 @@ const Header = () => {
                   <Icon as={RemoveIcon} />
                 </Stack>
               </Stack>
-            ))}
-          {totalbasket && <Text>Total: $ {totalbasket}</Text>}
-          <Button colorScheme="primary">Checkout</Button>
+            ))
+          ) : (
+            <p>Todavia no hay productos en el carrito</p>
+          )}
+          {totalbasket != 0 ? (
+            <>
+              <Text>Total: $ {totalbasket}</Text>
+              <Button colorScheme="primary">Checkout</Button>
+            </>
+          ) : null}
         </Stack>
       ) : null}
     </Stack>
