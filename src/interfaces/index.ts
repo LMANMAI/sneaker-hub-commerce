@@ -10,6 +10,7 @@ export interface ISneaker {
   sizes: number[];
   imgs: string[];
   status: string;
+  quantity: number;
 }
 
 export interface IProps {
@@ -20,4 +21,5 @@ export interface ISneakerState {
   basket: ISneaker[];
   sneakerActive: ISneaker | null;
   total: number;
+  gender: string;
 }

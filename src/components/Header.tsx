@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Stack, Image, Avatar, Icon, Text, Button } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import avatar from "../assets/image-avatar.png";
@@ -14,32 +15,52 @@ import {
   selectBasket,
   selectTotal,
   setSneaker,
+  setBasket,
+  changeGender,
+  removeOnefromBasket,
   removeSneakerBasket,
 } from "../features/sneakersSlice";
 const Header = () => {
-  const sneakers = useSelector(selectSneakers);
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
   const dispatch = useDispatch();
+  const sneakers = useSelector(selectSneakers);
+  ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
-  const [sneakerTotal, setTotalSneaker] = useState<ISneaker[]>(sneakers);
+
+  //state de los productos
+  const [sneakersstate, setSneakersState] = useState<ISneaker[]>();
+  const [sneakersfilter, setSneakersFilter] = useState<ISneaker[]>();
 
   const handleFilter = (genre: string) => {
-    // if (genre === "ALL") {
-    //   dispatch(setSneaker(sneakerTotal));
-    //   return;
-    // }
-    // const filterData = sneakerTotal.filter(
-    //   (sneaker) => sneaker.genre === genre
-    // );
-    // dispatch(setSneaker(filterData));
-    // console.log(filterData);
+    dispatch(changeGender(genre));
+
+    if (genre === "ALL") {
+      setSneakersFilter(sneakersstate);
+      return;
+    } else {
+      let filterData = sneakersstate?.filter((item) => item.genre === genre);
+      setSneakersFilter(filterData);
+    }
   };
+  useEffect(() => {
+    const handleReq = async () => {
+      const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
+      const res = await req.json();
+      dispatch(setSneaker(res.sneakers));
+      setSneakersState(res.sneakers);
+    };
+    handleReq();
+  }, []);
+  useEffect(() => {
+    if (sneakersstate !== undefined && sneakersfilter !== undefined) {
+      dispatch(setSneaker(sneakersfilter));
+    }
+  }, [sneakersfilter]);
   const handleRemoveBasket = (sneaker: ISneaker) => {
-    dispatch(removeSneakerBasket(sneaker));
+    dispatch(removeOnefromBasket(sneaker));
   };
-  console.log(basket);
   return (
     <Stack
       direction="row"
@@ -124,7 +145,7 @@ const Header = () => {
               className={({ isActive }) => (isActive ? "active" : "")}
               onClick={() => {
                 setMenuPosition(false);
-                handleFilter("WOMEN");
+                handleFilter("WOMAN");
               }}
               to="woman"
             >
@@ -133,9 +154,9 @@ const Header = () => {
             <NavLink
               className={({ isActive }) => (isActive ? "active" : "")}
               onClick={() => setMenuPosition(false)}
-              to="/Contact"
+              to="/Reports"
             >
-              Contact
+              Reports
             </NavLink>
           </Stack>
         </Stack>
@@ -179,7 +200,7 @@ const Header = () => {
           transition="all 250ms ease"
           backgroundColor="#FFF"
           borderRadius="15px"
-          w={{ base: "90vw", md: "270px" }}
+          w={{ base: "90vw", md: "300px" }}
           minHeight="200px"
           p={6}
           spacing={2}
@@ -191,13 +212,25 @@ const Header = () => {
                 <Image w="40px" h="40px" src={sneaker.posterPathImage} />
                 <Stack>
                   <Text fontSize="12px">{sneaker.name}</Text>
-                  <Text fontSize="12px">{sneaker.price}</Text>
+                  <Stack direction="row">
+                    <Text fontSize="12px">{sneaker.price}</Text>
+                    <Text fontSize="12px">x {sneaker.quantity}</Text>
+                    <Text fontSize="12px" fontWeight="bold">
+                      ${sneaker.price * sneaker.quantity}
+                    </Text>
+                  </Stack>
                 </Stack>
-                <Stack
-                  cursor="pointer"
-                  onClick={() => handleRemoveBasket(sneaker)}
-                >
-                  <Icon as={RemoveIcon} />
+                <Stack direction="row" w="20%" alignItems="center">
+                  <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
+                  <button onClick={() => dispatch(setBasket(sneaker))}>
+                    +
+                  </button>
+                  <Stack
+                    cursor="pointer"
+                    onClick={() => dispatch(removeSneakerBasket(sneaker))}
+                  >
+                    <Icon as={RemoveIcon} />
+                  </Stack>
                 </Stack>
               </Stack>
             ))
@@ -208,6 +241,12 @@ const Header = () => {
             <>
               <Text>Total: $ {totalbasket}</Text>
               <Button colorScheme="primary">Checkout</Button>
+              {/* <Button
+                colorScheme="primary"
+                onClick={() => dispatch(removeSneakerBasket())}
+              >
+                Clear cart
+              </Button> */}
             </>
           ) : null}
         </Stack>

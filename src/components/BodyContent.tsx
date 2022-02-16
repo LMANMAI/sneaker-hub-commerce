@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Badge,
   Heading,
@@ -21,12 +21,20 @@ import {
 } from "../features/sneakersSlice";
 import { Link } from "react-router-dom";
 const BodyContent: React.FC = () => {
+  const [contador, setContador] = useState<number>(0);
   const dispatch = useDispatch();
   const sneakerActive = useSelector(selectSneakerActive);
   if (sneakerActive === null) return <p>error</p>;
 
   const handleBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
+  };
+
+  const handleFunction = (sneaker: ISneaker, times: number) => {
+    for (let i = 0; i < times; i++) {
+      handleBasket(sneakerActive);
+    }
+    setContador(0);
   };
   return (
     <>
@@ -113,12 +121,17 @@ const BodyContent: React.FC = () => {
                 size="md"
                 variant="ghost"
                 fontSize="2xl"
+                onClick={() => {
+                  if (contador > 0) {
+                    setContador(contador - 1);
+                  }
+                }}
               >
                 -
               </Button>
               <Input
                 alignItems="center"
-                defaultValue="0"
+                value={contador}
                 textAlign="center"
                 minWidth={12}
                 justifyContent="center"
@@ -131,6 +144,7 @@ const BodyContent: React.FC = () => {
                 size="md"
                 variant="ghost"
                 fontSize="2xl"
+                onClick={() => setContador(contador + 1)}
               >
                 +
               </Button>
@@ -141,7 +155,7 @@ const BodyContent: React.FC = () => {
               leftIcon={<CartIcon color="#FFF" />}
               size="lg"
               fontSize="xs"
-              onClick={() => handleBasket(sneakerActive)}
+              onClick={() => handleFunction(sneakerActive, contador)}
             >
               Add to cart
             </Button>

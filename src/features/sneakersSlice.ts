@@ -6,6 +6,7 @@ const initialState: ISneakerState = {
   sneakerActive: null,
   basket: [],
   total: 0,
+  gender: "ALL",
 };
 
 export const sneakerSlice = createSlice({
@@ -19,7 +20,24 @@ export const sneakerSlice = createSlice({
       state.sneakerActive = action.payload;
     },
     setBasket: (state, action: PayloadAction<ISneaker>) => {
-      state.basket = [...state.basket, action.payload];
+      let newItem = state.sneakers.find(
+        (sneaker) => sneaker._id === action.payload._id
+      );
+      let sneakerCart = state.basket.find((item) => item._id === newItem?._id);
+
+      if (newItem !== undefined) {
+        if (sneakerCart) {
+          newItem.quantity += 1;
+          state.basket.map((item) =>
+            item._id === newItem?._id
+              ? (item.quantity = item.quantity + 1)
+              : item
+          );
+        } else {
+          newItem.quantity = 1;
+          state.basket = [...state.basket, newItem];
+        }
+      }
       state.total = state.total + action.payload.price;
     },
     removeSneakerBasket: (state, action: PayloadAction<ISneaker>) => {
@@ -30,22 +48,51 @@ export const sneakerSlice = createSlice({
       if (index >= 0) {
         tempbasket.splice(index, 1);
         state.basket = tempbasket;
-        state.total = state.total - action.payload.price;
+        state.total =
+          state.total - action.payload.price * action.payload.quantity;
       } else {
         console.warn(
           `No sé pudo remover el producto: ${action.payload._id} no  esta en el carrito`
         );
       }
     },
+    removeOnefromBasket: (state, action: PayloadAction<ISneaker>) => {
+      let sneakerToDelete = state.basket.find(
+        (item) => item._id === action.payload._id
+      );
+      if (sneakerToDelete !== undefined) {
+        if (sneakerToDelete.quantity > 1) {
+          state.basket.map((item) =>
+            item._id === action.payload._id ? (item.quantity -= 1) : item
+          );
+        } else {
+          let newBasket = state.basket.filter(
+            (item) => item._id !== action.payload._id
+          );
+
+          state.basket = newBasket;
+        }
+        state.total = state.total - action.payload.price;
+      }
+    },
+    changeGender: (state, action: PayloadAction<string>) => {
+      state.gender = action.payload;
+    },
   },
 });
-export const { setSneaker, setSneakerActive, setBasket, removeSneakerBasket } =
-  sneakerSlice.actions;
+export const {
+  setSneaker,
+  setSneakerActive,
+  setBasket,
+  removeSneakerBasket,
+  removeOnefromBasket,
+  changeGender,
+} = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
 export const selectSneakerActive = (state: RootState) =>
   state.sneaker.sneakerActive;
 export const selectBasket = (state: RootState) => state.sneaker.basket;
 export const selectTotal = (state: RootState) => state.sneaker.total;
-
+export const selectGender = (state: RootState) => state.sneaker.gender;
 export default sneakerSlice.reducer;
