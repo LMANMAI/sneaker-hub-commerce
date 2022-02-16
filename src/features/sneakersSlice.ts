@@ -5,6 +5,7 @@ const initialState: ISneakerState = {
   sneakers: [],
   sneakerActive: null,
   basket: [],
+  basketQuantity: 0,
   total: 0,
   gender: "ALL",
 };
@@ -39,6 +40,7 @@ export const sneakerSlice = createSlice({
         }
       }
       state.total = state.total + action.payload.price;
+      state.basketQuantity = state.basketQuantity + 1;
     },
     removeSneakerBasket: (state, action: PayloadAction<ISneaker>) => {
       const index = state.basket.findIndex(
@@ -73,6 +75,7 @@ export const sneakerSlice = createSlice({
           state.basket = newBasket;
         }
         state.total = state.total - action.payload.price;
+        state.basketQuantity = state.basketQuantity - 1;
       }
     },
     changeGender: (state, action: PayloadAction<string>) => {
@@ -95,4 +98,6 @@ export const selectSneakerActive = (state: RootState) =>
 export const selectBasket = (state: RootState) => state.sneaker.basket;
 export const selectTotal = (state: RootState) => state.sneaker.total;
 export const selectGender = (state: RootState) => state.sneaker.gender;
+export const selectBasketQuantity = (state: RootState) =>
+  state.sneaker.basketQuantity;
 export default sneakerSlice.reducer;

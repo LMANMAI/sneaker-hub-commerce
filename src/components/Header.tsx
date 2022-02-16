@@ -11,9 +11,9 @@ import { useState } from "react";
 import { ISneaker } from "../interfaces";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  selectSneakers,
   selectBasket,
   selectTotal,
+  selectBasketQuantity,
   setSneaker,
   setBasket,
   changeGender,
@@ -23,8 +23,8 @@ import {
 const Header = () => {
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
+  const basketQ = useSelector(selectBasketQuantity);
   const dispatch = useDispatch();
-  const sneakers = useSelector(selectSneakers);
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
@@ -58,9 +58,11 @@ const Header = () => {
       dispatch(setSneaker(sneakersfilter));
     }
   }, [sneakersfilter]);
+
   const handleRemoveBasket = (sneaker: ISneaker) => {
     dispatch(removeOnefromBasket(sneaker));
   };
+
   return (
     <Stack
       direction="row"
@@ -182,7 +184,7 @@ const Header = () => {
                   top="10px"
                   fontSize="10px"
                 >
-                  {basket.length}
+                  {basketQ}
                 </Text>
               )}
             </Stack>
@@ -241,12 +243,6 @@ const Header = () => {
             <>
               <Text>Total: $ {totalbasket}</Text>
               <Button colorScheme="primary">Checkout</Button>
-              {/* <Button
-                colorScheme="primary"
-                onClick={() => dispatch(removeSneakerBasket())}
-              >
-                Clear cart
-              </Button> */}
             </>
           ) : null}
         </Stack>

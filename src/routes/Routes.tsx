@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Collections } from "../pages";
+import { Collections, Reports } from "../pages";
 import { BodyContent } from "../components";
 
 const RoutesComponent = () => {
@@ -8,7 +8,7 @@ const RoutesComponent = () => {
       <Route path="/*" element={<Collections />} />
       <Route path="/Collections" element={<Collections />} />
       <Route path="/Collections/:id" element={<BodyContent />} />
-      <Route path="/Reports" element={<div>Reportes Page</div>} />
+      <Route path="/Reports" element={<Reports />} />
       <Route path="*" element={<div>NotFound</div>} />
     </Routes>
   );

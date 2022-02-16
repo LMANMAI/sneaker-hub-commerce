@@ -21,7 +21,7 @@ import {
 } from "../features/sneakersSlice";
 import { Link } from "react-router-dom";
 const BodyContent: React.FC = () => {
-  const [contador, setContador] = useState<number>(0);
+  const [contador, setContador] = useState<number>(1);
   const dispatch = useDispatch();
   const sneakerActive = useSelector(selectSneakerActive);
   if (sneakerActive === null) return <p>error</p>;
@@ -34,7 +34,7 @@ const BodyContent: React.FC = () => {
     for (let i = 0; i < times; i++) {
       handleBasket(sneakerActive);
     }
-    setContador(0);
+    setContador(1);
   };
   return (
     <>
