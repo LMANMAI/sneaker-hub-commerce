@@ -57,7 +57,7 @@ const Reports = () => {
       setMenPorcentaje((mencount?.length * 100) / sneakers.length);
       setWomPorcentaje((womcount?.length * 100) / sneakers.length);
     }
-  }, [sneakers, womporcentaje, menporcentaje]);
+  }, [sneakers, mencount, womporcentaje]);
 
   return (
     <Stack
