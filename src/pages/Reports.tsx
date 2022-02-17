@@ -115,7 +115,14 @@ const Reports = () => {
       }
     }
   }, [mencount, womcount]);
-
+  if (
+    mencount === undefined &&
+    womcount === undefined &&
+    sneakers === undefined &&
+    menporcentaje !== undefined &&
+    womporcentaje !== undefined
+  )
+    return <p>cargando...</p>;
   return (
     <Stack
       direction={{ base: "column", md: "row" }}

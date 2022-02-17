@@ -124,7 +124,6 @@ const Header = () => {
             spacing={{ base: 0, md: 6 }}
           >
             <NavLink
-              className={({ isActive }) => (isActive ? "active" : "")}
               onClick={() => {
                 setMenuPosition(false);
                 handleFilter("ALL");
@@ -135,32 +134,26 @@ const Header = () => {
               Collections
             </NavLink>
             <NavLink
-              className={({ isActive }) => (isActive ? "active" : "")}
               onClick={() => {
                 setMenuPosition(false);
                 handleFilter("MEN");
                 setBasketShows(false);
               }}
-              to="/men"
+              to="/Collections"
             >
               Men
             </NavLink>
             <NavLink
-              className={({ isActive }) => (isActive ? "active" : "")}
               onClick={() => {
                 setMenuPosition(false);
                 handleFilter("WOMAN");
                 setBasketShows(false);
               }}
-              to="woman"
+              to="/Collections"
             >
               Woman
             </NavLink>
-            <NavLink
-              className={({ isActive }) => (isActive ? "active" : "")}
-              onClick={() => setMenuPosition(false)}
-              to="/Reports"
-            >
+            <NavLink onClick={() => setMenuPosition(false)} to="/Reports">
               Reports
             </NavLink>
           </Stack>
