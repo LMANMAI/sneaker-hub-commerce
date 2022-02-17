@@ -8,6 +8,10 @@ import { Stack } from "@chakra-ui/react";
 interface IProps {
   height?: number | string;
 }
+interface IPorcentaje {
+  menper?: number;
+  womper?: number;
+}
 
 const ContBoard = styled.div`
   height: 80%;
@@ -25,7 +29,7 @@ const SubBarra = styled.div<IProps>`
   width: 100%;
   transition: 550ms all ease-in;
   height: ${(props) => (props.height ? `${props.height}%` : "0%")};
-  background: linear-gradient(45deg, hsl(26, 100%, 55%), hsl(25, 100%, 94%));
+  background: ${(props) => (props.color ? `${props.color}` : "#E50914")};
   border-radius: 3px 3px 0 0;
 `;
 const Graf = styled.div`
@@ -46,15 +50,20 @@ const ContainerTorta = styled.div`
   justify-content: space-around;
   flex-direction: column;
 `;
-const GraficoTorta = styled.div`
+const GraficoTorta = styled.div<IPorcentaje>`
   width: 300px;
   height: 300px;
   border-radius: 100%;
-  background-image: conic-gradient(blue 60%, red 40%);
+  transition: all 250ms ease;
+  align-self: center;
+  background-image: ${(props) =>
+    props.menper && props.womper
+      ? `conic-gradient(hsl(26, 100%, 55%) ${props.menper}%, #ffe600 ${props.womper}%)`
+      : `conic-gradient(orange ${0}%, red ${0}%)`};
 `;
 const ConteinerLeyd = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   flex-direction: row;
 `;
 const LeydAll = styled.span`
@@ -65,14 +74,14 @@ const LeydAll = styled.span`
 const ColorBox = styled.span`
   width: 15px;
   height: 15px;
-  background-color: red;
+  background-color: ${(props) => props.color};
   margin-right: 8px;
 `;
 const NameLeyd = styled.p``;
 
 const Reports = () => {
-  const sneakers = useSelector(selectSneakers);
-
+  //const sneakers = useSelector(selectSneakers);
+  const [sneakers, setSneakers] = useState<ISneaker[]>();
   const [mencount, setMenCount] = useState<ISneaker[]>();
   const [womcount, setWomCount] = useState<ISneaker[]>();
 
@@ -80,12 +89,26 @@ const Reports = () => {
   const [womporcentaje, setWomPorcentaje] = useState<number>(0);
 
   useEffect(() => {
-    setMenCount(sneakers.filter((items) => items.genre === "MEN" && items));
-    setWomCount(sneakers.filter((items) => items.genre === "WOMAN" && items));
+    const handleReq = async () => {
+      const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
+      const res = await req.json();
+      setSneakers(res.sneakers);
+    };
+    handleReq();
+  }, []);
+  useEffect(() => {
+    if (sneakers !== undefined) {
+      setMenCount(sneakers.filter((items) => items.genre === "MEN" && items));
+      setWomCount(sneakers.filter((items) => items.genre === "WOMAN" && items));
+    }
   }, [sneakers]);
 
   useEffect(() => {
-    if (mencount !== undefined && womcount !== undefined) {
+    if (
+      mencount !== undefined &&
+      womcount !== undefined &&
+      sneakers !== undefined
+    ) {
       if (menporcentaje !== undefined && womporcentaje !== undefined) {
         setMenPorcentaje((mencount?.length * 100) / sneakers.length);
         setWomPorcentaje((womcount?.length * 100) / sneakers.length);
@@ -123,30 +146,30 @@ const Reports = () => {
                 <div>10%</div>
               </div>
             </div>
-            <Graf className="graf_board">
-              <div className="barra">
-                <SubBarra height={100}>
-                  <div className="tag_g">{sneakers.length}</div>
-                  <div className="tag_leyenda">Sneaker Totales</div>
-                </SubBarra>
-              </div>
-              {menporcentaje | womporcentaje ? (
-                <>
+            {menporcentaje | womporcentaje ? (
+              <>
+                <Graf className="graf_board">
                   <div className="barra">
-                    <SubBarra height={menporcentaje}>
-                      <div className="tag_g">{mencount?.length}</div>
+                    <SubBarra height={100}>
+                      <div className="tag_g">{100} %</div>
+                      <div className="tag_leyenda">Sneaker Totales</div>
+                    </SubBarra>
+                  </div>
+                  <div className="barra">
+                    <SubBarra height={menporcentaje} color="hsl(26, 100%, 55%)">
+                      <div className="tag_g">{menporcentaje} %</div>
                       <div className="tag_leyenda">Men sneakers</div>
                     </SubBarra>
                   </div>
                   <div className="barra">
-                    <SubBarra height={womporcentaje}>
-                      <div className="tag_g">{womcount?.length}</div>
+                    <SubBarra height={womporcentaje} color="#ffe600">
+                      <div className="tag_g">{womporcentaje} %</div>
                       <div className="tag_leyenda">Woman Sneakers</div>
                     </SubBarra>
                   </div>
-                </>
-              ) : null}
-            </Graf>
+                </Graf>
+              </>
+            ) : null}
           </ContBoard>
           <div className="sep_board"></div>
         </Board>
@@ -161,62 +184,22 @@ const Reports = () => {
         <h3>Grafico de torta</h3>
 
         <ContainerTorta>
-          <GraficoTorta></GraficoTorta>
+          <GraficoTorta
+            menper={menporcentaje}
+            womper={womporcentaje}
+          ></GraficoTorta>
           <ConteinerLeyd>
             <LeydAll>
-              <ColorBox></ColorBox>
-              <NameLeyd>Men</NameLeyd>
+              <ColorBox color="hsl(26, 100%, 55%)"></ColorBox>
+              <NameLeyd>Men {menporcentaje}%</NameLeyd>
             </LeydAll>
             <LeydAll>
-              <ColorBox></ColorBox>
-              <NameLeyd>Women</NameLeyd>
+              <ColorBox color="#ffe600"></ColorBox>
+              <NameLeyd>Women {womporcentaje}%</NameLeyd>
             </LeydAll>
           </ConteinerLeyd>
         </ContainerTorta>
       </Stack>
-
-      {/* <Stack
-        alignItems="center"
-        marginY={2}
-        w={{ base: "100%", md: "33%" }}
-        flex={1}
-      >
-        <h3>Grafico de precios</h3>
-        <Board>
-          <div className="sep_board"></div>
-          <ContBoard>
-            <div className="tag_board">
-              <div className="sub_tag_board">
-                <div>100%</div>
-                <div>90%</div>
-                <div>80%</div>
-                <div>70%</div>
-                <div>60%</div>
-                <div>50%</div>
-                <div>40%</div>
-                <div>30%</div>
-                <div>20%</div>
-                <div>10%</div>
-              </div>
-            </div>
-            <Graf className="graf_board">
-              <div className="barra">
-                <SubBarra height={menporcentaje}>
-                  <div className="tag_g">{mencount?.length}</div>
-                  <div className="tag_leyenda">Men sneakers</div>
-                </SubBarra>
-              </div>
-              <div className="barra">
-                <SubBarra height={womporcentaje}>
-                  <div className="tag_g">{womcount?.length}</div>
-                  <div className="tag_leyenda">Woman Sneakers</div>
-                </SubBarra>
-              </div>
-            </Graf>
-          </ContBoard>
-          <div className="sep_board"></div>
-        </Board>
-      </Stack> */}
     </Stack>
   );
 };
