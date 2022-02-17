@@ -128,6 +128,7 @@ const Header = () => {
               onClick={() => {
                 setMenuPosition(false);
                 handleFilter("ALL");
+                setBasketShows(false);
               }}
               to="/Collections"
             >
@@ -138,6 +139,7 @@ const Header = () => {
               onClick={() => {
                 setMenuPosition(false);
                 handleFilter("MEN");
+                setBasketShows(false);
               }}
               to="/men"
             >
@@ -148,6 +150,7 @@ const Header = () => {
               onClick={() => {
                 setMenuPosition(false);
                 handleFilter("WOMAN");
+                setBasketShows(false);
               }}
               to="woman"
             >
@@ -229,7 +232,12 @@ const Header = () => {
                   </button>
                   <Stack
                     cursor="pointer"
-                    onClick={() => dispatch(removeSneakerBasket(sneaker))}
+                    onClick={() => (
+                      dispatch(removeSneakerBasket(sneaker)),
+                      setTimeout(() => {
+                        setBasketShows(false);
+                      }, 1000)
+                    )}
                   >
                     <Icon as={RemoveIcon} />
                   </Stack>

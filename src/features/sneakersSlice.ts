@@ -52,6 +52,7 @@ export const sneakerSlice = createSlice({
         state.basket = tempbasket;
         state.total =
           state.total - action.payload.price * action.payload.quantity;
+        state.basketQuantity = state.basketQuantity - action.payload.quantity;
       } else {
         console.warn(
           `No sé pudo remover el producto: ${action.payload._id} no  esta en el carrito`

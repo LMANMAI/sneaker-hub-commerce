@@ -4,9 +4,11 @@ import { selectSneakers } from "../features/sneakersSlice";
 import { ISneaker } from "../interfaces";
 import styled from "@emotion/styled";
 import { Stack } from "@chakra-ui/react";
+
 interface IProps {
-  height?: number;
+  height?: number | string;
 }
+
 const ContBoard = styled.div`
   height: 80%;
   display: flex;
@@ -22,7 +24,7 @@ const Board = styled.div`
 const SubBarra = styled.div<IProps>`
   width: 100%;
   transition: 550ms all ease-in;
-  height: ${(props) => (props.height ? `${props.height}%` : "100%")};
+  height: ${(props) => (props.height ? `${props.height}%` : "0%")};
   background: linear-gradient(45deg, hsl(26, 100%, 55%), hsl(25, 100%, 94%));
   border-radius: 3px 3px 0 0;
 `;
@@ -36,28 +38,30 @@ const Graf = styled.div`
   box-sizing: border-box;
   display: flex;
 `;
+
 const Reports = () => {
   const sneakers = useSelector(selectSneakers);
+
   const [mencount, setMenCount] = useState<ISneaker[]>();
   const [womcount, setWomCount] = useState<ISneaker[]>();
 
-  const [menporcentaje, setMenPorcentaje] = useState<number>();
-  const [womporcentaje, setWomPorcentaje] = useState<number>();
+  const [menporcentaje, setMenPorcentaje] = useState<number>(0);
+  const [womporcentaje, setWomPorcentaje] = useState<number>(0);
 
   const [menpamountprice, setMenPrice] = useState<number>();
   const [wompamountprice, setWomPrice] = useState<number>();
 
   useEffect(() => {
-    //guardo los items por genero
-    setMenCount(sneakers.filter((items) => items.genre === "MEN"));
-    setWomCount(sneakers.filter((items) => items.genre === "WOMAN"));
+    setMenCount(sneakers.filter((items) => items.genre === "MEN" && items));
+    setWomCount(sneakers.filter((items) => items.genre === "WOMAN" && items));
+  }, [sneakers]);
 
-    //saco los porcentajes
+  useEffect(() => {
     if (mencount !== undefined && womcount !== undefined) {
       setMenPorcentaje((mencount?.length * 100) / sneakers.length);
       setWomPorcentaje((womcount?.length * 100) / sneakers.length);
     }
-  }, [sneakers, mencount, womporcentaje]);
+  }, [mencount, womcount, menpamountprice, wompamountprice]);
 
   return (
     <Stack
@@ -65,7 +69,7 @@ const Reports = () => {
       justifyContent="center"
       p="10px"
     >
-      <Stack alignItems="center" p="10px" marginY={2}>
+      <Stack alignItems="center" marginY={2} w={{ base: "100%", md: "33%" }}>
         <h3>Grafico de cantidad</h3>
         <Board>
           <div className="sep_board"></div>
@@ -86,7 +90,7 @@ const Reports = () => {
             </div>
             <Graf className="graf_board">
               <div className="barra">
-                <SubBarra>
+                <SubBarra height={100}>
                   <div className="tag_g">{sneakers.length}</div>
                   <div className="tag_leyenda">Sneaker Totales</div>
                 </SubBarra>
@@ -108,7 +112,22 @@ const Reports = () => {
           <div className="sep_board"></div>
         </Board>
       </Stack>
-      <Stack alignItems="center" p="10px" marginY={2}>
+
+      <Stack alignItems="center" marginY={2} w={{ base: "100%", md: "33%" }}>
+        <h3>Grafico de torta</h3>
+
+        <div className="conteiner_grafico">
+          <div className="grafico"></div>
+          <div className="conteiner_leyed">
+            <span className="leyed_all">
+              <span className="color"></span>
+              <p className="name">nombre</p>
+            </span>
+          </div>
+        </div>
+      </Stack>
+
+      <Stack alignItems="center" marginY={2} w={{ base: "100%", md: "33%" }}>
         <h3>Grafico de precios</h3>
         <Board>
           <div className="sep_board"></div>

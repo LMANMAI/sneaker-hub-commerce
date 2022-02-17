@@ -7,6 +7,7 @@ const RoutesComponent = () => {
     <Routes>
       <Route path="/*" element={<Collections />} />
       <Route path="/Collections" element={<Collections />} />
+      <Route path="/Collections/*" element={<Collections />} />
       <Route path="/Collections/:id" element={<BodyContent />} />
       <Route path="/Reports" element={<Reports />} />
       <Route path="*" element={<div>NotFound</div>} />

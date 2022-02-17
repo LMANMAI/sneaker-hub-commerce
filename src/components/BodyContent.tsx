@@ -24,7 +24,8 @@ const BodyContent: React.FC = () => {
   const [contador, setContador] = useState<number>(1);
   const dispatch = useDispatch();
   const sneakerActive = useSelector(selectSneakerActive);
-  if (sneakerActive === null) return <p>error</p>;
+  ///dejar el item activo en localstorage para que al actualizar no se pierda
+  if (sneakerActive === null) return null;
 
   const handleBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
@@ -34,8 +35,8 @@ const BodyContent: React.FC = () => {
     for (let i = 0; i < times; i++) {
       handleBasket(sneakerActive);
     }
-    setContador(1);
   };
+
   return (
     <>
       <Link to="/Collections">
@@ -132,6 +133,9 @@ const BodyContent: React.FC = () => {
               <Input
                 alignItems="center"
                 value={contador}
+                type="number"
+                onChange={(e) => setContador(parseInt(e.target.value))}
+                name="contador"
                 textAlign="center"
                 minWidth={12}
                 justifyContent="center"
