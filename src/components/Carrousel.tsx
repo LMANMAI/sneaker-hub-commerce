@@ -18,8 +18,15 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
         borderRadius="lg"
         src={selectedimage}
         width={{ base: "initial", md: 345 }}
-        height={{ base: "initial", md: 345 }}
+        className="img"
       />
+      <Image
+        src={selectedimage}
+        width="100px"
+        border="1px solid red"
+        className="clip img"
+      />
+
       <Stack direction="row">
         {images?.map((image) => (
           <Image

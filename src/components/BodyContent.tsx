@@ -29,6 +29,7 @@ const BodyContent: React.FC = () => {
   if (!sneakerActive) return <NotFound />;
 
   const [contador, setContador] = useState<number>(0);
+  const [conttem, setContTemp] = useState<number>(0);
   const dispatch = useDispatch();
 
   const newcount = useMemo(() => {
@@ -39,9 +40,17 @@ const BodyContent: React.FC = () => {
     return basket.filter((item) => item._id === sneakerActive._id);
   }, [basket]);
 
-  const handleAddToBasket = (sneaker: ISneaker) => {
-    dispatch(setBasket(sneaker));
-    setContador(contador + 1);
+  const handleAddToBasket = (sneaker: ISneaker, typeBtn: string) => {
+    if (typeBtn === "ADD") {
+      for (let index = 0; index < conttem; index++) {
+        dispatch(setBasket(sneaker));
+      }
+      setContTemp(0);
+      setContador(contador + 1);
+    } else if (typeBtn === "PLUS") {
+      setContTemp(conttem + 1);
+      setContador(contador + 1);
+    }
   };
 
   const handleRemoveToBasket = () => {
@@ -53,6 +62,7 @@ const BodyContent: React.FC = () => {
       setContador(newBasketItemCount[0].quantity);
     } else {
       setContador(0);
+      setContTemp(0);
     }
   }, [newBasketItemCount, basket]);
   return (
@@ -164,7 +174,7 @@ const BodyContent: React.FC = () => {
                 size="md"
                 variant="ghost"
                 fontSize="2xl"
-                onClick={() => handleAddToBasket(sneakerActive)}
+                onClick={() => handleAddToBasket(sneakerActive, "PLUS")}
               >
                 +
               </Button>
@@ -175,7 +185,7 @@ const BodyContent: React.FC = () => {
               leftIcon={<CartIcon color="#FFF" />}
               size="lg"
               fontSize="xs"
-              onClick={() => handleAddToBasket(sneakerActive)}
+              onClick={() => handleAddToBasket(sneakerActive, "ADD")}
             >
               Add to cart
             </Button>

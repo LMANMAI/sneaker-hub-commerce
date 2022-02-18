@@ -178,3 +178,11 @@ a {
   padding-right: 10px;
   box-sizing: border-box;
 }
+.img {
+  overflow: hidden;
+  display: block;
+}
+.clip {
+  clip: rect(0px, 100px, 100px, 0px);
+  position: absolute;
+}
