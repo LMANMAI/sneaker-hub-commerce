@@ -18,42 +18,42 @@ import {
   setSneakerActive,
   setBasket,
   removeOnefromBasket,
-  selectSneakers,
+  selectBasket,
 } from "../features/sneakersSlice";
 import { Link } from "react-router-dom";
-import { filterById } from "../app/helper";
 import { NotFound } from "../pages";
 import { ISneaker } from "../interfaces";
 const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
+  const basket = useSelector(selectBasket);
   if (!sneakerActive) return <NotFound />;
 
-  const [contador, setContador] = useState<number>(1);
+  const [contador, setContador] = useState<number>(0);
   const dispatch = useDispatch();
 
-  const handleFunction = (sneaker: ISneaker) => {
+  const newcount = useMemo(() => {
+    return sneakerActive.quantity;
+  }, [contador, sneakerActive.quantity]);
+
+  const newBasketItemCount = useMemo(() => {
+    return basket.filter((item) => item._id === sneakerActive._id);
+  }, [basket]);
+
+  const handleAddToBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
-    setContador(contador + sneaker?.quantity + 1);
-    console.log(contador);
+    setContador(contador + 1);
   };
 
-  const handleRemove = () => {
-    if (contador < 1) {
-      setContador(1);
-      return;
-    }
+  const handleRemoveToBasket = () => {
     dispatch(removeOnefromBasket(sneakerActive));
     setContador(contador - 1);
   };
-  const newcount = useMemo(() => {
-    return sneakerActive.quantity * contador;
-  }, [contador, sneakerActive.quantity]);
-
   useEffect(() => {
-    setContador(sneakerActive.quantity);
-    console.log(newcount);
-  }, [sneakerActive.quantity]);
-
+    console.log(
+      "esta habiendo cambios en el carrito y por lo tanto tengo que cambiar el inpu"
+    );
+    setContador(newBasketItemCount[0].quantity);
+  }, [basket]);
   return (
     <>
       <Link to="/">
@@ -140,7 +140,7 @@ const BodyContent: React.FC = () => {
                 variant="ghost"
                 fontSize="2xl"
                 onClick={() => {
-                  handleRemove();
+                  handleRemoveToBasket();
                 }}
               >
                 -
@@ -148,7 +148,7 @@ const BodyContent: React.FC = () => {
               <Input
                 alignItems="center"
                 value={contador}
-                onChange={() => handleFunction(sneakerActive)}
+                onChange={() => setContador(contador + newcount)}
                 type="number"
                 name="contador"
                 textAlign="center"
@@ -163,7 +163,7 @@ const BodyContent: React.FC = () => {
                 size="md"
                 variant="ghost"
                 fontSize="2xl"
-                onClick={() => handleFunction(sneakerActive)}
+                onClick={() => handleAddToBasket(sneakerActive)}
               >
                 +
               </Button>
@@ -174,7 +174,7 @@ const BodyContent: React.FC = () => {
               leftIcon={<CartIcon color="#FFF" />}
               size="lg"
               fontSize="xs"
-              onClick={() => handleFunction(sneakerActive)}
+              onClick={() => handleAddToBasket(sneakerActive)}
             >
               Add to cart
             </Button>

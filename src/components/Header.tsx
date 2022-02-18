@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Stack, Image, Avatar, Icon, Text, Button } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import avatar from "../assets/image-avatar.png";
@@ -38,6 +38,14 @@ const Header = () => {
     };
     handleReq();
   }, []);
+
+  const count = useMemo(() => {
+    return basket.filter((item) => item._id === proyectoactivo?._id);
+  }, [basket]);
+
+  useEffect(() => {
+    console.log(count);
+  }, [count]);
 
   const handleRemoveBasket = (sneaker: ISneaker) => {
     if (sneaker.quantity < 1) return;

@@ -4,6 +4,7 @@ import { selectSneakers } from "../features/sneakersSlice";
 import { ISneaker } from "../interfaces";
 import styled from "@emotion/styled";
 import { Stack } from "@chakra-ui/react";
+import { NotFound } from ".";
 
 interface IProps {
   height?: number | string;
@@ -113,7 +114,7 @@ const Reports = () => {
     menporcentaje !== undefined &&
     womporcentaje !== undefined
   )
-    return <p>cargando...</p>;
+    return <NotFound />;
   return (
     <Stack
       direction={{ base: "column", md: "row" }}
