@@ -21,6 +21,5 @@ export interface ISneakerState {
   basket: ISneaker[];
   sneakerActive: ISneaker | null;
   total: number;
-  gender: string;
   basketQuantity: number;
 }

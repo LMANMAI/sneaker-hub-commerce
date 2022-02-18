@@ -7,7 +7,6 @@ const initialState: ISneakerState = {
   basket: [],
   basketQuantity: 0,
   total: 0,
-  gender: "ALL",
 };
 
 export const sneakerSlice = createSlice({
@@ -79,9 +78,6 @@ export const sneakerSlice = createSlice({
         state.basketQuantity = state.basketQuantity - 1;
       }
     },
-    changeGender: (state, action: PayloadAction<string>) => {
-      state.gender = action.payload;
-    },
   },
 });
 export const {
@@ -90,7 +86,6 @@ export const {
   setBasket,
   removeSneakerBasket,
   removeOnefromBasket,
-  changeGender,
 } = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
@@ -98,7 +93,6 @@ export const selectSneakerActive = (state: RootState) =>
   state.sneaker.sneakerActive;
 export const selectBasket = (state: RootState) => state.sneaker.basket;
 export const selectTotal = (state: RootState) => state.sneaker.total;
-export const selectGender = (state: RootState) => state.sneaker.gender;
 export const selectBasketQuantity = (state: RootState) =>
   state.sneaker.basketQuantity;
 export default sneakerSlice.reducer;

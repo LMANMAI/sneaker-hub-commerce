@@ -16,53 +16,41 @@ import {
   selectBasketQuantity,
   setSneaker,
   setBasket,
-  changeGender,
   removeOnefromBasket,
   removeSneakerBasket,
+  selectSneakerActive,
 } from "../features/sneakersSlice";
 const Header = () => {
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
   const basketQ = useSelector(selectBasketQuantity);
+  const proyectoactivo = useSelector(selectSneakerActive);
   const dispatch = useDispatch();
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
 
-  //state de los productos
-  const [sneakersstate, setSneakersState] = useState<ISneaker[]>();
-  const [sneakersfilter, setSneakersFilter] = useState<ISneaker[]>();
-
-  const handleFilter = (genre: string) => {
-    dispatch(changeGender(genre));
-
-    if (genre === "ALL") {
-      setSneakersFilter(sneakersstate);
-      return;
-    } else {
-      let filterData = sneakersstate?.filter((item) => item.genre === genre);
-      setSneakersFilter(filterData);
-    }
-  };
   useEffect(() => {
     const handleReq = async () => {
       const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
-      setSneakersState(res.sneakers);
     };
     handleReq();
   }, []);
-  useEffect(() => {
-    if (sneakersstate !== undefined && sneakersfilter !== undefined) {
-      dispatch(setSneaker(sneakersfilter));
-    }
-  }, [sneakersfilter]);
 
   const handleRemoveBasket = (sneaker: ISneaker) => {
+    if (sneaker.quantity < 1) return;
     dispatch(removeOnefromBasket(sneaker));
   };
 
+  const handleAddBasket = (sneaker: ISneaker) => {
+    dispatch(setBasket(sneaker));
+  };
+  const handleSwichtFilter = (value: boolean) => {
+    setMenuPosition(value);
+    setBasketShows(value);
+  };
   return (
     <Stack
       direction="row"
@@ -93,7 +81,7 @@ const Header = () => {
             transition="all 220ms ease-in-out"
           />
         )}
-        <NavLink to="/" onClick={() => handleFilter("ALL")}>
+        <NavLink to="/">
           <Image src={logo} />
         </NavLink>
         <Stack
@@ -123,37 +111,12 @@ const Header = () => {
             direction={{ base: "column", md: "row" }}
             spacing={{ base: 0, md: 6 }}
           >
-            <NavLink
-              onClick={() => {
-                setMenuPosition(false);
-                handleFilter("ALL");
-                setBasketShows(false);
-              }}
-              to="/Collections"
-            >
+            <NavLink onClick={() => handleSwichtFilter(false)} to="/">
               Collections
             </NavLink>
-            <NavLink
-              onClick={() => {
-                setMenuPosition(false);
-                handleFilter("MEN");
-                setBasketShows(false);
-              }}
-              to="/Collections"
-            >
-              Men
-            </NavLink>
-            <NavLink
-              onClick={() => {
-                setMenuPosition(false);
-                handleFilter("WOMAN");
-                setBasketShows(false);
-              }}
-              to="/Collections"
-            >
-              Woman
-            </NavLink>
-            <NavLink onClick={() => setMenuPosition(false)} to="/Reports">
+            <NavLink to={`/?gender=MEN`}>Men</NavLink>
+            <NavLink to={`/?gender=WOMAN`}>Woman</NavLink>
+            <NavLink onClick={() => setMenuPosition(false)} to="reports">
               Reports
             </NavLink>
           </Stack>
@@ -211,7 +174,7 @@ const Header = () => {
                 <Stack>
                   <Text fontSize="12px">{sneaker.name}</Text>
                   <Stack direction="row">
-                    <Text fontSize="12px">{sneaker.price}</Text>
+                    <Text fontSize="12px">$ {sneaker.price}</Text>
                     <Text fontSize="12px">x {sneaker.quantity}</Text>
                     <Text fontSize="12px" fontWeight="bold">
                       ${sneaker.price * sneaker.quantity}
@@ -220,9 +183,8 @@ const Header = () => {
                 </Stack>
                 <Stack direction="row" w="20%" alignItems="center">
                   <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
-                  <button onClick={() => dispatch(setBasket(sneaker))}>
-                    +
-                  </button>
+
+                  <button onClick={() => handleAddBasket(sneaker)}>+</button>
                   <Stack
                     cursor="pointer"
                     onClick={() => (

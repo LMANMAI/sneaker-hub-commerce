@@ -81,21 +81,13 @@ const NameLeyd = styled.p``;
 
 const Reports = () => {
   //const sneakers = useSelector(selectSneakers);
-  const [sneakers, setSneakers] = useState<ISneaker[]>();
+  const sneakers = useSelector(selectSneakers);
   const [mencount, setMenCount] = useState<ISneaker[]>();
   const [womcount, setWomCount] = useState<ISneaker[]>();
 
   const [menporcentaje, setMenPorcentaje] = useState<number>(0);
   const [womporcentaje, setWomPorcentaje] = useState<number>(0);
 
-  useEffect(() => {
-    const handleReq = async () => {
-      const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
-      const res = await req.json();
-      setSneakers(res.sneakers);
-    };
-    handleReq();
-  }, []);
   useEffect(() => {
     if (sneakers !== undefined) {
       setMenCount(sneakers.filter((items) => items.genre === "MEN" && items));
@@ -164,13 +156,13 @@ const Reports = () => {
                   </div>
                   <div className="barra">
                     <SubBarra height={menporcentaje} color="hsl(26, 100%, 55%)">
-                      <div className="tag_g">{menporcentaje} %</div>
+                      <div className="tag_g">{menporcentaje.toFixed(2)} %</div>
                       <div className="tag_leyenda">Men sneakers</div>
                     </SubBarra>
                   </div>
                   <div className="barra">
                     <SubBarra height={womporcentaje} color="#ffe600">
-                      <div className="tag_g">{womporcentaje} %</div>
+                      <div className="tag_g">{womporcentaje.toFixed(2)} %</div>
                       <div className="tag_leyenda">Woman Sneakers</div>
                     </SubBarra>
                   </div>
@@ -198,11 +190,11 @@ const Reports = () => {
           <ConteinerLeyd>
             <LeydAll>
               <ColorBox color="hsl(26, 100%, 55%)"></ColorBox>
-              <NameLeyd>Men {menporcentaje}%</NameLeyd>
+              <NameLeyd>Men {menporcentaje.toFixed(2)}%</NameLeyd>
             </LeydAll>
             <LeydAll>
               <ColorBox color="#ffe600"></ColorBox>
-              <NameLeyd>Women {womporcentaje}%</NameLeyd>
+              <NameLeyd>Women {womporcentaje.toFixed(2)}%</NameLeyd>
             </LeydAll>
           </ConteinerLeyd>
         </ContainerTorta>

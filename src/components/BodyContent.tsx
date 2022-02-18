@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Badge,
   Heading,
@@ -12,34 +12,51 @@ import {
 import CartIcon from "../icons/Cart";
 import PrevIcon from "../icons/PrevIcon";
 import { Carrousel } from "./";
-import { ISneaker } from "../interfaces";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectSneakerActive,
   setSneakerActive,
   setBasket,
+  removeOnefromBasket,
+  selectSneakers,
 } from "../features/sneakersSlice";
 import { Link } from "react-router-dom";
+import { filterById } from "../app/helper";
+import { NotFound } from "../pages";
+import { ISneaker } from "../interfaces";
 const BodyContent: React.FC = () => {
+  const sneakerActive = useSelector(selectSneakerActive);
+  if (!sneakerActive) return <NotFound />;
+
   const [contador, setContador] = useState<number>(1);
   const dispatch = useDispatch();
-  const sneakerActive = useSelector(selectSneakerActive);
-  ///dejar el item activo en localstorage para que al actualizar no se pierda
-  if (sneakerActive === null) return null;
 
-  const handleBasket = (sneaker: ISneaker) => {
+  const handleFunction = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
+    setContador(contador + sneaker?.quantity + 1);
+    console.log(contador);
   };
 
-  const handleFunction = (sneaker: ISneaker, times: number) => {
-    for (let i = 0; i < times; i++) {
-      handleBasket(sneakerActive);
+  const handleRemove = () => {
+    if (contador < 1) {
+      setContador(1);
+      return;
     }
+    dispatch(removeOnefromBasket(sneakerActive));
+    setContador(contador - 1);
   };
+  const newcount = useMemo(() => {
+    return sneakerActive.quantity * contador;
+  }, [contador, sneakerActive.quantity]);
+
+  useEffect(() => {
+    setContador(sneakerActive.quantity);
+    console.log(newcount);
+  }, [sneakerActive.quantity]);
 
   return (
     <>
-      <Link to="/Collections">
+      <Link to="/">
         <Stack
           marginTop={8}
           onClick={() => dispatch(setSneakerActive(null))}
@@ -104,7 +121,7 @@ const BodyContent: React.FC = () => {
               color="gray.400"
               textDecoration="line-through"
             >
-              {sneakerActive?.price * 2}
+              {sneakerActive && sneakerActive?.price * 2}
             </Text>
           </Stack>
 
@@ -123,9 +140,7 @@ const BodyContent: React.FC = () => {
                 variant="ghost"
                 fontSize="2xl"
                 onClick={() => {
-                  if (contador > 0) {
-                    setContador(contador - 1);
-                  }
+                  handleRemove();
                 }}
               >
                 -
@@ -133,8 +148,8 @@ const BodyContent: React.FC = () => {
               <Input
                 alignItems="center"
                 value={contador}
+                onChange={() => handleFunction(sneakerActive)}
                 type="number"
-                onChange={(e) => setContador(parseInt(e.target.value))}
                 name="contador"
                 textAlign="center"
                 minWidth={12}
@@ -148,7 +163,7 @@ const BodyContent: React.FC = () => {
                 size="md"
                 variant="ghost"
                 fontSize="2xl"
-                onClick={() => setContador(contador + 1)}
+                onClick={() => handleFunction(sneakerActive)}
               >
                 +
               </Button>
@@ -159,7 +174,7 @@ const BodyContent: React.FC = () => {
               leftIcon={<CartIcon color="#FFF" />}
               size="lg"
               fontSize="xs"
-              onClick={() => handleFunction(sneakerActive, contador)}
+              onClick={() => handleFunction(sneakerActive)}
             >
               Add to cart
             </Button>
