@@ -43,10 +43,6 @@ const Header = () => {
     return basket.filter((item) => item._id === proyectoactivo?._id);
   }, [basket]);
 
-  useEffect(() => {
-    console.log(count);
-  }, [count]);
-
   const handleRemoveBasket = (sneaker: ISneaker) => {
     if (sneaker.quantity < 1) return;
     dispatch(removeOnefromBasket(sneaker));

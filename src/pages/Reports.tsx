@@ -95,18 +95,6 @@ const Reports = () => {
     return sneakers.filter((items) => items.genre === "WOMAN" && items);
   }, [sneakers]);
 
-  useEffect(() => {
-    if (
-      sneakersmen !== undefined &&
-      sneakerswoman !== undefined &&
-      sneakers !== undefined
-    ) {
-      if (menporcentaje !== undefined && womporcentaje !== undefined) {
-        setMenPorcentaje((sneakersmen?.length * 100) / sneakers.length);
-        setWomPorcentaje((sneakerswoman?.length * 100) / sneakers.length);
-      }
-    }
-  }, [sneakersmen, sneakerswoman]);
   if (
     sneakersmen === undefined &&
     sneakerswoman === undefined &&
@@ -115,6 +103,11 @@ const Reports = () => {
     womporcentaje !== undefined
   )
     return <NotFound />;
+  useEffect(() => {
+    setMenPorcentaje((sneakersmen?.length * 100) / sneakers.length);
+    setWomPorcentaje((sneakerswoman?.length * 100) / sneakers.length);
+  }, [sneakersmen, sneakerswoman]);
+
   return (
     <Stack
       direction={{ base: "column", md: "row" }}

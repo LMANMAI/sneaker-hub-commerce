@@ -49,11 +49,12 @@ const BodyContent: React.FC = () => {
     setContador(contador - 1);
   };
   useEffect(() => {
-    console.log(
-      "esta habiendo cambios en el carrito y por lo tanto tengo que cambiar el inpu"
-    );
-    setContador(newBasketItemCount[0].quantity);
-  }, [basket]);
+    if (newBasketItemCount.length === 1) {
+      setContador(newBasketItemCount[0].quantity);
+    } else {
+      setContador(0);
+    }
+  }, [newBasketItemCount, basket]);
   return (
     <>
       <Link to="/">
