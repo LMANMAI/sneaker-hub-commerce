@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectSneakers } from "../features/sneakersSlice";
 import { ISneaker } from "../interfaces";
@@ -82,34 +82,33 @@ const NameLeyd = styled.p``;
 const Reports = () => {
   //const sneakers = useSelector(selectSneakers);
   const sneakers = useSelector(selectSneakers);
-  const [mencount, setMenCount] = useState<ISneaker[]>();
-  const [womcount, setWomCount] = useState<ISneaker[]>();
 
   const [menporcentaje, setMenPorcentaje] = useState<number>(0);
   const [womporcentaje, setWomPorcentaje] = useState<number>(0);
 
-  useEffect(() => {
-    if (sneakers !== undefined) {
-      setMenCount(sneakers.filter((items) => items.genre === "MEN" && items));
-      setWomCount(sneakers.filter((items) => items.genre === "WOMAN" && items));
-    }
+  const sneakersmen = useMemo(() => {
+    return sneakers.filter((items) => items.genre === "MEN" && items);
+  }, [sneakers]);
+
+  const sneakerswoman = useMemo(() => {
+    return sneakers.filter((items) => items.genre === "WOMAN" && items);
   }, [sneakers]);
 
   useEffect(() => {
     if (
-      mencount !== undefined &&
-      womcount !== undefined &&
+      sneakersmen !== undefined &&
+      sneakerswoman !== undefined &&
       sneakers !== undefined
     ) {
       if (menporcentaje !== undefined && womporcentaje !== undefined) {
-        setMenPorcentaje((mencount?.length * 100) / sneakers.length);
-        setWomPorcentaje((womcount?.length * 100) / sneakers.length);
+        setMenPorcentaje((sneakersmen?.length * 100) / sneakers.length);
+        setWomPorcentaje((sneakerswoman?.length * 100) / sneakers.length);
       }
     }
-  }, [mencount, womcount]);
+  }, [sneakersmen, sneakerswoman]);
   if (
-    mencount === undefined &&
-    womcount === undefined &&
+    sneakersmen === undefined &&
+    sneakerswoman === undefined &&
     sneakers === undefined &&
     menporcentaje !== undefined &&
     womporcentaje !== undefined
