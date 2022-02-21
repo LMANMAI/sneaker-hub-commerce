@@ -65,6 +65,7 @@ const BodyContent: React.FC = () => {
       setContTemp(0);
     }
   }, [newBasketItemCount, basket]);
+
   return (
     <>
       <Link to="/">
@@ -95,7 +96,10 @@ const BodyContent: React.FC = () => {
           position="relative"
           width="100%"
         >
-          <Stack className="reflect"></Stack>
+          <Stack className="reflect">
+            <p>imagen</p>
+          </Stack>
+
           <Stack>
             <Text
               textTransform="uppercase"
@@ -139,7 +143,7 @@ const BodyContent: React.FC = () => {
             </Text>
           </Stack>
 
-          <Stack direction="row">
+          <Stack direction="row" justifyContent="center">
             <Stack
               direction="row"
               backgroundColor="gray.100"

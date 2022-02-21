@@ -4,12 +4,16 @@ import { useState, useEffect } from "react";
 interface ICarrouselProps {
   images?: string[];
 }
-
 const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
   const [selectedimage, setSelectedImage] = useState<string>();
   const [cursor, setCursorPosition] = useState({
     cursor_x: 0,
     cursor_y: 0,
+  });
+  const [backgroundProps, setBackgroundProps] = useState({
+    background: "",
+    size: "",
+    position: "",
   });
   useEffect(() => {
     if (images !== undefined) {
@@ -19,9 +23,11 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
 
   const img_container = document.querySelector(".img_container");
   const zoomer = document.querySelector(".cursorZoom");
+  const resultcontainer = document.querySelector(".reflect");
+  const image = document.querySelector(".img");
 
   const handleMove = (e: any) => {
-    if (img_container && zoomer) {
+    if (img_container && zoomer && resultcontainer && image) {
       let x =
         e.clientX -
         img_container.getBoundingClientRect().left -
@@ -53,8 +59,26 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
         cursor_x: x,
         cursor_y: y,
       });
+      let fx =
+        resultcontainer?.getBoundingClientRect().width /
+        zoomer.getBoundingClientRect().width;
+      let fy =
+        resultcontainer?.getBoundingClientRect().height /
+        zoomer.getBoundingClientRect().height;
+
+      resultcontainer.style.backgroundImage = `url(${image.src})`;
+      setBackgroundProps({
+        background: `url(${image?.src})`,
+        size: `${image?.getBoundingClientRect().width * fx}px ${
+          image.getBoundingClientRect().height * fy
+        }`,
+        position: `-${x * fx}px -${y * fy}px`,
+      });
+      resultcontainer.style.backgroundSize = backgroundProps.size;
+      resultcontainer.style.backgroundPosition = backgroundProps.position;
     }
   };
+
   return (
     <Stack alignItems="center" marginY={5}>
       <Stack
