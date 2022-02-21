@@ -92,7 +92,10 @@ const BodyContent: React.FC = () => {
           flex={1}
           spacing={6}
           textAlign={{ base: "center", md: "initial" }}
+          position="relative"
+          width="100%"
         >
+          <Stack className="reflect"></Stack>
           <Stack>
             <Text
               textTransform="uppercase"
@@ -114,7 +117,7 @@ const BodyContent: React.FC = () => {
           <Stack>
             <Stack spacing={4} direction="row" alignItems="center">
               <Text fontWeight={700} fontSize="2xl">
-                {sneakerActive?.price}
+                $ {sneakerActive?.price}
               </Text>
               <Badge
                 color="primary.500"
@@ -132,7 +135,7 @@ const BodyContent: React.FC = () => {
               color="gray.400"
               textDecoration="line-through"
             >
-              {sneakerActive && sneakerActive?.price * 2}
+              $ {sneakerActive && sneakerActive?.price * 2}
             </Text>
           </Stack>
 

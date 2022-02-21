@@ -188,9 +188,10 @@ a {
 }
 
 .reflect {
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   border: 1px solid red;
+  position: absolute;
 }
 
 .cursorZoom {
@@ -199,4 +200,9 @@ a {
   height: 150px;
   position: absolute;
   transition: all ease-in-out;
+  visibility: hidden;
+}
+
+.img_container :hover ~ .cursorZoom {
+  visibility: visible;
 }
