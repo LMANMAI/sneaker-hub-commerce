@@ -27,11 +27,11 @@ const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
   const basket = useSelector(selectBasket);
   if (!sneakerActive) return <NotFound />;
-
+  const [label, setLabel] = useState<string>("Add to cart");
   const [contador, setContador] = useState<number>(0);
   const [conttem, setContTemp] = useState<number>(0);
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const newcount = useMemo(() => {
     return sneakerActive.quantity;
   }, [contador, sneakerActive.quantity]);
@@ -41,6 +41,8 @@ const BodyContent: React.FC = () => {
   }, [basket]);
 
   const handleAddToBasket = (sneaker: ISneaker, typeBtn: string) => {
+    setLabel("Add to cart");
+
     if (typeBtn === "ADD") {
       for (let index = 0; index < conttem; index++) {
         dispatch(setBasket(sneaker));
@@ -53,9 +55,28 @@ const BodyContent: React.FC = () => {
     }
   };
 
-  const handleRemoveToBasket = () => {
-    dispatch(removeOnefromBasket(sneakerActive));
-    setContador(contador - 1);
+  const handleRemoveToBasket = (sneaker: ISneaker, typeBtn: string) => {
+    //dispatch(removeOnefromBasket(sneakerActive));
+    if (contador < 1) return;
+    setLabel("Remove from cart");
+    if (typeBtn === "REMOVE") {
+      for (let index = 0; index < conttem; index++) {
+        dispatch(removeOnefromBasket(sneaker));
+      }
+
+      setContTemp(0);
+    } else if (typeBtn === "REST") {
+      setContTemp(conttem + 1);
+      setContador(contador - 1);
+    }
+  };
+
+  const handleFunction = (
+    Fn?: Function,
+    sneaker?: ISneaker,
+    buttontypr?: string
+  ) => {
+    Fn(sneaker, buttontypr);
   };
   useEffect(() => {
     if (newBasketItemCount.length === 1) {
@@ -156,7 +177,7 @@ const BodyContent: React.FC = () => {
                 variant="ghost"
                 fontSize="2xl"
                 onClick={() => {
-                  handleRemoveToBasket();
+                  handleFunction(handleRemoveToBasket, sneakerActive, "REST");
                 }}
               >
                 -
@@ -179,7 +200,9 @@ const BodyContent: React.FC = () => {
                 size="md"
                 variant="ghost"
                 fontSize="2xl"
-                onClick={() => handleAddToBasket(sneakerActive, "PLUS")}
+                onClick={() => {
+                  handleFunction(handleAddToBasket, sneakerActive, "PLUS");
+                }}
               >
                 +
               </Button>
@@ -190,9 +213,17 @@ const BodyContent: React.FC = () => {
               leftIcon={<CartIcon color="#FFF" />}
               size="lg"
               fontSize="xs"
-              onClick={() => handleAddToBasket(sneakerActive, "ADD")}
+              onClick={() => {
+                label === "Add to cart"
+                  ? handleFunction(handleAddToBasket, sneakerActive, "ADD")
+                  : handleFunction(
+                      handleRemoveToBasket,
+                      sneakerActive,
+                      "REMOVE"
+                    );
+              }}
             >
-              Add to cart
+              {label}
             </Button>
           </Stack>
         </Stack>
