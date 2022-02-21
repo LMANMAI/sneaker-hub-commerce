@@ -21,10 +21,10 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
     }
   }, [images]);
 
-  const img_container = document.querySelector(".img_container");
-  const zoomer = document.querySelector(".cursorZoom");
-  const resultcontainer = document.querySelector(".reflect");
-  const image = document.querySelector(".img");
+  const img_container = document.querySelector<HTMLElement>(".img_container");
+  const zoomer = document.querySelector<HTMLElement>(".cursorZoom");
+  const resultcontainer = document.querySelector<HTMLElement>(".reflect");
+  const image = document.querySelector<HTMLImageElement>(".img");
 
   const handleMove = (e: any) => {
     if (img_container && zoomer && resultcontainer && image) {
