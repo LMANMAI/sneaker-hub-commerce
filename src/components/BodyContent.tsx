@@ -96,9 +96,7 @@ const BodyContent: React.FC = () => {
           position="relative"
           width="100%"
         >
-          <Stack className="reflect">
-            <p>imagen</p>
-          </Stack>
+          <Stack className="reflect" display="none"></Stack>
 
           <Stack>
             <Text

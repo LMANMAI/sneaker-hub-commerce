@@ -6,6 +6,7 @@ interface ICarrouselProps {
 }
 const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
   const [selectedimage, setSelectedImage] = useState<string>();
+  const [render, setRender] = useState<boolean>(false);
   const [cursor, setCursorPosition] = useState({
     cursor_x: 0,
     cursor_y: 0,
@@ -59,36 +60,43 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
         cursor_x: x,
         cursor_y: y,
       });
+      zoomer.style.left = x + "px";
+      zoomer.style.top = y + "px";
       let fx =
-        resultcontainer?.getBoundingClientRect().width /
+        resultcontainer.getBoundingClientRect().width /
         zoomer.getBoundingClientRect().width;
       let fy =
-        resultcontainer?.getBoundingClientRect().height /
+        resultcontainer.getBoundingClientRect().height /
         zoomer.getBoundingClientRect().height;
 
-      resultcontainer.style.backgroundImage = `url(${image.src})`;
       setBackgroundProps({
         background: `url(${image?.src})`,
         size: `${image?.getBoundingClientRect().width * fx}px ${
           image.getBoundingClientRect().height * fy
-        }`,
+        }px`,
         position: `-${x * fx}px -${y * fy}px`,
       });
+      resultcontainer.style.backgroundImage = backgroundProps.background;
       resultcontainer.style.backgroundSize = backgroundProps.size;
       resultcontainer.style.backgroundPosition = backgroundProps.position;
     }
+    setRender(true);
   };
-
+  useEffect(() => {
+    if (render && resultcontainer) {
+      resultcontainer.style.display = "block";
+    } else if (!render && resultcontainer) {
+      resultcontainer.style.display = "none";
+    }
+  }, [render]);
   return (
     <Stack alignItems="center" marginY={5}>
       <Stack
         position="relative"
         className="img_container"
-        border="1px solid"
         cursor="pointer"
-        //onMouseOut={() => console.log("ahora debera acoultarse")}
-        //onMouseMove={(e) => handleMove(e)}
         onMouseMoveCapture={handleMove}
+        onMouseLeave={() => setRender(false)}
       >
         <Image
           cursor="pointer"
