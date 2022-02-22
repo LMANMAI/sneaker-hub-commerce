@@ -54,10 +54,16 @@ interface IProps {
 
 const ProfileMenu: React.FC = () => {
   const [menu, setMenuPosition] = useState<boolean>(false);
-  const [height, setHeight] = useState<number>(0);
+  const [height, setHeight] = useState<number>();
   const menureflect = document.querySelector(".menu_container");
   const menumain = document.querySelector(".menu_main");
-
+  useEffect(() => {
+    if (!menu) {
+      setHeight(menumain?.getBoundingClientRect().height);
+    } else if (menu) {
+      setHeight(menureflect?.getBoundingClientRect().height);
+    }
+  }, [menu]);
   function ItemMenu(props: IProps) {
     return (
       <ListLink>
@@ -87,7 +93,7 @@ const ProfileMenu: React.FC = () => {
       boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
       borderRadius="15px"
       overflow="hidden"
-      minHeight="310px"
+      minHeight="330px"
       height={height}
       transition="height 250ms ease"
     >
