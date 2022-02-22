@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Grid, GridItem, Image } from "@chakra-ui/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ISneaker } from "../interfaces";
@@ -25,8 +25,11 @@ const Collections = () => {
 
   return (
     <Grid
-      templateColumns="repeat(auto-fit, minmax(210px, 1fr))"
-      gap={2}
+      templateColumns={{
+        base: "repeat(auto-fit, minmax(150px, 1fr))",
+        md: "repeat(auto-fit, minmax(210px, 1fr))",
+      }}
+      gap={4}
       placeItems="center"
     >
       {sneakersF.map((sneaker: ISneaker) => (
@@ -38,7 +41,7 @@ const Collections = () => {
           <GridItem
             padding={2}
             maxWidth="250px"
-            minHeight="280px"
+            minHeight="250px"
             height="100%"
             borderRadius="15px"
             textAlign="center"

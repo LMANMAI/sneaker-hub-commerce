@@ -76,7 +76,9 @@ const BodyContent: React.FC = () => {
     sneaker?: ISneaker,
     buttontypr?: string
   ) => {
-    Fn(sneaker, buttontypr);
+    if (Fn) {
+      Fn(sneaker, buttontypr);
+    }
   };
   useEffect(() => {
     if (newBasketItemCount.length === 1) {

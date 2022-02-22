@@ -1,34 +1,25 @@
-import { useEffect, useMemo } from "react";
-import { Stack, Image, Avatar, Icon, Text, Button } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Stack, Image, Icon, Text } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
-import avatar from "../assets/image-avatar.png";
-import cart from "../assets/icon-cart.svg";
-import MenuIcon from "../icons/MenuIcon";
-import CloseIcon from "../icons/CloseIcon";
-import RemoveIcon from "../icons/RemoveIcon";
+import { Cart, MenuIcon, CloseIcon } from "../icons";
+import { IoCaretDownOutline } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
-import { ISneaker } from "../interfaces";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
-  selectTotal,
   selectBasketQuantity,
   setSneaker,
-  setBasket,
-  removeOnefromBasket,
-  removeSneakerBasket,
-  selectSneakerActive,
 } from "../features/sneakersSlice";
+import { Basket, ProfileMenu } from "./";
+
 const Header = () => {
   const basket = useSelector(selectBasket);
-  const totalbasket = useSelector(selectTotal);
   const basketQ = useSelector(selectBasketQuantity);
-  const proyectoactivo = useSelector(selectSneakerActive);
   const dispatch = useDispatch();
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
+  const [profilemenu, setProfileMenuState] = useState<boolean>(false);
 
   useEffect(() => {
     const handleReq = async () => {
@@ -39,28 +30,19 @@ const Header = () => {
     handleReq();
   }, []);
 
-  const count = useMemo(() => {
-    return basket.filter((item) => item._id === proyectoactivo?._id);
-  }, [basket]);
-
-  const handleRemoveBasket = (sneaker: ISneaker) => {
-    if (sneaker.quantity < 1) return;
-    dispatch(removeOnefromBasket(sneaker));
-  };
-
-  const handleAddBasket = (sneaker: ISneaker) => {
-    dispatch(setBasket(sneaker));
-  };
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
     setBasketShows(value);
   };
+
   return (
     <Stack
       direction="row"
       justifyContent="space-between"
       alignItems="center"
+      h="60px"
       as="nav"
+      className="header"
     >
       <Stack direction="row" spacing={{ base: 4, md: 12 }} alignItems="center">
         <Stack
@@ -118,22 +100,38 @@ const Header = () => {
             <NavLink onClick={() => handleSwichtFilter(false)} to="/">
               Collections
             </NavLink>
-            <NavLink to={`/?gender=MEN`}>Men</NavLink>
-            <NavLink to={`/?gender=WOMAN`}>Woman</NavLink>
-            <NavLink onClick={() => setMenuPosition(false)} to="reports">
+            <NavLink to={`/?gender=MEN`} onClick={() => setMenuPosition(false)}>
+              Men
+            </NavLink>
+            <NavLink
+              to={`/?gender=WOMAN`}
+              onClick={() => setMenuPosition(false)}
+            >
+              Woman
+            </NavLink>
+            <NavLink
+              onClick={() => {
+                setMenuPosition(false);
+                setProfileMenuState(false);
+              }}
+              to="reports"
+            >
               Reports
             </NavLink>
           </Stack>
         </Stack>
       </Stack>
-      <Stack direction="row" spacing={6} alignItems="center">
+      <Stack direction="row" spacing={2} alignItems="center">
         <Stack>
           <Stack
             direction="row"
             cursor="pointer"
-            onClick={() => setBasketShows(!basketshows)}
+            onClick={() => {
+              setBasketShows(!basketshows);
+              setProfileMenuState(false);
+            }}
           >
-            <Image width={6} height={6} src={cart} />
+            <Icon as={Cart} width={`calc(60px * 0.8)`} height={6} />
             <Stack position="absolute">
               {basket.length > 0 && (
                 <Text
@@ -153,67 +151,21 @@ const Header = () => {
             </Stack>
           </Stack>
         </Stack>
-        <Avatar width={8} height={8} src={avatar} />
-      </Stack>
-      {basketshows ? (
-        <Stack
-          position="absolute"
-          border="1px solid #e9e9e9"
-          boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
-          right={{ base: "5%", md: "5%" }}
-          top={{ base: "5%", md: "12%" }}
-          transition="all 250ms ease"
-          backgroundColor="#FFF"
-          borderRadius="15px"
-          w={{ base: "90vw", md: "300px" }}
-          minHeight="200px"
-          p={6}
-          spacing={2}
-          zIndex="99"
-        >
-          {basket.length > 0 ? (
-            basket.map((sneaker, index) => (
-              <Stack direction="row" alignItems="center" key={index}>
-                <Image w="40px" h="40px" src={sneaker.posterPathImage} />
-                <Stack>
-                  <Text fontSize="12px">{sneaker.name}</Text>
-                  <Stack direction="row">
-                    <Text fontSize="12px">$ {sneaker.price}</Text>
-                    <Text fontSize="12px">x {sneaker.quantity}</Text>
-                    <Text fontSize="12px" fontWeight="bold">
-                      ${sneaker.price * sneaker.quantity}
-                    </Text>
-                  </Stack>
-                </Stack>
-                <Stack direction="row" w="20%" alignItems="center">
-                  <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
-
-                  <button onClick={() => handleAddBasket(sneaker)}>+</button>
-                  <Stack
-                    cursor="pointer"
-                    onClick={() => (
-                      dispatch(removeSneakerBasket(sneaker)),
-                      setTimeout(() => {
-                        setBasketShows(false);
-                      }, 1000)
-                    )}
-                  >
-                    <Icon as={RemoveIcon} />
-                  </Stack>
-                </Stack>
-              </Stack>
-            ))
-          ) : (
-            <p>Todavia no hay productos en el carrito</p>
-          )}
-          {totalbasket != 0 ? (
-            <>
-              <Text>Total: $ {totalbasket}</Text>
-              <Button colorScheme="primary">Checkout</Button>
-            </>
-          ) : null}
+        <Stack direction="row" spacing={0} alignItems="center">
+          <Icon
+            as={IoCaretDownOutline}
+            width={`calc(60px * 0.8)`}
+            height={4}
+            cursor="pointer"
+            onClick={() => {
+              setProfileMenuState(!profilemenu);
+              setBasketShows(false);
+            }}
+          />
         </Stack>
-      ) : null}
+      </Stack>
+      {profilemenu && <ProfileMenu />}
+      {basketshows ? <Basket Fn={setBasketShows} /> : null}
     </Stack>
   );
 };

@@ -5,17 +5,9 @@ html {
 }
 a {
   text-decoration: none;
-  padding: 10px 0;
   font-weight: bold;
   border: none;
   border-color: transparent;
-}
-
-@media (min-width: 768px) {
-  a {
-    text-decoration: none;
-    padding: 2rem 0;
-  }
 }
 
 .sub_board {
@@ -208,4 +200,11 @@ a {
 
 .img_container :hover ~ .cursorZoom {
   visibility: visible;
+}
+
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
 }

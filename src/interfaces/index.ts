@@ -12,6 +12,13 @@ export interface ISneaker {
   status: string;
   quantity: number;
 }
+export interface IProps {
+  height?: number | string;
+}
+export interface IPorcentaje {
+  menper?: number;
+  womper?: number;
+}
 
 export interface IProps {
   sneaker?: ISneaker;
