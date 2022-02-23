@@ -10,11 +10,13 @@ import {
   selectBasketQuantity,
   setSneaker,
 } from "../features/sneakersSlice";
+
 import { Basket, ProfileMenu } from "./";
 
 const Header = () => {
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
+
   const dispatch = useDispatch();
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);

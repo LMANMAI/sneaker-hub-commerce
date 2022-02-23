@@ -5,3 +5,5 @@ export { default as Layout } from "./Layout";
 export { default as Footer } from "./Footer";
 export { default as Basket } from "./Basket";
 export { default as ProfileMenu } from "./ProfileMenu";
+export { default as AuthComponent } from "./AuthComponent";
+export { default as ProtectedComponent } from "./ProtectedComponent";

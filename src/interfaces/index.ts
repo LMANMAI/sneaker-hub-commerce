@@ -30,3 +30,18 @@ export interface ISneakerState {
   total: number;
   basketQuantity: number;
 }
+
+export interface IUser {
+  firstName: string;
+  email: string;
+  password: string;
+  id?: string;
+  createdAt?: any;
+}
+
+export interface IUserState {
+  user: null | any;
+  autenticated: boolean;
+  menu_height: boolean;
+  error: string;
+}
