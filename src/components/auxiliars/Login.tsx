@@ -8,8 +8,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
   const [user, setUserM] = useState({
-    email: "",
-    password: "",
+    emaillog: "",
+    passwordlog: "",
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserM({
@@ -20,11 +20,13 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, user.email, user.password).then(
-        (userCredential) => {
-          dispatch(setUser(userCredential.user));
-        }
-      );
+      await signInWithEmailAndPassword(
+        auth,
+        user.emaillog,
+        user.passwordlog
+      ).then((userCredential) => {
+        dispatch(setUser(userCredential.user));
+      });
     } catch (error: any) {
       dispatch(setError(error.message));
       setTimeout(() => {
@@ -37,20 +39,20 @@ const Login = () => {
       {errorM && <p>{errorM}</p>}
       <h3>Inicia sesion</h3>
       <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-        <FormLabel htmlFor="email">Email</FormLabel>
+        <FormLabel htmlFor="emaillog">Email</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
-          name="email"
-          id="email"
+          name="emaillog"
+          id="emaillog"
           type="email"
         />
 
-        <FormLabel htmlFor="email">Password</FormLabel>
+        <FormLabel htmlFor="passwordlog">Password</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
-          name="password"
+          name="passwordlog"
           type="password"
-          id="password"
+          id="passwordlog"
         />
 
         <Button
@@ -61,7 +63,7 @@ const Login = () => {
           border="none"
           outline="none"
         >
-          Registrar
+          Entrar
         </Button>
       </FormControl>
     </Stack>

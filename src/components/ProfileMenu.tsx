@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import {
   Stack,
   Switch,
@@ -6,7 +7,6 @@ import {
   FormLabel,
   Avatar,
   Icon,
-  Button,
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
@@ -19,9 +19,8 @@ import {
   MdFavoriteBorder,
   MdShoppingBasket,
   MdOutlineExitToApp,
-  MdOutlineArrowBackIos,
 } from "react-icons/md";
-import { selectUser, selectMenuHeight, setLogOut } from "../features/userSlice";
+import { selectUser, setLogOut } from "../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { ProtectedComponent } from "./";
 import { signOut } from "firebase/auth";
@@ -67,34 +66,15 @@ interface IProps {
   iconleft?: any;
   iconRight?: any;
   children: React.ReactNode;
-  component?: string;
 }
 
-const ProfileMenu: React.FC = () => {
-  const [menu, setMenuPosition] = useState<boolean>(false);
-  const [height, setHeight] = useState<number>();
-  const [component, setComponent] = useState<string | undefined>("");
-
+const ProfileMenu = (props: { fn: Function }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const menu_login = useSelector(selectMenuHeight);
-  const menureflect = document.querySelector(".menu_container");
-  const menumain = document.querySelector(".menu_main");
-  useEffect(() => {
-    //console.log(menumain?.getBoundingClientRect().height);
-  }, [menu, menu_login]);
 
   function ItemMenu(props: IProps) {
     return (
-      <ListLink
-        onClick={() => {
-          setMenuPosition(!menu);
-          setComponent(props.component);
-          if (menureflect) {
-            setHeight(menureflect?.getBoundingClientRect().height);
-          }
-        }}
-      >
+      <ListLink>
         <Icon className="icon_button" as={props.iconleft} />
         {props.children}
         <Icon className="icon_right" as={props.iconRight} />
@@ -120,105 +100,78 @@ const ProfileMenu: React.FC = () => {
       transition="height 250ms ease"
       className="menu_main"
     >
-      {user ? (
-        <ProtectedComponent>
-          <Stack
-            backgroundColor="white"
-            position="absolute"
-            top="0px"
-            left="0px"
-            w="100%"
-            padding="1rem"
-            transition="all 350ms ease"
-            transform={menu ? "translateX(-110%)" : "translateX(0%)"}
-            className="menu_main"
-          >
-            <UnorderedList margin="0px">
-              <ListLink justifyContent="center">
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Avatar width={8} height={8} src={avatar} /> <p>My Profile</p>
-                </Stack>
-              </ListLink>
-              <hr />
-              <ListLink>
-                <Icon className="icon_button" as={MdFavoriteBorder} />
-                <span>Favorites</span>
-              </ListLink>
-              <ItemMenu
-                iconleft={MdShoppingBasket}
-                iconRight={MdOutlineArrowForwardIos}
-                component="mis ordenes"
-              >
-                <span> My orders</span>
-              </ItemMenu>
-
-              <ItemMenu
-                iconleft={MdSettings}
-                iconRight={MdOutlineArrowForwardIos}
-                component="mis configuraciones"
-              >
-                <span>Settings</span>
-              </ItemMenu>
-              <ListLink>
-                <FormControl display="flex" alignItems="center">
-                  <FormLabel ml="30px" mb="0">
-                    Dark mode
-                  </FormLabel>
-                  <Switch id="dark_mode" />
-                </FormControl>
-              </ListLink>
-              <ListLink
-                onClick={() => {
-                  signOut(auth).then(() => {
-                    dispatch(setLogOut());
-                  });
-                }}
-              >
-                <Icon className="icon_button" as={MdOutlineExitToApp} />
-                <span>Close</span>
-              </ListLink>
-            </UnorderedList>
-          </Stack>
-
-          <Stack
-            position="absolute"
-            backgroundColor="white"
-            top="0px"
-            left="0px"
-            w="100%"
-            padding="1rem"
-            transition="all 350ms ease"
-            transform={menu ? "translateX(0%)" : "translateX(110%)"}
-            className="menu_container"
-          >
-            <Button
-              variant="unstyled"
-              outline="none"
-              border="none"
-              onClick={() => {
-                setMenuPosition(false);
-                if (menumain) {
-                  setHeight(menumain?.getBoundingClientRect().height);
-                }
-                setComponent("");
-              }}
+      <Stack>
+        {user ? (
+          <ProtectedComponent>
+            <Stack
+              backgroundColor="white"
+              w="100%"
+              padding="1rem"
+              transition="all 350ms ease"
+              className="menu_main"
             >
-              <MdOutlineArrowBackIos />
-            </Button>
-            {component && (
-              <Stack>
-                <p>{component}</p>
-              </Stack>
-            )}
-          </Stack>
-        </ProtectedComponent>
-      ) : (
-        <AuthComponent />
-      )}
+              <UnorderedList margin="0px">
+                <ListLink justifyContent="center">
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Avatar width={8} height={8} src={avatar} />
+                    <p>My Profile</p>
+                  </Stack>
+                </ListLink>
+                <hr />
+                <Link onClick={() => props.fn(false)} to="/favorites">
+                  <ListLink>
+                    <Icon className="icon_button" as={MdFavoriteBorder} />
+                    <span>Favorites</span>
+                  </ListLink>
+                </Link>
+
+                <Link onClick={() => props.fn(false)} to="/orders">
+                  <ItemMenu
+                    iconleft={MdShoppingBasket}
+                    iconRight={MdOutlineArrowForwardIos}
+                  >
+                    <span> My orders</span>
+                  </ItemMenu>
+                </Link>
+
+                <Link onClick={() => props.fn(false)} to="/settings">
+                  <ItemMenu
+                    iconleft={MdSettings}
+                    iconRight={MdOutlineArrowForwardIos}
+                  >
+                    <span>Settings</span>
+                  </ItemMenu>
+                </Link>
+
+                <ListLink>
+                  <FormControl display="flex" alignItems="center">
+                    <FormLabel ml="30px" mb="0">
+                      Dark mode
+                    </FormLabel>
+                    <Switch id="dark_mode" />
+                  </FormControl>
+                </ListLink>
+                <ListLink
+                  onClick={() => {
+                    signOut(auth).then(() => {
+                      dispatch(setLogOut());
+                    });
+                  }}
+                >
+                  <Icon className="icon_button" as={MdOutlineExitToApp} />
+                  <span>Close</span>
+                </ListLink>
+              </UnorderedList>
+            </Stack>
+          </ProtectedComponent>
+        ) : (
+          <AuthComponent />
+        )}
+      </Stack>
     </Stack>
   );
 };

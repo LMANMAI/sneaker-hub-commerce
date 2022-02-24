@@ -40,11 +40,11 @@ const Register = () => {
       {errorM && <p>{errorM}</p>}
       <h3>registrate</h3>
       <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-        <FormLabel htmlFor="name">Name</FormLabel>
+        <FormLabel htmlFor="firstName">Name</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
           name="firstName"
-          id="name"
+          id="firstName"
           type="text"
         />
 

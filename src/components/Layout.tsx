@@ -5,7 +5,7 @@ interface ILayoutProps {
 }
 const Layout: React.FC<ILayoutProps> = ({ children }) => {
   return (
-    <Box minHeight="70vh" h="100%" marginTop={2} p={4}>
+    <Box height="fit-content" minHeight="100vh" marginTop={2} p={4}>
       {children}
     </Box>
   );

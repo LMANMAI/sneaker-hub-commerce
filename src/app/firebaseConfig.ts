@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+
+// console.log(import.meta.env.API_KEY);
 const firebaseConfig = {
   apiKey: "AIzaSyAA4kBMNLGsS4gqjq5eLdlgrElaRGuFm-A",
   authDomain: "fe-mentors.firebaseapp.com",

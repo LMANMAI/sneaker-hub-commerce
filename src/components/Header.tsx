@@ -166,7 +166,7 @@ const Header = () => {
           />
         </Stack>
       </Stack>
-      {profilemenu && <ProfileMenu />}
+      {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
       {basketshows ? <Basket Fn={setBasketShows} /> : null}
     </Stack>
   );

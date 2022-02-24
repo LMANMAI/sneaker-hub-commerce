@@ -29,6 +29,7 @@ export interface ISneakerState {
   sneakerActive: ISneaker | null;
   total: number;
   basketQuantity: number;
+  favorites: ISneaker[];
 }
 
 export interface IUser {

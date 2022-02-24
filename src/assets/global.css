@@ -208,3 +208,13 @@ ul {
 a {
   text-decoration: none;
 }
+
+.checkL .chakra-checkbox__label {
+  width: 100% !important;
+}
+.link_fav {
+  width: 100%;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
