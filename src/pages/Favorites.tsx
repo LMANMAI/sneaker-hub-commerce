@@ -1,60 +1,69 @@
-import { useState } from "react";
-import { Stack, Button, Image, Text, Checkbox, Select } from "@chakra-ui/react";
+import { doc, getDocs, collection, deleteDoc } from "firebase/firestore";
+import { Stack, Button, Image, Text } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  selectFavorites,
   removeFromFavorites,
+  clenFav,
+  setFavorites,
 } from "../features/sneakersSlice";
+import { db } from "../app/firebaseConfig";
+import { useEffect, useState } from "react";
+import { selectUser } from "../features/userSlice";
+
 const Favorites = () => {
-  const itemsFav = useSelector(selectFavorites);
   const dispatch = useDispatch();
+  const currentUser = useSelector(selectUser);
+  const docRef = collection(db, currentUser.uid);
+  const [itemsFav, setFavoritesF] = useState<any[]>();
 
-  const [checkedItems, setCheckedItems] = useState([false, false]);
+  const deleteFav = async (id: string) => {
+    const currentFav = doc(db, currentUser.uid, id);
+    await deleteDoc(currentFav);
+  };
 
-  const allChecked = checkedItems.every(Boolean);
-  const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getDocs(docRef);
+      setFavoritesF(
+        data.docs.map((doc) => ({ ...doc.data(), idColecction: doc.id }))
+      );
+      itemsFav?.map((item) => {
+        dispatch(setFavorites(item));
+      });
+    };
+    getData();
+  }, [itemsFav]);
 
   return (
     <Stack overflow="hidden">
-      <h1>Favorites </h1>
+      <Text as="h1" fontSize="2.125rem" fontWeight="bold">
+        Favorites{" "}
+      </Text>
       <Stack
         direction={{ base: "column", md: "row" }}
         h="100%"
         minHeight="50vh"
         p={2}
+        w="80%"
         backgroundColor="#e9e9e986"
         borderRadius="15px"
+        alignSelf="center"
+        justifyContent="center"
       >
-        <Stack width={{ base: "100%", md: "20%" }}>
-          <p>Ordenar por</p>
-          <Select>
-            <option value="option1">Mayor precio</option>
-            <option value="option2">Menor Precio</option>
-            <option value="option3">Articulos de Mujer</option>
-            <option value="option3">Articulos de Hombre</option>
-          </Select>
-        </Stack>
         <Stack
-          flex="2"
           p={2}
+          w="100%"
           overflow="hidden"
           overflowY="auto"
           maxHeight="80vh"
+          justifyContent="center"
         >
-          {itemsFav.length > 0 ? (
+          {itemsFav && itemsFav?.length > 0 ? (
             <>
-              <Stack w="100%" direction="row" justifyContent="space-between">
-                <Checkbox
-                  isChecked={allChecked}
-                  isIndeterminate={isIndeterminate}
-                  onChange={(e) =>
-                    setCheckedItems([e.target.checked, e.target.checked])
-                  }
-                >
-                  Eliminar Seleccionados
-                </Checkbox>
-                <Text>Favoritos {itemsFav.length}</Text>
+              <Stack direction="row" justifyContent="space-between">
+                <Button onClick={() => dispatch(clenFav())}>Delete all</Button>
+                <Text>Favorites {itemsFav?.length}</Text>
               </Stack>
 
               <Stack
@@ -63,27 +72,19 @@ const Favorites = () => {
                 overflowX="hidden"
                 paddingX={4}
               >
-                {itemsFav.map((item) => (
-                  <Stack key={item._id} direction="row">
-                    <Checkbox
-                      className="checkL"
-                      isChecked={false}
-                      onChange={(e) =>
-                        setCheckedItems([e.target.checked, false])
-                      }
-                    ></Checkbox>
-
+                {itemsFav?.map((item, index) => (
+                  <Stack key={index} direction="row">
                     <Stack
                       direction="row"
                       backgroundColor="white"
                       alignItems="center"
                       borderTop="1px solid #e4e4e4"
                       borderBottom="1px solid #e4e4e4"
-                      w="100% "
+                      w="100%"
                     >
                       <Link to={`/sneaker/${item?._id}`} className="link_fav">
-                        <Stack w="100%" maxWidth="130px" p="24px">
-                          <Image w="100%" src={item.posterPathImage} />
+                        <Stack maxWidth="130px" p="24px">
+                          <Image src={item.posterPathImage} />
                         </Stack>
                         <Stack p={2}>
                           <Text fontSize="12px">{item.name}</Text>
@@ -97,9 +98,12 @@ const Favorites = () => {
                         h="fit-content"
                         w="80px"
                         marginRight="20px!important"
-                        onClick={() => dispatch(removeFromFavorites(item))}
+                        onClick={() => {
+                          deleteFav(item.idColecction);
+                          dispatch(removeFromFavorites(item));
+                        }}
                       >
-                        Eliminar
+                        Delete
                       </Button>
                     </Stack>
                   </Stack>
@@ -107,7 +111,9 @@ const Favorites = () => {
               </Stack>
             </>
           ) : (
-            <p>Todavia no hay items favoritos</p>
+            <Text h="100%" w="100%" textAlign="center" justifySelf="center">
+              There are no favorite items yet.
+            </Text>
           )}
         </Stack>
       </Stack>

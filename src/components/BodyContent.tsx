@@ -1,4 +1,6 @@
-import { MdFavoriteBorder } from "react-icons/md";
+import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import { db } from "../app/firebaseConfig";
 import {
   Badge,
   Heading,
@@ -8,18 +10,46 @@ import {
   Box,
   Icon,
 } from "@chakra-ui/react";
+import { ISneaker } from "../interfaces";
 import PrevIcon from "../icons/PrevIcon";
 import { Carrousel, ButtonCount } from "./";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSneakerActive, setFavorites } from "../features/sneakersSlice";
+import {
+  selectSneakerActive,
+  selectFavorites,
+} from "../features/sneakersSlice";
+import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { NotFound } from "../pages";
+import { useEffect, useState } from "react";
 const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
   if (!sneakerActive) return <NotFound />;
+  const [toggle, setToggle] = useState<boolean>(false);
+  const itemsFav = useSelector(selectFavorites);
+  const currentUser = useSelector(selectUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleAddStore = async (sneaker: ISneaker) => {
+    const sneakerCollection = collection(db, currentUser?.uid);
+    try {
+      await addDoc(sneakerCollection, {
+        ...sneaker,
+        toggle: true,
+        idColecction: "",
+      });
+    } catch (error) {}
+  };
+  const deleteFav = async (id: string) => {
+    try {
+      const fav = doc(db, currentUser?.uid, id);
+      await deleteDoc(fav);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {}, []);
   return (
     <>
       <Stack
@@ -96,15 +126,33 @@ const BodyContent: React.FC = () => {
             </Stack>
           </Stack>
           <Stack direction="row-reverse" justifyContent="center">
-            <Button
-              fontSize="2xl"
-              fontWeight="bold"
-              color="primary.500"
-              size="lg"
-              onClick={() => dispatch(setFavorites(sneakerActive))}
-            >
-              <MdFavoriteBorder />
-            </Button>
+            {toggle ? (
+              <Button
+                fontSize="2xl"
+                fontWeight="bold"
+                color="primary.500"
+                size="lg"
+                onClick={() => {
+                  setToggle(false);
+                  deleteFav(sneakerActive._id);
+                }}
+              >
+                <MdFavorite />
+              </Button>
+            ) : (
+              <Button
+                fontSize="2xl"
+                fontWeight="bold"
+                color="primary.500"
+                size="lg"
+                onClick={() => {
+                  setToggle(true);
+                  handleAddStore(sneakerActive);
+                }}
+              >
+                <MdFavoriteBorder />
+              </Button>
+            )}
             <ButtonCount />
           </Stack>
         </Stack>

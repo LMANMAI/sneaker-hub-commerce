@@ -93,6 +93,9 @@ export const sneakerSlice = createSlice({
       );
       state.favorites = temFav;
     },
+    clenFav: (state) => {
+      state.favorites = [];
+    },
   },
 });
 export const {
@@ -103,6 +106,7 @@ export const {
   removeOnefromBasket,
   setFavorites,
   removeFromFavorites,
+  clenFav,
 } = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
