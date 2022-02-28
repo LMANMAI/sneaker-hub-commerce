@@ -11,7 +11,7 @@ export interface ISneaker {
   imgs: string[];
   status: string;
   quantity: number;
-  idColecction?: string;
+  idColecction: string;
 }
 export interface IProps {
   height?: number | string;
@@ -31,6 +31,7 @@ export interface ISneakerState {
   total: number;
   basketQuantity: number;
   favorites: ISneaker[];
+  id: string;
 }
 
 export interface IUser {

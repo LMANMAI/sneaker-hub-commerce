@@ -129,14 +129,14 @@ const ProfileMenu = (props: { fn: Function }) => {
                   </ListLink>
                 </Link>
 
-                <Link onClick={() => props.fn(false)} to="/orders">
+                {/* <Link onClick={() => props.fn(false)} to="/orders" >
                   <ItemMenu
                     iconleft={MdShoppingBasket}
                     iconRight={MdOutlineArrowForwardIos}
                   >
                     <span> My orders</span>
                   </ItemMenu>
-                </Link>
+                </Link> */}
 
                 <Link onClick={() => props.fn(false)} to="/settings">
                   <ItemMenu

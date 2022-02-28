@@ -6,35 +6,25 @@ import {
   removeFromFavorites,
   clenFav,
   setFavorites,
+  selectFavorites,
 } from "../features/sneakersSlice";
 import { db } from "../app/firebaseConfig";
 import { useEffect, useState } from "react";
 import { selectUser } from "../features/userSlice";
+import { ISneaker } from "../interfaces";
 
 const Favorites = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
-  const docRef = collection(db, currentUser.uid);
-  const [itemsFav, setFavoritesF] = useState<any[]>();
+  const favs = useSelector(selectFavorites);
+  const [itexmsFav, setFavoritesF] = useState<ISneaker[]>(favs);
 
   const deleteFav = async (id: string) => {
+    console.log("db: ", currentUser.uid, "item: ", id);
     const currentFav = doc(db, currentUser.uid, id);
     await deleteDoc(currentFav);
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getDocs(docRef);
-      setFavoritesF(
-        data.docs.map((doc) => ({ ...doc.data(), idColecction: doc.id }))
-      );
-      itemsFav?.map((item) => {
-        dispatch(setFavorites(item));
-      });
-    };
-    getData();
-  }, [itemsFav]);
-
+  console.log(itexmsFav);
   return (
     <Stack overflow="hidden">
       <Text as="h1" fontSize="2.125rem" fontWeight="bold">
@@ -59,11 +49,11 @@ const Favorites = () => {
           maxHeight="80vh"
           justifyContent="center"
         >
-          {itemsFav && itemsFav?.length > 0 ? (
+          {itexmsFav && itexmsFav?.length > 0 ? (
             <>
               <Stack direction="row" justifyContent="space-between">
                 <Button onClick={() => dispatch(clenFav())}>Delete all</Button>
-                <Text>Favorites {itemsFav?.length}</Text>
+                <Text>Favorites {itexmsFav?.length}</Text>
               </Stack>
 
               <Stack
@@ -72,7 +62,7 @@ const Favorites = () => {
                 overflowX="hidden"
                 paddingX={4}
               >
-                {itemsFav?.map((item, index) => (
+                {itexmsFav?.map((item, index) => (
                   <Stack key={index} direction="row">
                     <Stack
                       direction="row"
@@ -99,7 +89,7 @@ const Favorites = () => {
                         w="80px"
                         marginRight="20px!important"
                         onClick={() => {
-                          deleteFav(item.idColecction);
+                          deleteFav(item?._id);
                           dispatch(removeFromFavorites(item));
                         }}
                       >

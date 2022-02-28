@@ -17,6 +17,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   selectSneakerActive,
   selectFavorites,
+  setSneakerActive,
+  selectIDCollection,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -28,28 +30,37 @@ const BodyContent: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const itemsFav = useSelector(selectFavorites);
   const currentUser = useSelector(selectUser);
+  const id_collection = useSelector(selectIDCollection);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleAddStore = async (sneaker: ISneaker) => {
     const sneakerCollection = collection(db, currentUser?.uid);
+    if (sneaker._id === sneakerActive._id) {
+      setToggle(true);
+      return;
+    }
     try {
       await addDoc(sneakerCollection, {
         ...sneaker,
+        idColecction: id_collection,
         toggle: true,
-        idColecction: "",
       });
     } catch (error) {}
   };
   const deleteFav = async (id: string) => {
-    try {
-      const fav = doc(db, currentUser?.uid, id);
-      await deleteDoc(fav);
-    } catch (error) {
-      console.log(error);
+    let newSneaker = itemsFav.find((item) => id === sneakerActive.idColecction);
+    if (currentUser !== undefined && newSneaker === undefined) {
+      let favRem = doc(db, currentUser?.uid, id);
+      deleteDoc(favRem);
     }
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    let sneakerexist = itemsFav.find((item) => item._id === sneakerActive._id);
+    if (sneakerexist) {
+      setToggle(true);
+    }
+  }, [sneakerActive]);
   return (
     <>
       <Stack
@@ -126,7 +137,7 @@ const BodyContent: React.FC = () => {
             </Stack>
           </Stack>
           <Stack direction="row-reverse" justifyContent="center">
-            {toggle ? (
+            {currentUser && toggle ? (
               <Button
                 fontSize="2xl"
                 fontWeight="bold"
@@ -134,7 +145,7 @@ const BodyContent: React.FC = () => {
                 size="lg"
                 onClick={() => {
                   setToggle(false);
-                  deleteFav(sneakerActive._id);
+                  deleteFav(sneakerActive.idColecction);
                 }}
               >
                 <MdFavorite />

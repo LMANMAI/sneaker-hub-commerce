@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Grid, GridItem, Image } from "@chakra-ui/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ISneaker } from "../interfaces";
@@ -8,7 +8,7 @@ import {
   setSneakerActive,
 } from "../features/sneakersSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { filterByGender } from "../app/helper";
+import { filterByBrand, filterByGender } from "../app/helper";
 
 const Collections = () => {
   const dispatch = useDispatch();
@@ -17,12 +17,18 @@ const Collections = () => {
 
   let [searchParams] = useSearchParams();
   let gender = searchParams.get("gender");
-
+  let brand = searchParams.get("brand");
   const sneakersF = useMemo(() => {
-    if (!gender) return sneakers;
-    return filterByGender(sneakers, gender);
-  }, [gender, sneakers]);
-
+    if (!gender && !brand) return sneakers;
+    else if (gender) {
+      return filterByGender(sneakers, gender);
+    } else if (brand) {
+      return filterByBrand(sneakers, brand);
+    }
+  }, [gender, sneakers, brand]);
+  useEffect(() => {
+    dispatch(setSneakerActive(null));
+  }, []);
   return (
     <Grid
       templateColumns={{
@@ -32,26 +38,27 @@ const Collections = () => {
       gap={4}
       placeItems="center"
     >
-      {sneakersF.map((sneaker: ISneaker) => (
-        <Link
-          to={`/sneaker/${sneakerActive?._id}`}
-          key={sneaker._id}
-          onClick={() => dispatch(setSneakerActive(sneaker))}
-        >
-          <GridItem
-            padding={2}
-            maxWidth="250px"
-            minHeight="250px"
-            height="100%"
-            borderRadius="15px"
-            textAlign="center"
-            boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+      {sneakersF &&
+        sneakersF?.map((sneaker: ISneaker) => (
+          <Link
+            to={`/sneaker/${sneakerActive?._id}`}
+            key={sneaker._id}
+            onClick={() => dispatch(setSneakerActive(sneaker))}
           >
-            <Image src={sneaker.posterPathImage} />
-            <p>{sneaker.name}</p>
-          </GridItem>
-        </Link>
-      ))}
+            <GridItem
+              padding={2}
+              maxWidth="250px"
+              minHeight="250px"
+              height="100%"
+              borderRadius="15px"
+              textAlign="center"
+              boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+            >
+              <Image src={sneaker.posterPathImage} />
+              <p>{sneaker.name}</p>
+            </GridItem>
+          </Link>
+        ))}
     </Grid>
   );
 };
