@@ -1,9 +1,8 @@
 import { Stack, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
 import { useState } from "react";
-import { setUser, setError, selectError } from "../../features/userSlice";
+import { setError, selectError } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { auth } from "../../app/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { authClient } from "../../controllers/Sesion";
 const Register = () => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
@@ -20,20 +19,15 @@ const Register = () => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await createUserWithEmailAndPassword(
-        auth,
-        user.email,
-        user.password
-      ).then((userCredential) => {
-        dispatch(setUser(userCredential.user));
-      });
-    } catch (error: any) {
-      dispatch(setError(error?.message));
-      setTimeout(() => {
-        dispatch(setError(""));
-      }, 2000);
-    }
+    authClient(user).then((res) => {
+      if (res === "Correcto") {
+        dispatch(setError("usuario registrado correctamente :)"));
+      } else if (res === "in_use") {
+        dispatch(setError("email ya registrado"));
+      } else if (res === "password") {
+        dispatch(setError("password incorrecto"));
+      }
+    });
   };
   return (
     <Stack h="100%" p={4}>

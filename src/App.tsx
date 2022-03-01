@@ -9,47 +9,55 @@ import {
   selectFavorites,
   setIDCollection,
 } from "./features/sneakersSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./app/firebaseConfig";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, onSnapshot, query } from "firebase/firestore";
+import { ISneaker } from "./interfaces";
 
 function App() {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   const favs = useSelector(selectFavorites);
+  const [favsdata, setDataFav] = useState<any[]>([]);
 
+  // const getData = async (id: string) => {
+  //   const docRef = collection(db, id);
+  //   const data = await getDocs(docRef);
+  //   let itemsFav = data.docs.map((doc) => ({
+  //     ...doc.data(),
+  //     toggle: true,
+  //   }));
+
+  //   itemsFav?.map((item) => {
+  //     dispatch(setFavorites(item));
+  //   });
+  // };
   const getData = async (id: string) => {
-    const docRef = collection(db, id);
-    const data = await getDocs(docRef);
-    let itemsFav = data.docs.map((doc) => ({
-      ...doc.data(),
-      idColecction: doc.id,
-      toggle: true,
-    }));
-
-    itemsFav?.map((item) => {
-      dispatch(setFavorites(item));
-      dispatch(setIDCollection(item.idColecction));
+    const q = await query(collection(db, id));
+    await onSnapshot(q, (querySnapshot) => {
+      setDataFav(
+        querySnapshot.docs.map((doc) => ({
+          favsdata: doc.data(),
+        }))
+      );
     });
   };
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(setUser(user));
-        getData(user.uid);
+        if (typeof user?.uid === "string") {
+          getData(user?.uid);
+        }
+        console.log(favsdata);
       } else {
         dispatch(setUser(null));
       }
     });
-
     return unsubscribe();
   }, []);
-
-  useEffect(() => {
-    getData(currentUser?.uid);
-  }, [favs]);
+  useEffect(() => {}, []);
 
   return (
     <Container maxWidth="container.xl" position="relative">

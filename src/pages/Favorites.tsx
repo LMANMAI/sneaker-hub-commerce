@@ -20,11 +20,9 @@ const Favorites = () => {
   const [itexmsFav, setFavoritesF] = useState<ISneaker[]>(favs);
 
   const deleteFav = async (id: string) => {
-    console.log("db: ", currentUser.uid, "item: ", id);
     const currentFav = doc(db, currentUser.uid, id);
     await deleteDoc(currentFav);
   };
-  console.log(itexmsFav);
   return (
     <Stack overflow="hidden">
       <Text as="h1" fontSize="2.125rem" fontWeight="bold">

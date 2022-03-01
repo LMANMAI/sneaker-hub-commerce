@@ -6,6 +6,7 @@ import {
   MyOrders,
   Settings,
   Favorites,
+  Verification,
 } from "../pages";
 import { ProtectedComponent } from "../components";
 import { BodyContent } from "../components";
@@ -16,7 +17,7 @@ const RoutesComponent = () => {
       <Route path="/" element={<Collections />} />
       <Route path="/sneaker/:id" element={<BodyContent />} />
       <Route path="/reports" element={<Reports />} />
-
+      <Route path="/checkverification" element={<Verification />} />
       <Route
         path="/settings"
         element={

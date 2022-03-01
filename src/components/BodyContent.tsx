@@ -19,6 +19,7 @@ import {
   selectFavorites,
   setSneakerActive,
   selectIDCollection,
+  removeFromFavorites,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -36,25 +37,24 @@ const BodyContent: React.FC = () => {
 
   const handleAddStore = async (sneaker: ISneaker) => {
     const sneakerCollection = collection(db, currentUser?.uid);
-    if (sneaker._id === sneakerActive._id) {
-      setToggle(true);
-      return;
-    }
+    console.log("agrego");
     try {
       await addDoc(sneakerCollection, {
         ...sneaker,
-        idColecction: id_collection,
         toggle: true,
       });
     } catch (error) {}
   };
-  const deleteFav = async (id: string) => {
-    let newSneaker = itemsFav.find((item) => id === sneakerActive.idColecction);
+  const deleteFav = async (sneaker: ISneaker) => {
+    console.log("saco");
+    let newSneaker = itemsFav.find((item) => sneaker._id === sneakerActive._id);
     if (currentUser !== undefined && newSneaker === undefined) {
-      let favRem = doc(db, currentUser?.uid, id);
+      let favRem = doc(db, currentUser?.uid, sneaker._id);
+      dispatch(removeFromFavorites(sneaker));
       deleteDoc(favRem);
     }
   };
+
   useEffect(() => {
     let sneakerexist = itemsFav.find((item) => item._id === sneakerActive._id);
     if (sneakerexist) {
@@ -145,7 +145,7 @@ const BodyContent: React.FC = () => {
                 size="lg"
                 onClick={() => {
                   setToggle(false);
-                  deleteFav(sneakerActive.idColecction);
+                  deleteFav(sneakerActive);
                 }}
               >
                 <MdFavorite />

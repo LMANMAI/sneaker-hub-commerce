@@ -230,8 +230,7 @@ const Header = () => {
                   transition="transform 250ms ease"
                   _hover={{
                     transform: "scale(1.05)",
-                  }}
-                  onClick={() => console.log(item.name)}
+                  }}  
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
