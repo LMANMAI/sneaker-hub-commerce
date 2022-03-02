@@ -14,7 +14,6 @@ function App(props: any) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //const token = localStorage.setItem("idCliente", user?.idCliente);
     const token = localStorage.getItem("idCliente");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user?.uid === token) {

@@ -1,16 +1,30 @@
-import { Stack, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  Stack,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Text,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
 import { setError, selectError } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { authClient } from "../../controllers/Sesion";
-const Register = () => {
+import { CheckView } from "./";
+interface IPropsFn {
+  fn: Function;
+}
+const Register: React.FC<IPropsFn> = ({ fn }) => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
+
+  const [check, setCheck] = useState<boolean>(false);
   const [user, setUserRegister] = useState({
     firstName: "",
-    email: "",
-    password: "",
+    emailr: "",
+    passwordr: "",
   });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserRegister({
       ...user,
@@ -21,54 +35,97 @@ const Register = () => {
     e.preventDefault();
     authClient(user).then((res) => {
       if (res === "Correcto") {
-        dispatch(setError("usuario registrado correctamente :)"));
+        setCheck(true);
+        setTimeout(() => {
+          setCheck(false);
+        }, 1000);
+        setUserRegister({
+          firstName: "",
+          emailr: "",
+          passwordr: "",
+        });
       } else if (res === "in_use") {
+        setCheck(false);
         dispatch(setError("email ya registrado"));
       } else if (res === "password") {
+        setCheck(false);
         dispatch(setError("password incorrecto"));
       }
     });
+    setTimeout(() => {
+      dispatch(setError(""));
+      setCheck(false);
+    }, 1000);
   };
   return (
     <Stack h="100%" p={4}>
-      {errorM && <p>{errorM}</p>}
-      <h3>registrate</h3>
-      <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-        <FormLabel htmlFor="firstName">Name</FormLabel>
-        <Input
-          onChange={(e) => handleChange(e)}
-          name="firstName"
-          id="firstName"
-          type="text"
-        />
-
-        <FormLabel htmlFor="email">Email</FormLabel>
-        <Input
-          onChange={(e) => handleChange(e)}
-          name="email"
-          id="email"
-          type="email"
-        />
-
-        <FormLabel htmlFor="password">Password</FormLabel>
-        <Input
-          onChange={(e) => handleChange(e)}
-          name="password"
-          type="password"
-          id="password"
-        />
-
-        <Button
-          colorScheme="primary"
-          type="submit"
-          mt={6}
-          w="100%"
-          border="none"
-          outline="none"
+      {errorM && (
+        <Text
+          textAlign="center"
+          fontSize="13px"
+          backgroundColor="#e4e4e4"
+          borderRadius="14px"
+          textTransform="initial"
+          p={2}
         >
-          Registrar
-        </Button>
-      </FormControl>
+          {errorM}
+        </Text>
+      )}
+
+      {check ? (
+        <CheckView />
+      ) : (
+        <>
+          <Text as="h3" textAlign="center" fontWeight="bold">
+            Don't have an account?
+          </Text>
+          <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
+            <FormLabel htmlFor="firstName">Name</FormLabel>
+            <Input
+              onChange={(e) => handleChange(e)}
+              name="firstName"
+              id="firstName"
+              type="text"
+            />
+
+            <FormLabel htmlFor="emailr">Email</FormLabel>
+            <Input
+              onChange={(e) => handleChange(e)}
+              name="emailr"
+              id="emailr"
+              type="email"
+            />
+
+            <FormLabel htmlFor="passwordr">Password</FormLabel>
+            <Input
+              onChange={(e) => handleChange(e)}
+              name="passwordr"
+              type="password"
+              id="passwordr"
+            />
+            <Text fontSize="13px" textAlign="center">
+              Do you already have an account?
+              <Button
+                variant="unstyled"
+                size="fit-content"
+                onClick={() => fn(false)}
+              >
+                log in
+              </Button>
+            </Text>
+            <Button
+              colorScheme="primary"
+              type="submit"
+              mt={2}
+              w="100%"
+              border="none"
+              outline="none"
+            >
+              Registrar
+            </Button>
+          </FormControl>
+        </>
+      )}
     </Stack>
   );
 };

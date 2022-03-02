@@ -2,7 +2,6 @@ import {
   applyActionCode,
   checkActionCode,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   sendEmailVerification,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -24,7 +23,6 @@ export const registerClient = async (
   clientID: string,
   clientToken: string
 ) => {
-  console.log("cliente id", clientID);
   try {
     await setDoc(doc(db, collecion, clientID), {
       email: formData.email,
@@ -33,6 +31,7 @@ export const registerClient = async (
       confirmacion: false,
       rol: "cliente",
       idToken: clientToken,
+      idUser: clientID,
     });
   } catch (error) {
     console.log("Error registrando el usuario");

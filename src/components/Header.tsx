@@ -10,6 +10,7 @@ import {
   selectBasketQuantity,
   setSneaker,
 } from "../features/sneakersSlice";
+import { selectUser } from "../features/userSlice";
 
 import { Basket, ProfileMenu } from "./";
 const brands = [
@@ -49,6 +50,7 @@ const brands = [
 const Header = () => {
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
+  const currentUser = useSelector(selectUser);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   ///states
@@ -152,15 +154,17 @@ const Header = () => {
               >
                 Woman
               </NavLink>
-              <NavLink
-                onClick={() => {
-                  setMenuPosition(false);
-                  setProfileMenuState(false);
-                }}
-                to="reports"
-              >
-                Reports
-              </NavLink>
+              {currentUser && (
+                <NavLink
+                  onClick={() => {
+                    setMenuPosition(false);
+                    setProfileMenuState(false);
+                  }}
+                  to="reports"
+                >
+                  Reports
+                </NavLink>
+              )}
             </Stack>
           </Stack>
         </Stack>
@@ -230,7 +234,7 @@ const Header = () => {
                   transition="transform 250ms ease"
                   _hover={{
                     transform: "scale(1.05)",
-                  }}  
+                  }}
                   display="flex"
                   justifyContent="center"
                   alignItems="center"

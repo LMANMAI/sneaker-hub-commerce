@@ -1,23 +1,29 @@
-import { Stack, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import {
+  Stack,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Text,
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import {
   setUser,
   setError,
   selectError,
-  setIdUSer,
   selectUser,
 } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getUserAuth,
-  signAuthUser,
-  clientOnState,
-} from "../../controllers/Sesion";
+import { getUserAuth, signAuthUser } from "../../controllers/Sesion";
+
 interface IUserVerified {
   idUsuario: string;
   token: any;
 }
-const Login = (props: any) => {
+interface IProps {
+  fn: Function;
+}
+const Login: React.FC<IProps> = (props, { fn, setCheck }) => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
   const current_user = useSelector(selectUser);
@@ -26,9 +32,6 @@ const Login = (props: any) => {
     password: "",
   });
   const [userverificated, setUserVerificated] = useState<any>();
-  const [statenotif, setStateNotif] = useState<boolean>(false);
-  const [massagenotif, setMessage] = useState<string>("");
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserM({
@@ -41,12 +44,14 @@ const Login = (props: any) => {
       (async () => {
         const userDB = await getUserAuth(userverificated);
         localStorage.setItem("idCliente", userDB?.idCliente);
-        console.log(userDB);
         dispatch(setUser(userDB));
       })();
     }
+    setTimeout(() => {
+      dispatch(setError(""));
+    }, 1000);
     setUserVerificated(null);
-  }, [userverificated, current_user, props.history]);
+  }, [userverificated, current_user]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,14 +59,11 @@ const Login = (props: any) => {
       if (typeof res !== "string") {
         setUserVerificated(res);
       } else if (res === "contraseñaIncorreta") {
-        setStateNotif(true);
-        setMessage("Contraseña incorrecta");
+        dispatch(setError("Contraseña incorrecta"));
       } else if (res === "noverificado") {
-        setStateNotif(true);
-        setMessage("Necesitas verificar el correo");
+        dispatch(setError("Necesitas verificar el correo"));
       } else {
-        setStateNotif(true);
-        setMessage("Hay un error");
+        dispatch(setError("Hay un error"));
       }
       setUserM({
         email: "",
@@ -72,8 +74,21 @@ const Login = (props: any) => {
 
   return (
     <Stack h="100%" p={4}>
-      {errorM && <p>{errorM}</p>}
-      <h3>Inicia sesion</h3>
+      {errorM && (
+        <Text
+          textAlign="center"
+          fontSize="13px"
+          backgroundColor="#e4e4e4"
+          borderRadius="14px"
+          textTransform="initial"
+          p={2}
+        >
+          {errorM}
+        </Text>
+      )}
+      <Text as="h3" textAlign="center" fontWeight="bold">
+        Log in
+      </Text>
       <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
         <FormLabel htmlFor="email">Email</FormLabel>
         <Input
@@ -90,11 +105,20 @@ const Login = (props: any) => {
           type="password"
           id="password"
         />
-
+        <Text fontSize="13px" textAlign="center" alignItems="center">
+          You do not have an account?
+          <Button
+            variant="unstyled"
+            size="fit-content"
+            onClick={() => props.fn(true)}
+          >
+            register
+          </Button>
+        </Text>
         <Button
           colorScheme="primary"
           type="submit"
-          mt={6}
+          mt={2}
           w="100%"
           border="none"
           outline="none"

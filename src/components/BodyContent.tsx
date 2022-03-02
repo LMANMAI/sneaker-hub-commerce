@@ -1,6 +1,4 @@
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../app/firebaseConfig";
 import {
   Badge,
   Heading,
@@ -13,54 +11,42 @@ import {
 import { ISneaker } from "../interfaces";
 import PrevIcon from "../icons/PrevIcon";
 import { Carrousel, ButtonCount } from "./";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  selectSneakerActive,
-  selectFavorites,
-  setSneakerActive,
-  selectIDCollection,
-  removeFromFavorites,
-} from "../features/sneakersSlice";
+import { useSelector } from "react-redux";
+import { selectSneakerActive } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-import { NotFound } from "../pages";
 import { useEffect, useState } from "react";
-const BodyContent: React.FC = () => {
-  const sneakerActive = useSelector(selectSneakerActive);
-  if (!sneakerActive) return <NotFound />;
-  const [toggle, setToggle] = useState<boolean>(false);
-  const itemsFav = useSelector(selectFavorites);
-  const currentUser = useSelector(selectUser);
-  const id_collection = useSelector(selectIDCollection);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+import { checkFavs, removeFav } from "../controllers/Products";
 
-  const handleAddStore = async (sneaker: ISneaker) => {
-    const sneakerCollection = collection(db, currentUser?.uid);
-    console.log("agrego");
-    try {
-      await addDoc(sneakerCollection, {
-        ...sneaker,
-        toggle: true,
-      });
-    } catch (error) {}
+const BodyContent = () => {
+  const sneakerActive = useSelector(selectSneakerActive);
+  const navigate = useNavigate();
+  if (!sneakerActive) return navigate("/");
+
+  const [toggle, setToggle] = useState<boolean>(false);
+  const [showmessage, setShowMessage] = useState<boolean>(false);
+  const currentUser = useSelector(selectUser);
+
+  const handleAddStore = async (user: any, sneaker: ISneaker) => {
+    const res = await checkFavs(user, sneaker);
+    setToggle(true);
+    if (res === "existe") {
+      // setToggle(true);
+    }
   };
   const deleteFav = async (sneaker: ISneaker) => {
     console.log("saco");
-    let newSneaker = itemsFav.find((item) => sneaker._id === sneakerActive._id);
-    if (currentUser !== undefined && newSneaker === undefined) {
-      let favRem = doc(db, currentUser?.uid, sneaker._id);
-      dispatch(removeFromFavorites(sneaker));
-      deleteDoc(favRem);
-    }
+    setToggle(false);
+    removeFav(currentUser, sneaker);
   };
 
   useEffect(() => {
-    let sneakerexist = itemsFav.find((item) => item._id === sneakerActive._id);
-    if (sneakerexist) {
-      setToggle(true);
+    if (showmessage) {
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 2000);
     }
-  }, [sneakerActive]);
+  }, [showmessage]);
   return (
     <>
       <Stack
@@ -136,35 +122,50 @@ const BodyContent: React.FC = () => {
               </Badge>
             </Stack>
           </Stack>
-          <Stack direction="row-reverse" justifyContent="center">
-            {currentUser && toggle ? (
-              <Button
-                fontSize="2xl"
-                fontWeight="bold"
-                color="primary.500"
-                size="lg"
-                onClick={() => {
-                  setToggle(false);
-                  deleteFav(sneakerActive);
-                }}
-              >
-                <MdFavorite />
-              </Button>
-            ) : (
-              <Button
-                fontSize="2xl"
-                fontWeight="bold"
-                color="primary.500"
-                size="lg"
-                onClick={() => {
-                  setToggle(true);
-                  handleAddStore(sneakerActive);
-                }}
-              >
-                <MdFavoriteBorder />
-              </Button>
+
+          <Stack alignItems="center">
+            {showmessage && (
+              <Text>Necesitas tener cuenta para agregarlo a favoritos</Text>
             )}
-            <ButtonCount />
+            <Stack direction="row-reverse" justifyContent="center">
+              {currentUser && toggle ? (
+                <Button
+                  fontSize="2xl"
+                  fontWeight="bold"
+                  color="primary.500"
+                  size="lg"
+                  onClick={() => {
+                    if (!currentUser) {
+                      setShowMessage(true);
+                      return;
+                    } else {
+                      deleteFav(sneakerActive);
+                    }
+                  }}
+                >
+                  <MdFavorite />
+                </Button>
+              ) : (
+                <Button
+                  fontSize="2xl"
+                  fontWeight="bold"
+                  color="primary.500"
+                  size="lg"
+                  onClick={() => {
+                    if (!currentUser) {
+                      setShowMessage(true);
+                      return;
+                    } else {
+                      handleAddStore(currentUser, sneakerActive);
+                    }
+                  }}
+                >
+                  <MdFavoriteBorder />
+                </Button>
+              )}
+
+              <ButtonCount />
+            </Stack>
           </Stack>
         </Stack>
       </Stack>
