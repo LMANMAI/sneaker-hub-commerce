@@ -1,58 +1,94 @@
 import { Stack, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
-import { useState } from "react";
-import { setUser, setError, selectError } from "../../features/userSlice";
+import { useEffect, useState } from "react";
+import {
+  setUser,
+  setError,
+  selectError,
+  setIdUSer,
+  selectUser,
+} from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { auth } from "../../app/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
-const Login = () => {
+import {
+  getUserAuth,
+  signAuthUser,
+  clientOnState,
+} from "../../controllers/Sesion";
+interface IUserVerified {
+  idUsuario: string;
+  token: any;
+}
+const Login = (props: any) => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
+  const current_user = useSelector(selectUser);
   const [user, setUserM] = useState({
-    emaillog: "",
-    passwordlog: "",
+    email: "",
+    password: "",
   });
+  const [userverificated, setUserVerificated] = useState<any>();
+  const [statenotif, setStateNotif] = useState<boolean>(false);
+  const [massagenotif, setMessage] = useState<string>("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setUserM({
       ...user,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(
-        auth,
-        user.emaillog,
-        user.passwordlog
-      ).then((userCredential) => {
-        dispatch(setUser(userCredential.user));
-      });
-    } catch (error: any) {
-      dispatch(setError(error.message));
-      setTimeout(() => {
-        dispatch(setError(""));
-      }, 2000);
+  useEffect(() => {
+    if (userverificated) {
+      (async () => {
+        const userDB = await getUserAuth(userverificated);
+        localStorage.setItem("idCliente", userDB?.idCliente);
+        console.log(userDB);
+        dispatch(setUser(userDB));
+      })();
     }
+    setUserVerificated(null);
+  }, [userverificated, current_user, props.history]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    signAuthUser(user).then((res) => {
+      if (typeof res !== "string") {
+        setUserVerificated(res);
+      } else if (res === "contraseñaIncorreta") {
+        setStateNotif(true);
+        setMessage("Contraseña incorrecta");
+      } else if (res === "noverificado") {
+        setStateNotif(true);
+        setMessage("Necesitas verificar el correo");
+      } else {
+        setStateNotif(true);
+        setMessage("Hay un error");
+      }
+      setUserM({
+        email: "",
+        password: "",
+      });
+    });
   };
+
   return (
     <Stack h="100%" p={4}>
       {errorM && <p>{errorM}</p>}
       <h3>Inicia sesion</h3>
       <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-        <FormLabel htmlFor="emaillog">Email</FormLabel>
+        <FormLabel htmlFor="email">Email</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
-          name="emaillog"
-          id="emaillog"
+          name="email"
+          id="email"
           type="email"
         />
 
-        <FormLabel htmlFor="passwordlog">Password</FormLabel>
+        <FormLabel htmlFor="password">Password</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
-          name="passwordlog"
+          name="password"
           type="password"
-          id="passwordlog"
+          id="password"
         />
 
         <Button

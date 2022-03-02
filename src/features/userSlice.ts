@@ -7,6 +7,7 @@ const initialState: IUserState = {
   autenticated: false,
   menu_height: false,
   error: "",
+  id_user: "",
 };
 
 export const userSlice = createSlice({
@@ -15,7 +16,6 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
-      state.autenticated = true;
     },
     setLogOut: (state) => {
       state.user = null;
@@ -27,12 +27,16 @@ export const userSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+    setIdUSer: (state, action: PayloadAction<any>) => {
+      state.id_user = action.payload;
+    },
   },
 });
-export const { setUser, setLogOut, setMenuHeight, setError } =
+export const { setUser, setLogOut, setMenuHeight, setError, setIdUSer } =
   userSlice.actions;
 export const selectUser = (state: RootState) => state.user.user;
 export const selectAutenticated = (state: RootState) => state.user.autenticated;
 export const selectMenuHeight = (state: RootState) => state.user.menu_height;
 export const selectError = (state: RootState) => state.user.error;
+export const selectIDUSer = (state: RootState) => state.user.id_user;
 export default userSlice.reducer;

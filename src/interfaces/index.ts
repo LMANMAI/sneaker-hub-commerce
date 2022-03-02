@@ -47,4 +47,5 @@ export interface IUserState {
   autenticated: boolean;
   menu_height: boolean;
   error: string;
+  id_user: any;
 }

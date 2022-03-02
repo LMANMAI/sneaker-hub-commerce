@@ -118,7 +118,7 @@ const ProfileMenu = (props: { fn: Function }) => {
                     justifyContent="center"
                   >
                     <Avatar width={8} height={8} src={avatar} />
-                    <p>My Profile</p>
+                    <p>{user.firstName}</p>
                   </Stack>
                 </ListLink>
                 <hr />
