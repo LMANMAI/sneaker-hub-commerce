@@ -15,13 +15,12 @@ import { useSelector } from "react-redux";
 import { selectSneakerActive } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { checkFavs, removeFav } from "../controllers/Products";
 
-const BodyContent = () => {
+const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
   const navigate = useNavigate();
-  if (!sneakerActive) return navigate("/");
 
   const [toggle, setToggle] = useState<boolean>(false);
   const [showmessage, setShowMessage] = useState<boolean>(false);
@@ -138,7 +137,7 @@ const BodyContent = () => {
                     if (!currentUser) {
                       setShowMessage(true);
                       return;
-                    } else {
+                    } else if (sneakerActive) {
                       deleteFav(sneakerActive);
                     }
                   }}
@@ -155,7 +154,7 @@ const BodyContent = () => {
                     if (!currentUser) {
                       setShowMessage(true);
                       return;
-                    } else {
+                    } else if (sneakerActive) {
                       handleAddStore(currentUser, sneakerActive);
                     }
                   }}

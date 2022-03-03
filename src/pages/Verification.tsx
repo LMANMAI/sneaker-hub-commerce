@@ -9,7 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 import { verifyEmail } from "../controllers/Sesion";
 const Verification = () => {
   const [checkEmail, setCheckEmail] = useState<string>("waiting");
-  const [clientEmail, setClientEmail] = useState<string>("");
+  const [clientEmail, setClientEmail] = useState<any>("");
 
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);

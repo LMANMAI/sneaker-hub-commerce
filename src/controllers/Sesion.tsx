@@ -22,7 +22,7 @@ const collecion = "users";
 export const registerClient = async (
   formData: IClient,
   clientID: string,
-  clientToken: string
+  clientToken: any
 ) => {
   console.log(formData, clientID, clientToken);
   try {
@@ -48,7 +48,11 @@ export const authClient = (formData: any) => {
   )
     .then((userCredential) => {
       const clientID = userCredential.user.uid;
-      const clientToken = userCredential.user?.accessToken;
+      const clientToken = userCredential.user
+        ?.getIdToken(true)
+        .then((idtoken) => {
+          return idtoken;
+        });
       return sendEmailVerification(userCredential.user).then(() => {
         registerClient(formData, clientID, clientToken);
         return "Correcto";
@@ -88,7 +92,9 @@ export const signAuthUser = (formData: any) => {
       const emailverified = userCredential.user.emailVerified;
       const user = {
         idUsuario: userCredential?.user?.uid,
-        token: userCredential?.user?.accessToken,
+        token: userCredential?.user?.getIdToken(true).then((idtoken) => {
+          return idtoken;
+        }),
       };
       if (emailverified) {
         return user;
