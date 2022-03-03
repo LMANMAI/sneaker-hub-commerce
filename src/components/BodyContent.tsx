@@ -15,27 +15,28 @@ import { useSelector } from "react-redux";
 import { selectSneakerActive } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { checkFavs, removeFav } from "../controllers/Products";
 
-const BodyContent = () => {
+const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
+  const currentUser = useSelector(selectUser);
   const navigate = useNavigate();
-  if (!sneakerActive) return navigate("/");
-
   const [toggle, setToggle] = useState<boolean>(false);
   const [showmessage, setShowMessage] = useState<boolean>(false);
-  const currentUser = useSelector(selectUser);
 
-  const handleAddStore = async (user: any, sneaker: ISneaker) => {
+  const verificated = async (user: any, sneaker: ISneaker) => {
     const res = await checkFavs(user, sneaker);
-    setToggle(true);
     if (res === "existe") {
-      // setToggle(true);
+      setToggle(true);
     }
   };
+
+  const handleAddStore = async (user: any, sneaker: ISneaker) => {
+    verificated(user, sneaker);
+    setToggle(true);
+  };
   const deleteFav = async (sneaker: ISneaker) => {
-    console.log("saco");
     setToggle(false);
     removeFav(currentUser, sneaker);
   };
@@ -47,6 +48,12 @@ const BodyContent = () => {
       }, 2000);
     }
   }, [showmessage]);
+
+  useEffect(() => {
+    if (sneakerActive) {
+      verificated(currentUser, sneakerActive);
+    }
+  }, []);
   return (
     <>
       <Stack
@@ -138,7 +145,7 @@ const BodyContent = () => {
                     if (!currentUser) {
                       setShowMessage(true);
                       return;
-                    } else {
+                    } else if (sneakerActive) {
                       deleteFav(sneakerActive);
                     }
                   }}
@@ -155,7 +162,7 @@ const BodyContent = () => {
                     if (!currentUser) {
                       setShowMessage(true);
                       return;
-                    } else {
+                    } else if (sneakerActive) {
                       handleAddStore(currentUser, sneakerActive);
                     }
                   }}

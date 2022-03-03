@@ -36,7 +36,10 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
     authClient(user).then((res) => {
       if (res === "Correcto") {
         setCheck(true);
-        dispatch(setUser(res));
+        setTimeout(() => {
+          dispatch(setError(""));
+          setCheck(false);
+        }, 1500);
       } else if (res === "in_use") {
         setCheck(false);
         dispatch(setError("email ya registrado"));
@@ -50,10 +53,6 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
       emailr: "",
       passwordr: "",
     });
-    setTimeout(() => {
-      dispatch(setError(""));
-      setCheck(false);
-    }, 1000);
   };
   return (
     <Stack h="100%" p={4}>
