@@ -7,7 +7,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { setError, selectError } from "../../features/userSlice";
+import { setError, selectError, setUser } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { authClient } from "../../controllers/Sesion";
 import { CheckView } from "./";
@@ -36,14 +36,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
     authClient(user).then((res) => {
       if (res === "Correcto") {
         setCheck(true);
-        setTimeout(() => {
-          setCheck(false);
-        }, 1000);
-        setUserRegister({
-          firstName: "",
-          emailr: "",
-          passwordr: "",
-        });
+        dispatch(setUser(res));
       } else if (res === "in_use") {
         setCheck(false);
         dispatch(setError("email ya registrado"));
@@ -51,6 +44,11 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
         setCheck(false);
         dispatch(setError("password incorrecto"));
       }
+    });
+    setUserRegister({
+      firstName: "",
+      emailr: "",
+      passwordr: "",
     });
     setTimeout(() => {
       dispatch(setError(""));

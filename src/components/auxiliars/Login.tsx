@@ -47,9 +47,6 @@ const Login: React.FC<IProps> = (props, { fn, setCheck }) => {
         dispatch(setUser(userDB));
       })();
     }
-    setTimeout(() => {
-      dispatch(setError(""));
-    }, 1000);
     setUserVerificated(null);
   }, [userverificated, current_user]);
 
@@ -69,6 +66,9 @@ const Login: React.FC<IProps> = (props, { fn, setCheck }) => {
         email: "",
         password: "",
       });
+      setTimeout(() => {
+        dispatch(setError(""));
+      }, 1000);
     });
   };
 
