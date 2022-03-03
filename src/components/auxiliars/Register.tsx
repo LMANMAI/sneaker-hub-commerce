@@ -36,7 +36,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
     authClient(user).then((res) => {
       if (res === "Correcto") {
         setCheck(true);
-        dispatch(setUser(res));
+        // dispatch(setUser(res));
       } else if (res === "in_use") {
         setCheck(false);
         dispatch(setError("email ya registrado"));

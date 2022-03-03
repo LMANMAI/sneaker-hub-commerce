@@ -24,7 +24,7 @@ export const registerClient = async (
   clientID: string,
   clientToken: any
 ) => {
-  console.log(formData, clientID, clientToken);
+  //console.log(formData, clientID, clientToken);
   try {
     await setDoc(doc(db, collecion, clientID), {
       email: formData.emailr,
