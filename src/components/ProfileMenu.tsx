@@ -23,8 +23,7 @@ import {
 import { selectUser, setLogOut } from "../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { ProtectedComponent } from "./";
-import { signOut } from "firebase/auth";
-import { auth } from "../app/firebaseConfig";
+import { setUserSignOut } from "../controllers/Sesion";
 const ListLink = styled(ListItem)`
   height: 50px;
   margin: 7px 0px;
@@ -81,7 +80,10 @@ const ProfileMenu = (props: { fn: Function }) => {
       </ListLink>
     );
   }
-
+  const handdleOut = () => {
+    setUserSignOut();
+    dispatch(setLogOut());
+  };
   return (
     <Stack
       position="absolute"
@@ -148,9 +150,7 @@ const ProfileMenu = (props: { fn: Function }) => {
                 </ListLink>
                 <ListLink
                   onClick={() => {
-                    signOut(auth).then(() => {
-                      dispatch(setLogOut());
-                    });
+                    handdleOut();
                   }}
                 >
                   <Icon className="icon_button" as={MdOutlineExitToApp} />

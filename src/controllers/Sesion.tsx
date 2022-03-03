@@ -4,12 +4,13 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db, auth } from "../app/firebaseConfig";
 
 interface IClient {
-  email: string;
+  emailr: string;
   firstName: string;
   method?: string;
   confirmacion?: boolean;
@@ -23,9 +24,10 @@ export const registerClient = async (
   clientID: string,
   clientToken: string
 ) => {
+  console.log(formData, clientID, clientToken);
   try {
     await setDoc(doc(db, collecion, clientID), {
-      email: formData.email,
+      email: formData.emailr,
       firstName: formData.firstName,
       method: "correo",
       confirmacion: false,
@@ -34,15 +36,19 @@ export const registerClient = async (
       idUser: clientID,
     });
   } catch (error) {
-    console.log("Error registrando el usuario");
+    console.log("Error registrando el usuario: ");
   }
 };
 
 export const authClient = (formData: any) => {
-  return createUserWithEmailAndPassword(auth, formData.email, formData.password)
+  return createUserWithEmailAndPassword(
+    auth,
+    formData.emailr,
+    formData.passwordr
+  )
     .then((userCredential) => {
       const clientID = userCredential.user.uid;
-      const clientToken = userCredential.user.accessToken;
+      const clientToken = userCredential.user?.accessToken;
       return sendEmailVerification(userCredential.user).then(() => {
         registerClient(formData, clientID, clientToken);
         return "Correcto";
@@ -53,6 +59,8 @@ export const authClient = (formData: any) => {
         return "in_use";
       } else if (error.code === "auth/weak-password") {
         return "password";
+      } else {
+        console.log(error.message);
       }
     });
 };
@@ -105,4 +113,15 @@ export const getUserAuth = async (userverified: any) => {
     idCliente: id_user,
     ...docClient.data(),
   };
+};
+
+export const setUserSignOut = async () => {
+  try {
+    await signOut(auth).then(() => {
+      localStorage.removeItem("idCliente");
+    });
+    return "exit";
+  } catch (error) {
+    console.log(error);
+  }
 };
