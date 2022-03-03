@@ -20,21 +20,23 @@ import { checkFavs, removeFav } from "../controllers/Products";
 
 const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
+  const currentUser = useSelector(selectUser);
   const navigate = useNavigate();
-
   const [toggle, setToggle] = useState<boolean>(false);
   const [showmessage, setShowMessage] = useState<boolean>(false);
-  const currentUser = useSelector(selectUser);
 
-  const handleAddStore = async (user: any, sneaker: ISneaker) => {
+  const verificated = async (user: any, sneaker: ISneaker) => {
     const res = await checkFavs(user, sneaker);
-    setToggle(true);
     if (res === "existe") {
-      // setToggle(true);
+      setToggle(true);
     }
   };
+
+  const handleAddStore = async (user: any, sneaker: ISneaker) => {
+    verificated(user, sneaker);
+    setToggle(true);
+  };
   const deleteFav = async (sneaker: ISneaker) => {
-    console.log("saco");
     setToggle(false);
     removeFav(currentUser, sneaker);
   };
@@ -46,6 +48,12 @@ const BodyContent: React.FC = () => {
       }, 2000);
     }
   }, [showmessage]);
+
+  useEffect(() => {
+    if (sneakerActive) {
+      verificated(currentUser, sneakerActive);
+    }
+  }, []);
   return (
     <>
       <Stack

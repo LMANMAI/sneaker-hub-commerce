@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../app/firebaseConfig";
 import { ISneaker } from "../interfaces";
+import { Favorites } from "../pages";
 
 export const setFavItems = async (
   userID: any,
@@ -20,7 +21,7 @@ export const setFavItems = async (
   const docRef = doc(db, "users", userID.idUser);
   const collRef = collection(docRef, "favorites");
   try {
-    console.log(idRef);
+    // console.log(idRef);
     const faav = await addDoc(collRef, sneaker);
     return faav;
   } catch (error) {
@@ -53,8 +54,6 @@ export const checkFavs = async (userID: any, sneaker: ISneaker) => {
 };
 
 export const removeFav = async (userID: any, sneaker: ISneaker) => {
-  console.log("Este es el item que tengo que borrar", sneaker);
-
   const docRef = doc(db, "users", userID.idUser);
   const collRef = collection(docRef, "favorites");
   const favArray: any[] = [];
@@ -65,8 +64,40 @@ export const removeFav = async (userID: any, sneaker: ISneaker) => {
     });
     const docExist = favArray.find((item) => item._id === sneaker._id);
     if (docExist) {
-      console.log(docExist.idRef);
-      await deleteDoc(docExist.idRef);
+      await deleteDoc(
+        doc(db, "users", userID.idUser, "favorites", docExist.idRef)
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getProductsFav = async (user: any) => {
+  const docRef = doc(db, "users", user?.idUser);
+  const collRef = collection(docRef, "favorites");
+  try {
+    const array: any[] = [];
+    const allFavs = await getDocs(collRef);
+    allFavs.forEach((doc) => {
+      array.push({ ...doc.data(), idRef: doc.id });
+    });
+    return array;
+  } catch (error) {
+    console.log(error);
+  }
+  console.log(user);
+};
+
+export const clearFavs = async (user: any) => {
+  try {
+    const array = await getProductsFav(user);
+    if (array) {
+      for (let index = 0; index < array.length; index++) {
+        await deleteDoc(
+          doc(db, "users", user.idUser, "favorites", array[index].idRef)
+        );
+      }
     }
   } catch (error) {
     console.log(error);

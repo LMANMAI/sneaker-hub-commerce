@@ -1,32 +1,26 @@
-import { doc, getDocs, collection, deleteDoc } from "firebase/firestore";
 import { Stack, Button, Image, Text } from "@chakra-ui/react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  removeFromFavorites,
-  clenFav,
-  setFavorites,
-  selectFavorites,
-} from "../features/sneakersSlice";
-import { db } from "../app/firebaseConfig";
+
 import { useEffect, useState } from "react";
 import { selectUser } from "../features/userSlice";
 import { ISneaker } from "../interfaces";
+import { clearFavs, getProductsFav, removeFav } from "../controllers/Products";
 
 const Favorites = () => {
-  const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
-  const favs = useSelector(selectFavorites);
-  const [itexmsFav, setFavoritesF] = useState<ISneaker[]>(favs);
+  const [itexmsFav, setItexmsFav] = useState<any[]>([]);
+  useEffect(() => {
+    (async () => {
+      const result = await getProductsFav(currentUser);
+      if (result) setItexmsFav(result);
+    })();
+  }, [itexmsFav]);
 
-  const deleteFav = async (id: string) => {
-    const currentFav = doc(db, currentUser.uid, id);
-    await deleteDoc(currentFav);
-  };
   return (
     <Stack overflow="hidden">
       <Text as="h1" fontSize="2.125rem" fontWeight="bold">
-        Favorites{" "}
+        Favorites
       </Text>
       <Stack
         direction={{ base: "column", md: "row" }}
@@ -50,7 +44,9 @@ const Favorites = () => {
           {itexmsFav && itexmsFav?.length > 0 ? (
             <>
               <Stack direction="row" justifyContent="space-between">
-                <Button onClick={() => dispatch(clenFav())}>Delete all</Button>
+                <Button onClick={() => clearFavs(currentUser)}>
+                  Delete all
+                </Button>
                 <Text>Favorites {itexmsFav?.length}</Text>
               </Stack>
 
@@ -86,10 +82,7 @@ const Favorites = () => {
                         h="fit-content"
                         w="80px"
                         marginRight="20px!important"
-                        onClick={() => {
-                          deleteFav(item?._id);
-                          dispatch(removeFromFavorites(item));
-                        }}
+                        onClick={() => removeFav(currentUser, item)}
                       >
                         Delete
                       </Button>

@@ -24,7 +24,6 @@ export const registerClient = async (
   clientID: string,
   clientToken: any
 ) => {
-  //console.log(formData, clientID, clientToken);
   try {
     await setDoc(doc(db, collecion, clientID), {
       email: formData.emailr,
@@ -34,25 +33,27 @@ export const registerClient = async (
       rol: "cliente",
       idToken: clientToken,
       idUser: clientID,
+      profileIMG:
+        "https://ih0.redbubble.net/image.618427277.3222/flat,1000x1000,075,f.u2.jpg",
     });
   } catch (error) {
-    console.log("Error registrando el usuario: ");
+    console.log("Error registrando el usuario: ", error);
   }
 };
 
-export const authClient = (formData: any) => {
-  return createUserWithEmailAndPassword(
+export const authClient = async (formData: any) => {
+  return await createUserWithEmailAndPassword(
     auth,
     formData.emailr,
     formData.passwordr
   )
     .then((userCredential) => {
       const clientID = userCredential.user.uid;
-      const clientToken = userCredential.user
-        ?.getIdToken(true)
-        .then((idtoken) => {
-          return idtoken;
-        });
+      let clientToken: string;
+      userCredential.user?.getIdTokenResult(true).then((idToken) => {
+        clientToken = idToken.token;
+      });
+
       return sendEmailVerification(userCredential.user).then(() => {
         registerClient(formData, clientID, clientToken);
         return "Correcto";
@@ -92,8 +93,8 @@ export const signAuthUser = (formData: any) => {
       const emailverified = userCredential.user.emailVerified;
       const user = {
         idUsuario: userCredential?.user?.uid,
-        token: userCredential?.user?.getIdToken(true).then((idtoken) => {
-          return idtoken;
+        token: userCredential?.user?.getIdTokenResult(true).then((idtoken) => {
+          return idtoken.token;
         }),
       };
       if (emailverified) {
@@ -105,8 +106,6 @@ export const signAuthUser = (formData: any) => {
     .catch((error) => {
       if (error.code === "auth/wrog-password") {
         return "contraseñaIncorreta";
-      } else {
-        return "error";
       }
     });
 };

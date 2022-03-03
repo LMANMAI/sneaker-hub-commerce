@@ -20,7 +20,7 @@ const RoutesComponent = () => {
       <Route path="/sneaker/:id" element={<BodyContent />} />
       <Route path="/reports" element={<Reports />} />
       {/**Protejer esta ruta */}
-      <Route path="/checkverification" element={<Verification />} />
+      <Route path="checkverification" element={<Verification />} />
       <Route
         path="/settings"
         element={
