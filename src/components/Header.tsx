@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
-import { Stack, Image, Icon, Text, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Stack,
+  Image,
+  Icon,
+  Text,
+  Grid,
+  GridItem,
+  Button,
+} from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
 import { IoCaretDownOutline } from "react-icons/io5";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
@@ -47,6 +55,7 @@ const brands = [
     bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/revenge.jpg?alt=media&token=2023707a-bec4-4f1a-822b-eea188c9421c",
   },
 ];
+
 const Header = () => {
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
@@ -57,7 +66,7 @@ const Header = () => {
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-
+  const [close, setClose] = useState<boolean>(false);
   useEffect(() => {
     const handleReq = async () => {
       const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
@@ -72,6 +81,10 @@ const Header = () => {
     setBasketShows(value);
   };
 
+  const handleFilterView = () => {
+    console.log("este tendria que tener el marco");
+  };
+
   return (
     <>
       <Stack
@@ -81,6 +94,11 @@ const Header = () => {
         h="60px"
         as="nav"
         className="header"
+        position="fixed"
+        width="98%"
+        left="15px"
+        backgroundColor="white"
+        zIndex="99"
       >
         <Stack
           direction="row"
@@ -214,42 +232,69 @@ const Header = () => {
         {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>
-      <Stack marginY={pathname === "/" ? "20px" : ""}>
+      <Stack marginY={pathname === "/" ? "20px" : ""} marginTop="60px">
         <Grid
           templateColumns={{
             base: "repeat(auto-fit, minmax(45%, 1fr))",
             md: "repeat(auto-fit, minmax(20%, 1fr))",
           }}
-          gap={2}
+          gap={4}
           padding={2}
         >
           {pathname === "/" &&
             brands.map((item, index) => (
-              <NavLink to={`/?brand=${item.name}`} key={index}>
-                <GridItem
-                  height="170px"
-                  borderRadius="20px"
-                  padding={4}
-                  cursor="pointer"
-                  transition="transform 250ms ease"
-                  _hover={{
-                    transform: "scale(1.05)",
-                  }}
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  background={`url(${item.bg})`}
-                  backgroundPosition="center center"
-                >
-                  <Text
-                    width="fit-content"
-                    backgroundColor="white"
-                    padding="5px 10px"
-                  >
-                    {item.name}
-                  </Text>
-                </GridItem>
-              </NavLink>
+              <Stack key={index}>
+                <Stack alignItems="end">
+                  <Link to={`/`}>
+                    <Button
+                      variant="unstyled"
+                      backgroundColor="black"
+                      color="white"
+                      w="fit-content"
+                      h="25px"
+                      position="absolute"
+                      zIndex="2"
+                      id="buton_hide"
+                      transform="translateX(-52px) translateY(30px)"
+                      visibility={close ? "visible" : "hidden"}
+                      onClick={() => setClose(false)}
+                      transition="150ms ease"
+                    >
+                      X
+                    </Button>
+                  </Link>
+                </Stack>
+
+                <NavLink to={`/?brand=${item.name}`}>
+                  <Stack borderRadius="20px" p={2}>
+                    <GridItem
+                      height={{ base: "100px", md: "120px" }}
+                      borderRadius="20px"
+                      padding={4}
+                      cursor="pointer"
+                      transition="transform 250ms ease"
+                      _hover={{
+                        transform: "scale(1.05)",
+                      }}
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      background={`url(${item.bg})`}
+                      backgroundPosition="center center"
+                      className=""
+                      onClick={() => setClose(true)}
+                    >
+                      <Text
+                        width="fit-content"
+                        backgroundColor="white"
+                        padding="5px 10px"
+                      >
+                        {item.name}
+                      </Text>
+                    </GridItem>
+                  </Stack>
+                </NavLink>
+              </Stack>
             ))}
         </Grid>
       </Stack>

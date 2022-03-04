@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import {
   Badge,
@@ -11,11 +12,11 @@ import {
 import { ISneaker } from "../interfaces";
 import PrevIcon from "../icons/PrevIcon";
 import { Carrousel, ButtonCount } from "./";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectSneakerActive } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+
 import { checkFavs, removeFav } from "../controllers/Products";
 
 const BodyContent: React.FC = () => {
@@ -25,13 +26,18 @@ const BodyContent: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [showmessage, setShowMessage] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (sneakerActive) {
+      verificated(currentUser, sneakerActive);
+    }
+  }, []);
+
   const verificated = async (user: any, sneaker: ISneaker) => {
     const res = await checkFavs(user, sneaker);
     if (res === "existe") {
       setToggle(true);
     }
   };
-
   const handleAddStore = async (user: any, sneaker: ISneaker) => {
     verificated(user, sneaker);
     setToggle(true);
@@ -41,19 +47,6 @@ const BodyContent: React.FC = () => {
     removeFav(currentUser, sneaker);
   };
 
-  useEffect(() => {
-    if (showmessage) {
-      setTimeout(() => {
-        setShowMessage(false);
-      }, 2000);
-    }
-  }, [showmessage]);
-
-  useEffect(() => {
-    if (sneakerActive) {
-      verificated(currentUser, sneakerActive);
-    }
-  }, []);
   return (
     <>
       <Stack
@@ -106,7 +99,12 @@ const BodyContent: React.FC = () => {
             repudiandae quidem dolorem voluptatum!
           </Text>
           <Stack>
-            <Stack spacing={4} direction="row" alignItems="center">
+            <Stack
+              spacing={4}
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
               <Text
                 fontSize="sm"
                 fontWeight={700}
@@ -131,44 +129,45 @@ const BodyContent: React.FC = () => {
           </Stack>
 
           <Stack alignItems="center">
-            {showmessage && (
-              <Text>Necesitas tener cuenta para agregarlo a favoritos</Text>
-            )}
             <Stack direction="row-reverse" justifyContent="center">
-              {currentUser && toggle ? (
-                <Button
-                  fontSize="2xl"
-                  fontWeight="bold"
-                  color="primary.500"
-                  size="lg"
-                  onClick={() => {
-                    if (!currentUser) {
-                      setShowMessage(true);
-                      return;
-                    } else if (sneakerActive) {
-                      deleteFav(sneakerActive);
-                    }
-                  }}
-                >
-                  <MdFavorite />
-                </Button>
-              ) : (
-                <Button
-                  fontSize="2xl"
-                  fontWeight="bold"
-                  color="primary.500"
-                  size="lg"
-                  onClick={() => {
-                    if (!currentUser) {
-                      setShowMessage(true);
-                      return;
-                    } else if (sneakerActive) {
-                      handleAddStore(currentUser, sneakerActive);
-                    }
-                  }}
-                >
-                  <MdFavoriteBorder />
-                </Button>
+              {currentUser && (
+                <>
+                  {toggle ? (
+                    <Button
+                      fontSize="2xl"
+                      fontWeight="bold"
+                      color="primary.500"
+                      size="lg"
+                      onClick={() => {
+                        if (!currentUser) {
+                          setShowMessage(true);
+                          return;
+                        } else if (sneakerActive) {
+                          deleteFav(sneakerActive);
+                        }
+                      }}
+                    >
+                      <MdFavorite />
+                    </Button>
+                  ) : (
+                    <Button
+                      fontSize="2xl"
+                      fontWeight="bold"
+                      color="primary.500"
+                      size="lg"
+                      onClick={() => {
+                        if (!currentUser) {
+                          setShowMessage(true);
+                          return;
+                        } else if (sneakerActive) {
+                          handleAddStore(currentUser, sneakerActive);
+                        }
+                      }}
+                    >
+                      <MdFavoriteBorder />
+                    </Button>
+                  )}
+                </>
               )}
 
               <ButtonCount />

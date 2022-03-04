@@ -218,3 +218,7 @@ a {
   display: flex;
   align-items: center;
 }
+
+.active_link {
+  outline: 1px solid red;
+}

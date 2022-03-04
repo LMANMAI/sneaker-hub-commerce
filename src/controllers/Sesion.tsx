@@ -121,12 +121,6 @@ export const getUserAuth = async (userverified: any) => {
 };
 
 export const setUserSignOut = async () => {
-  try {
-    await signOut(auth).then(() => {
-      localStorage.removeItem("idCliente");
-    });
-    return "exit";
-  } catch (error) {
-    console.log(error);
-  }
+  localStorage.clear();
+  await signOut(auth);
 };

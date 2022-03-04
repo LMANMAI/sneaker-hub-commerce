@@ -10,17 +10,14 @@ import {
 } from "../pages";
 import { ProtectedComponent } from "../components";
 import { BodyContent } from "../components";
-import { selectUser } from "../features/userSlice";
-import { useSelector } from "react-redux";
 const RoutesComponent = () => {
-  const user = useSelector(selectUser);
   return (
     <Routes>
       <Route path="/" element={<Collections />} />
-      <Route path="/sneaker/:id" element={<BodyContent />} />
+      <Route path="/:id" element={<BodyContent />} />
       <Route path="/reports" element={<Reports />} />
       {/**Protejer esta ruta */}
-      <Route path="checkverification" element={<Verification />} />
+      <Route path="/checkverification" element={<Verification />} />
       <Route
         path="/settings"
         element={
@@ -45,7 +42,7 @@ const RoutesComponent = () => {
           </ProtectedComponent>
         }
       />
-      <Route path="*" element={<NotFound />} />
+      {/* <Route path="*" element={<NotFound />} /> */}
     </Routes>
   );
 };
