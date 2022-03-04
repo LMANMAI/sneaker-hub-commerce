@@ -8,66 +8,47 @@ import {
   removeOnefromBasket,
   selectBasket,
 } from "../features/sneakersSlice";
-import { NotFound } from "../pages";
 import { ISneaker } from "../interfaces";
 
 const ButtonCount = (props: { direction?: string }) => {
   const sneakerActive = useSelector(selectSneakerActive);
   const basket = useSelector(selectBasket);
-  if (!sneakerActive) return <NotFound />;
-  const [label, setLabel] = useState<string>("Add to cart");
+
   const [contador, setContador] = useState<number>(0);
   const [conttem, setContTemp] = useState<number>(0);
-
+  const [isadd, setIsAdd] = useState<boolean>(true);
   const dispatch = useDispatch();
-  const newcount = useMemo(() => {
-    return sneakerActive.quantity;
-  }, [contador, sneakerActive.quantity]);
 
   const newBasketItemCount = useMemo(() => {
-    return basket.filter((item) => item._id === sneakerActive._id);
+    return basket.filter((item) => item._id === sneakerActive?._id);
   }, [basket]);
 
-  const handleAddToBasket = (sneaker: ISneaker, typeBtn: string) => {
-    setLabel("Add to cart");
-
-    if (typeBtn === "ADD") {
+  const handleAddToBasket = (sneaker: ISneaker) => {
+    if (conttem > 0) {
       for (let index = 0; index < conttem; index++) {
         dispatch(setBasket(sneaker));
+        setContador(contador + conttem);
       }
-      setContTemp(0);
-      setContador(contador + 1);
-    } else if (typeBtn === "PLUS") {
-      setContTemp(conttem + 1);
-      setContador(contador + 1);
+    } else {
+      dispatch(setBasket(sneaker));
+      setContTemp(conttem + conttem);
+      setContador(contador + conttem);
     }
+    setContTemp(0);
   };
 
-  const handleRemoveToBasket = (sneaker: ISneaker, typeBtn: string) => {
-    //dispatch(removeOnefromBasket(sneakerActive));
-    if (contador < 1) return;
-    setLabel("Remove from cart");
-    if (typeBtn === "REMOVE") {
+  const handleRemoveToBasket = (sneaker: ISneaker) => {
+    if (contador <= 0) return;
+    if (conttem > 0) {
       for (let index = 0; index < conttem; index++) {
         dispatch(removeOnefromBasket(sneaker));
       }
-
       setContTemp(0);
-    } else if (typeBtn === "REST") {
-      setContTemp(conttem + 1);
-      setContador(contador - 1);
+    } else {
+      dispatch(removeOnefromBasket(sneaker));
     }
   };
 
-  const handleFunction = (
-    Fn?: Function,
-    sneaker?: ISneaker,
-    buttontypr?: string
-  ) => {
-    if (Fn) {
-      Fn(sneaker, buttontypr);
-    }
-  };
   useEffect(() => {
     if (newBasketItemCount.length === 1) {
       setContador(newBasketItemCount[0].quantity);
@@ -102,8 +83,11 @@ const ButtonCount = (props: { direction?: string }) => {
           size="md"
           variant="ghost"
           fontSize="2xl"
+          disabled={contador <= 0 ? true : false}
           onClick={() => {
-            handleFunction(handleRemoveToBasket, sneakerActive, "REST");
+            setContTemp(conttem + 1);
+            setContador(contador - 1);
+            setIsAdd(false);
           }}
         >
           -
@@ -111,7 +95,7 @@ const ButtonCount = (props: { direction?: string }) => {
         <Input
           alignItems="center"
           value={contador}
-          onChange={() => setContador(contador + newcount)}
+          onChange={() => setContador(contador + 1)}
           type="number"
           name="contador"
           textAlign="center"
@@ -119,6 +103,7 @@ const ButtonCount = (props: { direction?: string }) => {
           width={4}
           border="none"
           variant="unstyled"
+          minWidth="35px"
         />
         <Button
           colorScheme="primary"
@@ -126,7 +111,9 @@ const ButtonCount = (props: { direction?: string }) => {
           variant="ghost"
           fontSize="2xl"
           onClick={() => {
-            handleFunction(handleAddToBasket, sneakerActive, "PLUS");
+            setIsAdd(true);
+            setContTemp(conttem + 1);
+            setContador(contador + 1);
           }}
         >
           +
@@ -139,12 +126,14 @@ const ButtonCount = (props: { direction?: string }) => {
         size="lg"
         fontSize="xs"
         onClick={() => {
-          label === "Add to cart"
-            ? handleFunction(handleAddToBasket, sneakerActive, "ADD")
-            : handleFunction(handleRemoveToBasket, sneakerActive, "REMOVE");
+          if (isadd && sneakerActive) {
+            handleAddToBasket(sneakerActive);
+          } else if (sneakerActive) {
+            handleRemoveToBasket(sneakerActive);
+          }
         }}
       >
-        {label}
+        {isadd ? "Add to cart" : "Remove"}
       </Button>
     </Stack>
   );

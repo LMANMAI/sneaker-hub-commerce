@@ -10,17 +10,15 @@ import {
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
-import avatar from "../assets/image-avatar.png";
 import { AuthComponent } from "./";
 import styled from "@emotion/styled";
 import {
   MdOutlineArrowForwardIos,
   MdSettings,
   MdFavoriteBorder,
-  MdShoppingBasket,
   MdOutlineExitToApp,
 } from "react-icons/md";
-import { selectUser, setLogOut } from "../features/userSlice";
+import { selectUser, setLogOut, setUser } from "../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { ProtectedComponent } from "./";
 import { setUserSignOut } from "../controllers/Sesion";
@@ -81,8 +79,9 @@ const ProfileMenu = (props: { fn: Function }) => {
     );
   }
   const handdleOut = () => {
+    console.log("saliendooo");
     setUserSignOut();
-    dispatch(setLogOut());
+    dispatch(setUser(null));
   };
   return (
     <Stack

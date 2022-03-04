@@ -7,7 +7,6 @@ const initialState: ISneakerState = {
   basket: [],
   basketQuantity: 0,
   total: 0,
-  favorites: [],
   id: "",
 };
 
@@ -80,23 +79,7 @@ export const sneakerSlice = createSlice({
         state.basketQuantity = state.basketQuantity - 1;
       }
     },
-    setFavorites: (state, action: PayloadAction<ISneaker | any>) => {
-      let itemExits = state.favorites.find(
-        (item) => item._id === action.payload._id
-      );
-      if (!itemExits) {
-        state.favorites = [...state.favorites, action.payload];
-      } else return;
-    },
-    removeFromFavorites: (state, action: PayloadAction<ISneaker>) => {
-      let temFav = state.favorites.filter(
-        (item) => item._id !== action.payload._id
-      );
-      state.favorites = temFav;
-    },
-    clenFav: (state) => {
-      state.favorites = [];
-    },
+
     setIDCollection: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
@@ -108,9 +91,6 @@ export const {
   setBasket,
   removeSneakerBasket,
   removeOnefromBasket,
-  setFavorites,
-  removeFromFavorites,
-  clenFav,
   setIDCollection,
 } = sneakerSlice.actions;
 
@@ -121,6 +101,5 @@ export const selectBasket = (state: RootState) => state.sneaker.basket;
 export const selectTotal = (state: RootState) => state.sneaker.total;
 export const selectBasketQuantity = (state: RootState) =>
   state.sneaker.basketQuantity;
-export const selectFavorites = (state: RootState) => state.sneaker.favorites;
 export const selectIDCollection = (state: RootState) => state.sneaker.id;
 export default sneakerSlice.reducer;

@@ -1,17 +1,12 @@
 import {
   doc,
-  getDoc,
-  setDoc,
   addDoc,
   collection,
   getDocs,
   deleteDoc,
-  updateDoc,
-  deleteField,
 } from "firebase/firestore";
 import { db } from "../app/firebaseConfig";
 import { ISneaker } from "../interfaces";
-import { Favorites } from "../pages";
 
 export const setFavItems = async (
   userID: any,

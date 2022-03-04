@@ -141,30 +141,6 @@ const Settings = () => {
             </Stack>
           </StackContainer>
 
-          <StackContainer border={true}>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-evenly"
-            >
-              <Text w="30%" mb="8px" textAlign="end">
-                Email:
-              </Text>
-              <Input
-                disabled={!disabledstate ? true : false}
-                value={email}
-                name="email"
-                onChange={handleChange}
-                placeholder="Email"
-                size="sm"
-                maxWidth="450px"
-                type="text"
-                borderRadius="10px"
-                padding="20px"
-              />
-            </Stack>
-          </StackContainer>
-
           <StackContainer>
             <Stack
               direction="row"

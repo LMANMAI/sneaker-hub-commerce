@@ -27,9 +27,7 @@ const Collections = () => {
       return filterByBrand(sneakers, brand);
     }
   }, [gender, sneakers, brand]);
-  useEffect(() => {
-    dispatch(setSneakerActive(null));
-  }, []);
+
   setTimeout(() => {
     if (sneakers) {
       setLoadign(false);
@@ -51,7 +49,7 @@ const Collections = () => {
           {sneakersF &&
             sneakersF?.map((sneaker: ISneaker) => (
               <Link
-                to={`/sneaker/${sneakerActive?._id}`}
+                to={`/${sneaker?._id}`}
                 key={sneaker._id}
                 onClick={() => dispatch(setSneakerActive(sneaker))}
               >
