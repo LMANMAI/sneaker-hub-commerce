@@ -1,17 +1,9 @@
 import { useState, useEffect } from "react";
-import {
-  Stack,
-  Image,
-  Icon,
-  Text,
-  Grid,
-  GridItem,
-  Button,
-} from "@chakra-ui/react";
+import { Stack, Image, Icon, Text, Grid, GridItem } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
 import { IoCaretDownOutline } from "react-icons/io5";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
@@ -66,7 +58,9 @@ const Header = () => {
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-  const [close, setClose] = useState<boolean>(false);
+  const [brandsselected, setBrands] = useState<string>();
+  const [hidefilter, setHide] = useState<boolean>(false);
+
   useEffect(() => {
     const handleReq = async () => {
       const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
@@ -80,11 +74,15 @@ const Header = () => {
     setMenuPosition(value);
     setBasketShows(value);
   };
-
-  const handleFilterView = () => {
-    console.log("este tendria que tener el marco");
+  const handleBrandArray = (brand: string) => {
+    let itemExist = brandsselected === brand;
+    if (itemExist) {
+      const newBrand = brandsselected !== brand ? "" : brand;
+      setBrands(newBrand);
+      return;
+    }
+    setBrands(brand);
   };
-
   return (
     <>
       <Stack
@@ -238,33 +236,11 @@ const Header = () => {
             base: "repeat(auto-fit, minmax(45%, 1fr))",
             md: "repeat(auto-fit, minmax(20%, 1fr))",
           }}
-          gap={4}
           padding={2}
         >
           {pathname === "/" &&
             brands.map((item, index) => (
-              <Stack key={index}>
-                <Stack alignItems="end">
-                  <Link to={`/`}>
-                    <Button
-                      variant="unstyled"
-                      backgroundColor="black"
-                      color="white"
-                      w="fit-content"
-                      h="25px"
-                      position="absolute"
-                      zIndex="2"
-                      id="buton_hide"
-                      transform="translateX(-52px) translateY(30px)"
-                      visibility={close ? "visible" : "hidden"}
-                      onClick={() => setClose(false)}
-                      transition="150ms ease"
-                    >
-                      X
-                    </Button>
-                  </Link>
-                </Stack>
-
+              <Stack key={index} className="contenedor">
                 <NavLink to={`/?brand=${item.name}`}>
                   <Stack borderRadius="20px" p={2}>
                     <GridItem
@@ -281,8 +257,10 @@ const Header = () => {
                       alignItems="center"
                       background={`url(${item.bg})`}
                       backgroundPosition="center center"
-                      className=""
-                      onClick={() => setClose(true)}
+                      onClick={() => {
+                        setHide(true);
+                        handleBrandArray(item.name);
+                      }}
                     >
                       <Text
                         width="fit-content"
@@ -297,6 +275,55 @@ const Header = () => {
               </Stack>
             ))}
         </Grid>
+        <Stack padding={2} direction="row">
+          {/* {brandsselected.map((item, index) => (
+            <Text
+              key={index}
+              backgroundColor="#cecece"
+              w="fit-content"
+              p="5px"
+              borderRadius="10px"
+              alignItems="center"
+            >
+              {item}
+              <NavLink to="/">
+                <Text
+                  as="strong"
+                  cursor="pointer"
+                  onClick={() => handleBrandArray(item)}
+                  marginLeft="7px"
+                >
+                  X
+                </Text>
+              </NavLink>
+            </Text>
+          ))} */}
+
+          {hidefilter && brandsselected && (
+            <Text
+              backgroundColor="#cecece"
+              w="fit-content"
+              p="5px"
+              borderRadius="10px"
+              alignItems="center"
+            >
+              {brandsselected}
+              <NavLink to="/">
+                <Text
+                  as="strong"
+                  cursor="pointer"
+                  onClick={() => {
+                    handleBrandArray(brandsselected);
+                    setHide(false);
+                  }}
+                  marginLeft="7px"
+                >
+                  X
+                </Text>
+              </NavLink>
+            </Text>
+          )}
+        </Stack>
       </Stack>
     </>
   );

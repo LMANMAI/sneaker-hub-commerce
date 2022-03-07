@@ -13,17 +13,20 @@ import { filterByBrand, filterByGender } from "../app/helper";
 
 const Collections = () => {
   const [loadign, setLoadign] = useState<boolean>(true);
+  const [brandsarray, setBrandArray] = useState<string[]>([]);
   const dispatch = useDispatch();
   const sneakers = useSelector(selectSneakers);
   const sneakerActive = useSelector(selectSneakerActive);
   let [searchParams] = useSearchParams();
   let gender = searchParams.get("gender");
   let brand = searchParams.get("brand");
+
   const sneakersF = useMemo(() => {
     if (!gender && !brand) return sneakers;
     else if (gender) {
       return filterByGender(sneakers, gender);
-    } else if (brand) {
+    } else if (brand && brand !== undefined) {
+      setBrandArray([...brandsarray, brand]);
       return filterByBrand(sneakers, brand);
     }
   }, [gender, sneakers, brand]);
@@ -33,6 +36,7 @@ const Collections = () => {
       setLoadign(false);
     }
   }, 1000);
+
   return (
     <Stack>
       {loadign ? (
