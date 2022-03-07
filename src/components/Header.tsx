@@ -67,8 +67,9 @@ const Header = () => {
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
+    setBrands("");
     handleReq();
-  }, []);
+  }, [pathname]);
 
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
@@ -231,52 +232,9 @@ const Header = () => {
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>
       <Stack marginY={pathname === "/" ? "20px" : ""} marginTop="60px">
-        <Grid
-          templateColumns={{
-            base: "repeat(auto-fit, minmax(45%, 1fr))",
-            md: "repeat(auto-fit, minmax(20%, 1fr))",
-          }}
-          padding={2}
-        >
-          {pathname === "/" &&
-            brands.map((item, index) => (
-              <Stack key={index} className="contenedor">
-                <NavLink to={`/?brand=${item.name}`}>
-                  <Stack borderRadius="20px" p={2}>
-                    <GridItem
-                      height={{ base: "100px", md: "120px" }}
-                      borderRadius="20px"
-                      padding={4}
-                      cursor="pointer"
-                      transition="transform 250ms ease"
-                      _hover={{
-                        transform: "scale(1.05)",
-                      }}
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      background={`url(${item.bg})`}
-                      backgroundPosition="center center"
-                      onClick={() => {
-                        setHide(true);
-                        handleBrandArray(item.name);
-                      }}
-                    >
-                      <Text
-                        width="fit-content"
-                        backgroundColor="white"
-                        padding="5px 10px"
-                      >
-                        {item.name}
-                      </Text>
-                    </GridItem>
-                  </Stack>
-                </NavLink>
-              </Stack>
-            ))}
-        </Grid>
-        <Stack padding={2} direction="row">
-          {/* {brandsselected.map((item, index) => (
+        {pathname === "/" && (
+          <Stack padding={2} direction="row">
+            {/* {brandsselected.map((item, index) => (
             <Text
               key={index}
               backgroundColor="#cecece"
@@ -299,31 +257,78 @@ const Header = () => {
             </Text>
           ))} */}
 
-          {hidefilter && brandsselected && (
-            <Text
-              backgroundColor="#cecece"
-              w="fit-content"
-              p="5px"
-              borderRadius="10px"
-              alignItems="center"
-            >
-              {brandsselected}
-              <NavLink to="/">
-                <Text
-                  as="strong"
-                  cursor="pointer"
-                  onClick={() => {
-                    handleBrandArray(brandsselected);
-                    setHide(false);
-                  }}
-                  marginLeft="7px"
-                >
-                  X
-                </Text>
-              </NavLink>
-            </Text>
+            {hidefilter && brandsselected && (
+              <Text
+                backgroundColor="#cecece"
+                w="fit-content"
+                p="5px"
+                borderRadius="10px"
+                alignItems="center"
+              >
+                {brandsselected}
+                <NavLink to="/">
+                  <Text
+                    as="strong"
+                    cursor="pointer"
+                    onClick={() => {
+                      handleBrandArray(brandsselected);
+                      setHide(false);
+                    }}
+                    marginLeft="7px"
+                  >
+                    X
+                  </Text>
+                </NavLink>
+              </Text>
+            )}
+          </Stack>
+        )}
+        <Grid
+          templateColumns={{
+            base: "repeat(auto-fit, minmax(45%, 1fr))",
+            md: "repeat(auto-fit, minmax(20%, 1fr))",
+          }}
+        >
+          {pathname === "/" && (
+            <>
+              {brands.map((item, index) => (
+                <Stack key={index} className="contenedor">
+                  <NavLink to={`/?brand=${item.name}`}>
+                    <Stack borderRadius="20px" p={2}>
+                      <GridItem
+                        height={{ base: "100px", md: "120px" }}
+                        borderRadius="20px"
+                        padding={4}
+                        cursor="pointer"
+                        transition="transform 250ms ease"
+                        _hover={{
+                          transform: "scale(1.05)",
+                        }}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        background={`url(${item.bg})`}
+                        backgroundPosition="center center"
+                        onClick={() => {
+                          setHide(true);
+                          handleBrandArray(item.name);
+                        }}
+                      >
+                        <Text
+                          width="fit-content"
+                          backgroundColor="white"
+                          padding="5px 10px"
+                        >
+                          {item.name}
+                        </Text>
+                      </GridItem>
+                    </Stack>
+                  </NavLink>
+                </Stack>
+              ))}
+            </>
           )}
-        </Stack>
+        </Grid>
       </Stack>
     </>
   );
