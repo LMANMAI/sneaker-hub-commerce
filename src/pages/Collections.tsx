@@ -27,7 +27,7 @@ const Collections = (props: any) => {
   let brand = searchParams.get("brand");
   const [producfilter, setProductsFilter] = useState<any[]>([]);
   useEffect(() => {
-    if (!brandsArray && !brand && !gender) {
+    if (brandsArray.length === 0) {
       setProductsFilter([]);
       setSecondArray([]);
       setProductsFilter(sneakers);
