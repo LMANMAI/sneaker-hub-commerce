@@ -1,22 +1,16 @@
 import { useState, useEffect } from "react";
-import {
-  Stack,
-  Image,
-  Icon,
-  Text,
-  Grid,
-  GridItem,
-  Button,
-} from "@chakra-ui/react";
+import { Stack, Image, Icon, Text, Grid, GridItem } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
 import { IoCaretDownOutline } from "react-icons/io5";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
   selectBasketQuantity,
   setSneaker,
+  setBrandFilter,
+  selecBrands,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 
@@ -62,29 +56,31 @@ const Header = () => {
   const currentUser = useSelector(selectUser);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
+  const brandsArray = useSelector(selecBrands);
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-  const [close, setClose] = useState<boolean>(false);
+  const [brandsselected, setBrands] = useState<string[]>([]);
+  const [hidefilter, setHide] = useState<boolean>(false);
+
   useEffect(() => {
     const handleReq = async () => {
       const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
+
     handleReq();
-  }, []);
+  }, [pathname]);
 
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
     setBasketShows(value);
   };
-
-  const handleFilterView = () => {
-    console.log("este tendria que tener el marco");
+  const handleBrandArray = (brand: string) => {
+    dispatch(setBrandFilter(brand));
   };
-
   return (
     <>
       <Stack
@@ -233,69 +229,77 @@ const Header = () => {
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>
       <Stack marginY={pathname === "/" ? "20px" : ""} marginTop="60px">
+        {pathname === "/" && (
+          <Stack padding={2} direction="row">
+            {brandsArray.map((item, index) => (
+              <Text
+                key={index}
+                backgroundColor="#cecece"
+                w="fit-content"
+                p="5px"
+                borderRadius="10px"
+                alignItems="center"
+              >
+                {item}
+                <NavLink to={`/?brand=${item}`}>
+                  <Text
+                    as="strong"
+                    cursor="pointer"
+                    onClick={() => handleBrandArray(item)}
+                    marginLeft="7px"
+                  >
+                    X
+                  </Text>
+                </NavLink>
+              </Text>
+            ))}
+          </Stack>
+        )}
         <Grid
           templateColumns={{
             base: "repeat(auto-fit, minmax(45%, 1fr))",
             md: "repeat(auto-fit, minmax(20%, 1fr))",
           }}
-          gap={4}
-          padding={2}
         >
-          {pathname === "/" &&
-            brands.map((item, index) => (
-              <Stack key={index}>
-                <Stack alignItems="end">
-                  <Link to={`/`}>
-                    <Button
-                      variant="unstyled"
-                      backgroundColor="black"
-                      color="white"
-                      w="fit-content"
-                      h="25px"
-                      position="absolute"
-                      zIndex="2"
-                      id="buton_hide"
-                      transform="translateX(-52px) translateY(30px)"
-                      visibility={close ? "visible" : "hidden"}
-                      onClick={() => setClose(false)}
-                      transition="150ms ease"
-                    >
-                      X
-                    </Button>
-                  </Link>
-                </Stack>
-
-                <NavLink to={`/?brand=${item.name}`}>
-                  <Stack borderRadius="20px" p={2}>
-                    <GridItem
-                      height={{ base: "100px", md: "120px" }}
-                      borderRadius="20px"
-                      padding={4}
-                      cursor="pointer"
-                      transition="transform 250ms ease"
-                      _hover={{
-                        transform: "scale(1.05)",
-                      }}
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      background={`url(${item.bg})`}
-                      backgroundPosition="center center"
-                      className=""
-                      onClick={() => setClose(true)}
-                    >
-                      <Text
-                        width="fit-content"
-                        backgroundColor="white"
-                        padding="5px 10px"
+          {pathname === "/" && (
+            <>
+              {brands.map((item, index) => (
+                <Stack key={index} className="contenedor">
+                  <NavLink to={`/?brand=${item.name}`}>
+                    <Stack borderRadius="20px" p={2}>
+                      <GridItem
+                        height={{ base: "100px", md: "120px" }}
+                        borderRadius="20px"
+                        padding={4}
+                        cursor="pointer"
+                        transition="transform 250ms ease"
+                        _hover={{
+                          transform: "scale(1.05)",
+                        }}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        background={`url(${item.bg})`}
+                        backgroundPosition="center center"
+                        onClick={() => {
+                          setHide(true);
+                          handleBrandArray(item.name);
+                        }}
                       >
-                        {item.name}
-                      </Text>
-                    </GridItem>
-                  </Stack>
-                </NavLink>
-              </Stack>
-            ))}
+                        <Text
+                          width="fit-content"
+                          backgroundColor="white"
+                          padding="5px 10px"
+                        >
+                          {item.name}
+                        </Text>
+                      </GridItem>
+                    </Stack>
+                  </NavLink>
+                </Stack>
+              ))}
+            </>
+          )}
         </Grid>
       </Stack>
     </>

@@ -5,7 +5,8 @@ function filterByGender(sneakers: ISneaker[], gender: string) {
 }
 
 function filterByBrand(sneakers: ISneaker[], brand: string) {
-  return sneakers.filter((item) => item.brand === brand);
+  let array = sneakers.filter((item) => item.brand === brand && item);
+  return array;
 }
 
 export { filterByGender, filterByBrand };

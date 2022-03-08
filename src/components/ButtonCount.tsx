@@ -38,7 +38,7 @@ const ButtonCount = (props: { direction?: string }) => {
   };
 
   const handleRemoveToBasket = (sneaker: ISneaker) => {
-    if (contador <= 0) return;
+    if (contador < 0) return;
     if (conttem > 0) {
       for (let index = 0; index < conttem; index++) {
         dispatch(removeOnefromBasket(sneaker));
@@ -87,7 +87,11 @@ const ButtonCount = (props: { direction?: string }) => {
           onClick={() => {
             setContTemp(conttem + 1);
             setContador(contador - 1);
-            setIsAdd(false);
+            if (contador < 0) {
+              setIsAdd(false);
+            } else {
+              setIsAdd(false);
+            }
           }}
         >
           -

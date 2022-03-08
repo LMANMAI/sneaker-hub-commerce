@@ -8,6 +8,7 @@ const initialState: ISneakerState = {
   basketQuantity: 0,
   total: 0,
   id: "",
+  brands: [],
 };
 
 export const sneakerSlice = createSlice({
@@ -83,6 +84,16 @@ export const sneakerSlice = createSlice({
     setIDCollection: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
+
+    setBrandFilter: (state, action: PayloadAction<string>) => {
+      let itemExist = state.brands.find((item) => item === action.payload);
+      if (itemExist) {
+        let newArray = state.brands.filter((item) => item !== action.payload);
+        state.brands = newArray;
+        return;
+      }
+      state.brands = [...state.brands, action.payload];
+    },
   },
 });
 export const {
@@ -92,6 +103,7 @@ export const {
   removeSneakerBasket,
   removeOnefromBasket,
   setIDCollection,
+  setBrandFilter,
 } = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
@@ -102,4 +114,5 @@ export const selectTotal = (state: RootState) => state.sneaker.total;
 export const selectBasketQuantity = (state: RootState) =>
   state.sneaker.basketQuantity;
 export const selectIDCollection = (state: RootState) => state.sneaker.id;
+export const selecBrands = (state: RootState) => state.sneaker.brands;
 export default sneakerSlice.reducer;

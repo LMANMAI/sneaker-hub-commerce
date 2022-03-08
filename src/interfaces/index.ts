@@ -31,6 +31,7 @@ export interface ISneakerState {
   total: number;
   basketQuantity: number;
   id: string;
+  brands: string[];
 }
 
 export interface IUser {
