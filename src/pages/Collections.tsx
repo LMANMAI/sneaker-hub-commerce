@@ -3,6 +3,7 @@ import { Grid, GridItem, Image, Stack } from "@chakra-ui/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ISneaker } from "../interfaces";
 import {
+  selecBrands,
   selectSneakerActive,
   selectSneakers,
   setSneakerActive,
@@ -11,32 +12,60 @@ import Spinkit from "../components/SpinKit";
 import { useDispatch, useSelector } from "react-redux";
 import { filterByBrand, filterByGender } from "../app/helper";
 
-const Collections = () => {
+const Collections = (props: any) => {
+  //states
   const [loadign, setLoadign] = useState<boolean>(true);
-  const [brandsarray, setBrandArray] = useState<string[]>([]);
+
+  const [secondarray, setSecondArray] = useState<any[]>([]);
+  //selectors
   const dispatch = useDispatch();
   const sneakers = useSelector(selectSneakers);
-  const sneakerActive = useSelector(selectSneakerActive);
+  const brandsArray = useSelector(selecBrands);
+  //query params
   let [searchParams] = useSearchParams();
   let gender = searchParams.get("gender");
   let brand = searchParams.get("brand");
-
-  const sneakersF = useMemo(() => {
-    if (!gender && !brand) return sneakers;
-    else if (gender) {
-      return filterByGender(sneakers, gender);
-    } else if (brand && brand !== undefined) {
-      setBrandArray([...brandsarray, brand]);
-      return filterByBrand(sneakers, brand);
+  const [producfilter, setProductsFilter] = useState<any[]>([]);
+  useEffect(() => {
+    if (!brandsArray && !brand && !gender) {
+      setProductsFilter([]);
+      setSecondArray([]);
+      setProductsFilter(sneakers);
+    } else if (gender) {
+      let arrayfilter = filterByGender(sneakers, gender);
+      setProductsFilter(arrayfilter);
+    } else if (brand || brandsArray.length > 1) {
+      let brand_exist = brandsArray.find((item) => item === brand);
+      if (brand_exist && brand) {
+        setSecondArray([...secondarray, filterByBrand(sneakers, brand)]);
+      } else {
+        console.log(
+          "Aca deberia de eliminar la marca y sacar los priductos filtrados",
+          brand
+        );
+        const newArray = producfilter.filter((item) => item.brand !== brand);
+        setProductsFilter(newArray);
+      }
     }
-  }, [gender, sneakers, brand]);
+  }, [gender, brand, brandsArray]);
 
-  setTimeout(() => {
-    if (sneakers) {
-      setLoadign(false);
-    }
-  }, 1000);
+  useEffect(() => {
+    let tempData: any[] = [];
+    secondarray.map((item) => {
+      //console.log("Este es array", item);
+      tempData = tempData.concat(item);
+      setProductsFilter(tempData);
+    });
+  }, [secondarray]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (sneakers) {
+        setLoadign(false);
+        setProductsFilter(sneakers);
+      }
+    }, 300);
+  }, [props.history, sneakers]);
   return (
     <Stack>
       {loadign ? (
@@ -50,11 +79,11 @@ const Collections = () => {
           gap={4}
           placeItems="center"
         >
-          {sneakersF &&
-            sneakersF?.map((sneaker: ISneaker) => (
+          {producfilter &&
+            producfilter?.map((sneaker: ISneaker, index: number) => (
               <Link
                 to={`/${sneaker?._id}`}
-                key={sneaker._id}
+                key={index}
                 onClick={() => dispatch(setSneakerActive(sneaker))}
               >
                 <GridItem

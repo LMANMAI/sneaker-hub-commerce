@@ -9,6 +9,8 @@ import {
   selectBasket,
   selectBasketQuantity,
   setSneaker,
+  setBrandFilter,
+  selecBrands,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 
@@ -54,11 +56,12 @@ const Header = () => {
   const currentUser = useSelector(selectUser);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
+  const brandsArray = useSelector(selecBrands);
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-  const [brandsselected, setBrands] = useState<string>();
+  const [brandsselected, setBrands] = useState<string[]>([]);
   const [hidefilter, setHide] = useState<boolean>(false);
 
   useEffect(() => {
@@ -67,7 +70,7 @@ const Header = () => {
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
-    setBrands("");
+
     handleReq();
   }, [pathname]);
 
@@ -76,13 +79,7 @@ const Header = () => {
     setBasketShows(value);
   };
   const handleBrandArray = (brand: string) => {
-    let itemExist = brandsselected === brand;
-    if (itemExist) {
-      const newBrand = brandsselected !== brand ? "" : brand;
-      setBrands(newBrand);
-      return;
-    }
-    setBrands(brand);
+    dispatch(setBrandFilter(brand));
   };
   return (
     <>
@@ -234,53 +231,28 @@ const Header = () => {
       <Stack marginY={pathname === "/" ? "20px" : ""} marginTop="60px">
         {pathname === "/" && (
           <Stack padding={2} direction="row">
-            {/* {brandsselected.map((item, index) => (
-            <Text
-              key={index}
-              backgroundColor="#cecece"
-              w="fit-content"
-              p="5px"
-              borderRadius="10px"
-              alignItems="center"
-            >
-              {item}
-              <NavLink to="/">
-                <Text
-                  as="strong"
-                  cursor="pointer"
-                  onClick={() => handleBrandArray(item)}
-                  marginLeft="7px"
-                >
-                  X
-                </Text>
-              </NavLink>
-            </Text>
-          ))} */}
-
-            {hidefilter && brandsselected && (
+            {brandsArray.map((item, index) => (
               <Text
+                key={index}
                 backgroundColor="#cecece"
                 w="fit-content"
                 p="5px"
                 borderRadius="10px"
                 alignItems="center"
               >
-                {brandsselected}
-                <NavLink to="/">
+                {item}
+                <NavLink to={`/?brand=${item}`}>
                   <Text
                     as="strong"
                     cursor="pointer"
-                    onClick={() => {
-                      handleBrandArray(brandsselected);
-                      setHide(false);
-                    }}
+                    onClick={() => handleBrandArray(item)}
                     marginLeft="7px"
                   >
                     X
                   </Text>
                 </NavLink>
               </Text>
-            )}
+            ))}
           </Stack>
         )}
         <Grid
