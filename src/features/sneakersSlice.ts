@@ -94,6 +94,13 @@ export const sneakerSlice = createSlice({
       }
       state.brands = [...state.brands, action.payload];
     },
+    removeBrandFilter: (state, action: PayloadAction<string>) => {
+      let item = state.brands.find((item) => item === action.payload);
+      if (item) {
+        let arraytemp = state.brands.filter((item) => item !== action.payload);
+        state.brands = arraytemp;
+      }
+    },
   },
 });
 export const {
@@ -104,6 +111,7 @@ export const {
   removeOnefromBasket,
   setIDCollection,
   setBrandFilter,
+  removeBrandFilter,
 } = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
