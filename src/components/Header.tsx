@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
-import { Stack, Image, Icon, Text, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Stack,
+  Image,
+  Icon,
+  Text,
+  Grid,
+  GridItem,
+  Input,
+} from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
-import { IoCaretDownOutline } from "react-icons/io5";
+import { IoCaretDownOutline, IoSearchOutline } from "react-icons/io5";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -11,9 +19,10 @@ import {
   setSneaker,
   setBrandFilter,
   selecBrands,
+  setSearch,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
-import { Basket, ProfileMenu } from "./";
+import { Basket, ProfileMenu, SearchC } from "./";
 const brands = [
   {
     name: "Adidas",
@@ -67,7 +76,6 @@ const Header = () => {
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
-
     handleReq();
   }, [pathname]);
 
@@ -179,6 +187,26 @@ const Header = () => {
             </Stack>
           </Stack>
         </Stack>
+        <Stack
+          flex="1"
+          maxWidth="30%"
+          direction="row"
+          alignItems="center"
+          border="1px solid #e3e3e3"
+          borderRadius="15px"
+          paddingX={2}
+        >
+          <Icon as={IoSearchOutline} cursor="pointer" />
+          <Input
+            type="text"
+            variant="unstyled"
+            padding={2}
+            onChange={(e) => {
+              dispatch(setSearch(e.target.value));
+            }}
+          />
+        </Stack>
+
         <Stack direction="row" spacing={2} alignItems="center">
           <Stack>
             <Stack
@@ -222,6 +250,7 @@ const Header = () => {
             />
           </Stack>
         </Stack>
+
         {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>

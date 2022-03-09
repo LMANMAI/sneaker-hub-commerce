@@ -5,6 +5,7 @@ import { ISneaker } from "../interfaces";
 import {
   selecBrands,
   selectSneakers,
+  selectSearch,
   setSneakerActive,
 } from "../features/sneakersSlice";
 import Spinkit from "../components/SpinKit";
@@ -20,19 +21,21 @@ const Collections = (props: any) => {
   const dispatch = useDispatch();
   const sneakers = useSelector(selectSneakers);
   const brandsArray = useSelector(selecBrands);
+  const search = useSelector(selectSearch);
   //query params
   let [searchParams] = useSearchParams();
   let gender = searchParams.get("gender");
   let brand = searchParams.get("brand");
   const [producfilter, setProductsFilter] = useState<any[]>([]);
   useEffect(() => {
-    if (brandsArray.length === 0) {
-      setProductsFilter([]);
+    if (brandsArray.length === 0 && !gender) {
       setSecondArray([]);
       setProductsFilter(sneakers);
+      return;
     } else if (gender) {
       let arrayfilter = filterByGender(sneakers, gender);
       setProductsFilter(arrayfilter);
+      return;
     } else if (brand || brandsArray.length > 1) {
       let brand_exist = brandsArray.find((item) => item === brand);
 
@@ -64,6 +67,7 @@ const Collections = (props: any) => {
       }
     }, 300);
   }, [props.history, sneakers]);
+
   return (
     <Stack>
       {loadign ? (
@@ -78,26 +82,36 @@ const Collections = (props: any) => {
           placeItems="center"
         >
           {producfilter &&
-            producfilter?.map((sneaker: ISneaker, index: number) => (
-              <Link
-                to={`/${sneaker?._id}`}
-                key={index}
-                onClick={() => dispatch(setSneakerActive(sneaker))}
-              >
-                <GridItem
-                  padding={2}
-                  maxWidth="250px"
-                  minHeight="250px"
-                  height="100%"
-                  borderRadius="15px"
-                  textAlign="center"
-                  boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+            producfilter
+              ?.filter((item) => {
+                if (search === "") {
+                  return item;
+                } else if (
+                  item.name.toLowerCase().includes(search.toLocaleLowerCase())
+                ) {
+                  return item;
+                }
+              })
+              .map((sneaker: ISneaker, index: number) => (
+                <Link
+                  to={`/${sneaker?._id}`}
+                  key={index}
+                  onClick={() => dispatch(setSneakerActive(sneaker))}
                 >
-                  <Image src={sneaker.posterPathImage} />
-                  <p>{sneaker.name}</p>
-                </GridItem>
-              </Link>
-            ))}
+                  <GridItem
+                    padding={2}
+                    maxWidth="250px"
+                    minHeight="250px"
+                    height="100%"
+                    borderRadius="15px"
+                    textAlign="center"
+                    boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+                  >
+                    <Image src={sneaker.posterPathImage} />
+                    <p>{sneaker.name}</p>
+                  </GridItem>
+                </Link>
+              ))}
         </Grid>
       )}
     </Stack>
