@@ -13,7 +13,6 @@ import {
   selecBrands,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
-
 import { Basket, ProfileMenu } from "./";
 const brands = [
   {
@@ -61,8 +60,6 @@ const Header = () => {
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-  const [brandsselected, setBrands] = useState<string[]>([]);
-  const [hidefilter, setHide] = useState<boolean>(false);
 
   useEffect(() => {
     const handleReq = async () => {
@@ -282,7 +279,6 @@ const Header = () => {
                         background={`url(${item.bg})`}
                         backgroundPosition="center center"
                         onClick={() => {
-                          setHide(true);
                           handleBrandArray(item.name);
                         }}
                       >

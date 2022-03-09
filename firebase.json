@@ -22,10 +22,17 @@
     ],
     "rewrites": [
       {
-          "source": "**",
-          "destination": "/index.html"
+        "source": "/path([^/]*)",
+        "run": {
+          "serviceId": "test-run",
+          "region": "us-central1"
+        }
+      },
+      { 
+        "source": "**", 
+        "destination": "/index.html" 
       }
-  ]
+    ]
   },
   "storage": {
     "rules": "storage.rules"

@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, GridItem, Image, Stack } from "@chakra-ui/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ISneaker } from "../interfaces";
 import {
   selecBrands,
-  selectSneakerActive,
   selectSneakers,
   setSneakerActive,
 } from "../features/sneakersSlice";
@@ -27,7 +26,7 @@ const Collections = (props: any) => {
   let brand = searchParams.get("brand");
   const [producfilter, setProductsFilter] = useState<any[]>([]);
   useEffect(() => {
-    if (!brandsArray && !brand && !gender) {
+    if (brandsArray.length === 0) {
       setProductsFilter([]);
       setSecondArray([]);
       setProductsFilter(sneakers);
@@ -36,15 +35,14 @@ const Collections = (props: any) => {
       setProductsFilter(arrayfilter);
     } else if (brand || brandsArray.length > 1) {
       let brand_exist = brandsArray.find((item) => item === brand);
-      if (brand_exist && brand) {
-        setSecondArray([...secondarray, filterByBrand(sneakers, brand)]);
+
+      if (brand_exist) {
+        setSecondArray([...secondarray, filterByBrand(sneakers, brand_exist)]);
+        return;
       } else {
-        console.log(
-          "Aca deberia de eliminar la marca y sacar los priductos filtrados",
-          brand
-        );
         const newArray = producfilter.filter((item) => item.brand !== brand);
         setProductsFilter(newArray);
+        setSecondArray(newArray);
       }
     }
   }, [gender, brand, brandsArray]);
