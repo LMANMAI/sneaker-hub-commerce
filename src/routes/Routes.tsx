@@ -42,7 +42,7 @@ const RoutesComponent = () => {
           </ProtectedComponent>
         }
       />
-      {/* <Route path="*" element={<NotFound />} /> */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
