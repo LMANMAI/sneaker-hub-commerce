@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Stack,
   Image,
@@ -58,7 +58,7 @@ const brands = [
   },
 ];
 
-const Header = () => {
+const Header = (props: { limit: number }) => {
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
   const currentUser = useSelector(selectUser);
@@ -72,12 +72,14 @@ const Header = () => {
 
   useEffect(() => {
     const handleReq = async () => {
-      const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
+      const req = await fetch(
+        `https://sneakersapinest.herokuapp.com/sneaker?limit=${props.limit}&offset=0`
+      );
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
     handleReq();
-  }, [pathname]);
+  }, [pathname, props.limit]);
 
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
