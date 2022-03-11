@@ -33,6 +33,8 @@ export interface ISneakerState {
   id: string;
   brands: string[];
   search: string;
+  counter: number;
+  counterLimit: number;
 }
 
 export interface IUser {

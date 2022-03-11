@@ -16,10 +16,12 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
   selectBasketQuantity,
+  selecBrands,
+  selectCount,
   setSneaker,
   setBrandFilter,
-  selecBrands,
   setSearch,
+  setCounterLimit,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { Basket, ProfileMenu, SearchC } from "./";
@@ -58,10 +60,11 @@ const brands = [
   },
 ];
 
-const Header = (props: { limit: number }) => {
+const Header = () => {
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
   const currentUser = useSelector(selectUser);
+  const counter = useSelector(selectCount);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const brandsArray = useSelector(selecBrands);
@@ -72,14 +75,20 @@ const Header = (props: { limit: number }) => {
 
   useEffect(() => {
     const handleReq = async () => {
+      const reqLength = await fetch(
+        `https://sneakersapinest.herokuapp.com/sneaker`
+      );
+      const data = await reqLength.json();
+      let limit = data.sneakers.length;
+      dispatch(setCounterLimit(limit));
       const req = await fetch(
-        `https://sneakersapinest.herokuapp.com/sneaker?limit=${props.limit}&offset=0`
+        `https://sneakersapinest.herokuapp.com/sneaker?limit=10&offset=${counter}`
       );
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
     handleReq();
-  }, [pathname, props.limit]);
+  }, [pathname, counter]);
 
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);

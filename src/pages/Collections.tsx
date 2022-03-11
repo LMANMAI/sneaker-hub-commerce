@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Grid, GridItem, Image, Stack } from "@chakra-ui/react";
+import { Grid, GridItem, Image, Stack, Button, Text } from "@chakra-ui/react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ISneaker } from "../interfaces";
 import {
   selecBrands,
   selectSneakers,
   selectSearch,
+  selectCountLimit,
   setSneakerActive,
+  setCounterState,
 } from "../features/sneakersSlice";
 import Spinkit from "../components/SpinKit";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,18 +17,20 @@ import { filterByBrand, filterByGender } from "../app/helper";
 const Collections = (props: any) => {
   //states
   const [loadign, setLoadign] = useState<boolean>(true);
-
   const [secondarray, setSecondArray] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
   //selectors
   const dispatch = useDispatch();
   const sneakers = useSelector(selectSneakers);
   const brandsArray = useSelector(selecBrands);
   const search = useSelector(selectSearch);
+  const limit = useSelector(selectCountLimit);
   //query params
   let [searchParams] = useSearchParams();
   let gender = searchParams.get("gender");
   let brand = searchParams.get("brand");
   const [producfilter, setProductsFilter] = useState<any[]>([]);
+  const [countPage, setCountPage] = useState<number>(1);
   useEffect(() => {
     if (brandsArray.length === 0 && !gender) {
       setSecondArray([]);
@@ -68,51 +72,81 @@ const Collections = (props: any) => {
     }, 300);
   }, [props.history, sneakers]);
 
+  useEffect(() => {
+    dispatch(setCounterState(count));
+  }, [count]);
   return (
     <Stack>
       {loadign ? (
         <Spinkit />
       ) : (
-        <Grid
-          templateColumns={{
-            base: "repeat(auto-fit, minmax(150px, 1fr))",
-            md: "repeat(auto-fit, minmax(210px, 1fr))",
-          }}
-          gap={4}
-          placeItems="center"
-        >
-          {producfilter &&
-            producfilter
-              ?.filter((item) => {
-                if (search === "") {
-                  return item;
-                } else if (
-                  item.name.toLowerCase().includes(search.toLocaleLowerCase())
-                ) {
-                  return item;
-                }
-              })
-              .map((sneaker: ISneaker, index: number) => (
-                <Link
-                  to={`/${sneaker?._id}`}
-                  key={index}
-                  onClick={() => dispatch(setSneakerActive(sneaker))}
-                >
-                  <GridItem
-                    padding={2}
-                    maxWidth="250px"
-                    minHeight="250px"
-                    height="100%"
-                    borderRadius="15px"
-                    textAlign="center"
-                    boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+        <>
+          <Stack direction="row" justifyContent="center">
+            {count <= 0 ? null : (
+              <Button
+                onClick={() => {
+                  setCountPage(countPage - 1);
+                  setCount(count - 10);
+                }}
+              >
+                {"<"}
+              </Button>
+            )}
+            <Text>
+              Page {countPage} to {Math.ceil(limit / 10)}
+            </Text>
+            {count + 10 > limit ? null : (
+              <Button
+                onClick={() => {
+                  setCount(count + 10);
+                  setCountPage(countPage + 1);
+                }}
+              >
+                {">"}
+              </Button>
+            )}
+          </Stack>
+          <Grid
+            templateColumns={{
+              base: "repeat(auto-fit, minmax(150px, 1fr))",
+              md: "repeat(auto-fit, minmax(210px, 1fr))",
+            }}
+            gap={4}
+            placeItems="center"
+          >
+            {producfilter &&
+              producfilter
+                ?.filter((item) => {
+                  if (search === "") {
+                    return item;
+                  } else if (
+                    item.name.toLowerCase().includes(search.toLocaleLowerCase())
+                  ) {
+                    return item;
+                  }
+                })
+                .map((sneaker: ISneaker, index: number) => (
+                  <Link
+                    to={`/${sneaker?._id}`}
+                    key={index}
+                    onClick={() => dispatch(setSneakerActive(sneaker))}
                   >
-                    <Image src={sneaker.posterPathImage} />
-                    <p>{sneaker.name}</p>
-                  </GridItem>
-                </Link>
-              ))}
-        </Grid>
+                    <GridItem
+                      padding={2}
+                      maxWidth="250px"
+                      minHeight="250px"
+                      height="100%"
+                      borderRadius="15px"
+                      textAlign="center"
+                      boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+                    >
+                      <Image src={sneaker.posterPathImage} />
+                      <p>{sneaker.name}</p>
+                    </GridItem>
+                  </Link>
+                ))}
+          </Grid>
+        </>
       )}
     </Stack>
   );
