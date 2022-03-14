@@ -7,9 +7,9 @@ import {
   FormControl,
   Image,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateProfile } from "../controllers/Profile";
+import { updateProfile, updateProfileWhithPhoto } from "../controllers/Profile";
 import { clearFavs } from "../controllers/Products";
 import { selectUser, setUser } from "../features/userSlice";
 
@@ -23,6 +23,9 @@ function StackContainer({ children, border }: IPropsStack) {
       borderY={border ? "1px solid #f0f0f0" : "none"}
       padding="25px"
       marginY={4}
+      alignItems="center"
+      justifyContent="center"
+      direction="row"
     >
       {children}
     </Stack>
@@ -32,7 +35,6 @@ function StackContainer({ children, border }: IPropsStack) {
 const Settings = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
-
   const [usersettigns, setUSerSettings] = useState<any>({
     email: currentUser.email,
     firstName: currentUser.firstName,
@@ -43,7 +45,9 @@ const Settings = () => {
     profileIMG: currentUser.profileIMG,
     rol: currentUser.rol,
   });
-  const [disabledstate, setDisabled] = useState<boolean>(false);
+  const [disabledstate, setDisabled] = useState<boolean>(true);
+  const [foto, setFoto] = useState<any>(undefined);
+  const [fotopreview, setPreview] = useState<any>(undefined);
   const { firstName, email } = usersettigns;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +65,44 @@ const Settings = () => {
       dispatch(setUser(newprofile));
     })();
   };
+
+  const eliminarImage = () => {
+    setFoto(undefined);
+    setPreview(undefined);
+  };
+
+  const saveImage = (e: any) => {
+    e.preventDefault();
+    const userId = currentUser.idUser;
+    if (foto === undefined) {
+      setFoto(undefined);
+      setPreview(fotopreview);
+      updateProfileWhithPhoto(fotopreview, userId);
+    } else {
+      updateProfileWhithPhoto(foto, userId);
+      setFoto(undefined);
+      setPreview(fotopreview);
+    }
+  };
+
+  const changeImage = (e: any) => {
+    let selectImage;
+    if (e.target.files && e.target.files.length === 1) {
+      selectImage = e.target.files[0];
+      setFoto(selectImage);
+    }
+  };
+
+  useEffect(() => {
+    if (!foto) {
+      return;
+    }
+    const fotcargada = new FileReader();
+    fotcargada.onload = () => {
+      setPreview(fotcargada.result);
+    };
+    fotcargada.readAsDataURL(foto);
+  }, [foto]);
   return (
     <Stack h="100%" p={2}>
       <Text as="h1" fontSize="2.125rem" fontWeight="bold">
@@ -89,7 +131,7 @@ const Settings = () => {
               overflow="hidden"
               position="absolute"
             >
-              <Image src={usersettigns.profileIMG} />
+              <Image src={currentUser.profileIMG} />
             </Stack>
           </Stack>
         </Stack>
@@ -105,17 +147,19 @@ const Settings = () => {
               </Text>
               <Text>Update your photo and some details </Text>
             </Stack>
-            <Button
-              type={disabledstate ? "submit" : "button"}
-              onClick={(e) => {
-                setDisabled(!disabledstate);
-                if (disabledstate) {
-                  handleSubmit(e);
-                }
-              }}
-            >
-              {disabledstate ? "Save" : "Update"}
-            </Button>
+            <Stack direction="row">
+              <Button
+                type={disabledstate ? "submit" : "button"}
+                onClick={(e) => {
+                  setDisabled(!disabledstate);
+                  if (disabledstate) {
+                    handleSubmit(e);
+                  }
+                }}
+              >
+                {disabledstate ? "Save" : "Update"}
+              </Button>
+            </Stack>
           </Stack>
           <StackContainer>
             <Stack
@@ -140,7 +184,44 @@ const Settings = () => {
               />
             </Stack>
           </StackContainer>
-
+          <StackContainer>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-evenly"
+            >
+              <Text w="30%" mb="8px" textAlign="end">
+                Image:
+              </Text>
+              <Input
+                w="fit-content"
+                type="file"
+                accept=".jpg"
+                variant="unstyled"
+                alignSelf="center"
+                border="none"
+                onChange={(e) => changeImage(e)}
+              />
+              {foto !== undefined && (
+                <Stack direction="row">
+                  <Button
+                    size="sm"
+                    colorScheme="primary"
+                    onClick={(e) => saveImage(e)}
+                  >
+                    Change Image
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="primary"
+                    onClick={() => eliminarImage()}
+                  >
+                    Cancel
+                  </Button>
+                </Stack>
+              )}
+            </Stack>
+          </StackContainer>
           <StackContainer>
             <Stack
               direction="row"
