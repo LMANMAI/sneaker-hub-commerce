@@ -32,6 +32,10 @@ export interface ISneakerState {
   basketQuantity: number;
   id: string;
   brands: string[];
+  search: string;
+  counter: number;
+  counterLimit: number;
+  sneakersTotal: ISneaker[];
 }
 
 export interface IUser {

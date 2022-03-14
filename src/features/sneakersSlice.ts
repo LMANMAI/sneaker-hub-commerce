@@ -9,6 +9,10 @@ const initialState: ISneakerState = {
   total: 0,
   id: "",
   brands: [],
+  search: "",
+  counter: 0,
+  counterLimit: 0,
+  sneakersTotal: [],
 };
 
 export const sneakerSlice = createSlice({
@@ -101,6 +105,18 @@ export const sneakerSlice = createSlice({
         state.brands = arraytemp;
       }
     },
+    setSearch: (state, action: PayloadAction<string>) => {
+      state.search = action.payload;
+    },
+    setCounterState: (state, action: PayloadAction<number>) => {
+      state.counter = action.payload;
+    },
+    setCounterLimit: (state, action: PayloadAction<number>) => {
+      state.counterLimit = action.payload;
+    },
+    setTotalSneaker: (state, action: PayloadAction<ISneaker[]>) => {
+      state.sneakersTotal = action.payload;
+    },
   },
 });
 export const {
@@ -112,6 +128,10 @@ export const {
   setIDCollection,
   setBrandFilter,
   removeBrandFilter,
+  setSearch,
+  setCounterState,
+  setCounterLimit,
+  setTotalSneaker,
 } = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
@@ -123,4 +143,11 @@ export const selectBasketQuantity = (state: RootState) =>
   state.sneaker.basketQuantity;
 export const selectIDCollection = (state: RootState) => state.sneaker.id;
 export const selecBrands = (state: RootState) => state.sneaker.brands;
+export const selectSearch = (state: RootState) => state.sneaker.search;
+export const selectCount = (state: RootState) => state.sneaker.counter;
+export const selectTotalSneakers = (state: RootState) =>
+  state.sneaker.sneakersTotal;
+export const selectCountLimit = (state: RootState) =>
+  state.sneaker.counterLimit;
+
 export default sneakerSlice.reducer;

@@ -7,10 +7,11 @@ import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyAA4kBMNLGsS4gqjq5eLdlgrElaRGuFm-A",
   authDomain: "fe-mentors.firebaseapp.com",
+  databaseURL: "https://fe-mentors-default-rtdb.firebaseio.com",
   projectId: "fe-mentors",
   storageBucket: "fe-mentors.appspot.com",
   messagingSenderId: "792842318173",
-  appId: "1:792842318173:web:f78c9170c2b38af80cb8b4",
+  appId: "1:792842318173:web:8d3e732fda64b8cc0cb8b4",
 };
 // const firebaseConfig = {
 //   apiKey: "AIzaSyDkGrT3YCt6EnXmxQxbGD_-IASmupo-iH4",

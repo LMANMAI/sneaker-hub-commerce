@@ -1,19 +1,31 @@
-import { useState, useEffect } from "react";
-import { Stack, Image, Icon, Text, Grid, GridItem } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import {
+  Stack,
+  Image,
+  Icon,
+  Text,
+  Grid,
+  GridItem,
+  Input,
+} from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
-import { IoCaretDownOutline } from "react-icons/io5";
+import { IoCaretDownOutline, IoSearchOutline } from "react-icons/io5";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
   selectBasketQuantity,
+  selecBrands,
+  selectCount,
   setSneaker,
   setBrandFilter,
-  selecBrands,
+  setSearch,
+  setCounterLimit,
+  setTotalSneaker,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
-import { Basket, ProfileMenu } from "./";
+import { Basket, ProfileMenu, SearchC } from "./";
 const brands = [
   {
     name: "Adidas",
@@ -53,6 +65,7 @@ const Header = () => {
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
   const currentUser = useSelector(selectUser);
+  const counter = useSelector(selectCount);
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const brandsArray = useSelector(selecBrands);
@@ -63,13 +76,20 @@ const Header = () => {
 
   useEffect(() => {
     const handleReq = async () => {
-      const req = await fetch("https://sneakersapinest.herokuapp.com/sneaker");
+      const reqLength = await fetch(
+        `https://sneakersapinest.herokuapp.com/sneaker`
+      );
+      const data = await reqLength.json();
+      dispatch(setTotalSneaker(data.sneakers));
+      dispatch(setCounterLimit(data.sneakers.length));
+      const req = await fetch(
+        `https://sneakersapinest.herokuapp.com/sneaker?limit=10&offset=${counter}`
+      );
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
     };
-
     handleReq();
-  }, [pathname]);
+  }, [pathname, counter]);
 
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
@@ -179,6 +199,26 @@ const Header = () => {
             </Stack>
           </Stack>
         </Stack>
+        <Stack
+          flex="1"
+          maxWidth="30%"
+          direction="row"
+          alignItems="center"
+          border="1px solid #e3e3e3"
+          borderRadius="15px"
+          paddingX={2}
+        >
+          <Icon as={IoSearchOutline} cursor="pointer" />
+          <Input
+            type="text"
+            variant="unstyled"
+            padding={2}
+            onChange={(e) => {
+              dispatch(setSearch(e.target.value));
+            }}
+          />
+        </Stack>
+
         <Stack direction="row" spacing={2} alignItems="center">
           <Stack>
             <Stack
@@ -222,6 +262,7 @@ const Header = () => {
             />
           </Stack>
         </Stack>
+
         {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>

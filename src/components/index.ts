@@ -8,3 +8,4 @@ export { default as ProfileMenu } from "./ProfileMenu";
 export { default as AuthComponent } from "./AuthComponent";
 export { default as ProtectedComponent } from "./ProtectedComponent";
 export { default as ButtonCount } from "./ButtonCount";
+export { default as SearchC } from "./SearchC";
