@@ -22,6 +22,7 @@ import {
   setBrandFilter,
   setSearch,
   setCounterLimit,
+  setTotalSneaker,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { Basket, ProfileMenu, SearchC } from "./";
@@ -79,8 +80,8 @@ const Header = () => {
         `https://sneakersapinest.herokuapp.com/sneaker`
       );
       const data = await reqLength.json();
-      let limit = data.sneakers.length;
-      dispatch(setCounterLimit(limit));
+      dispatch(setTotalSneaker(data.sneakers));
+      dispatch(setCounterLimit(data.sneakers.length));
       const req = await fetch(
         `https://sneakersapinest.herokuapp.com/sneaker?limit=10&offset=${counter}`
       );

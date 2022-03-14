@@ -35,6 +35,7 @@ export interface ISneakerState {
   search: string;
   counter: number;
   counterLimit: number;
+  sneakersTotal: ISneaker[];
 }
 
 export interface IUser {

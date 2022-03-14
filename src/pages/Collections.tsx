@@ -7,6 +7,7 @@ import {
   selectSneakers,
   selectSearch,
   selectCountLimit,
+  selectTotalSneakers,
   setSneakerActive,
   setCounterState,
 } from "../features/sneakersSlice";
@@ -25,6 +26,7 @@ const Collections = (props: any) => {
   const brandsArray = useSelector(selecBrands);
   const search = useSelector(selectSearch);
   const limit = useSelector(selectCountLimit);
+  const total = useSelector(selectTotalSneakers);
   //query params
   let [searchParams] = useSearchParams();
   let gender = searchParams.get("gender");
@@ -37,14 +39,14 @@ const Collections = (props: any) => {
       setProductsFilter(sneakers);
       return;
     } else if (gender) {
-      let arrayfilter = filterByGender(sneakers, gender);
+      let arrayfilter = filterByGender(total, gender);
       setProductsFilter(arrayfilter);
       return;
     } else if (brand || brandsArray.length > 1) {
       let brand_exist = brandsArray.find((item) => item === brand);
 
       if (brand_exist) {
-        setSecondArray([...secondarray, filterByBrand(sneakers, brand_exist)]);
+        setSecondArray([...secondarray, filterByBrand(total, brand_exist)]);
         return;
       } else {
         const newArray = producfilter.filter((item) => item.brand !== brand);
@@ -57,7 +59,6 @@ const Collections = (props: any) => {
   useEffect(() => {
     let tempData: any[] = [];
     secondarray.map((item) => {
-      //console.log("Este es array", item);
       tempData = tempData.concat(item);
       setProductsFilter(tempData);
     });
@@ -71,6 +72,17 @@ const Collections = (props: any) => {
       }
     }, 300);
   }, [props.history, sneakers]);
+  useEffect(() => {
+    let array: any = [];
+    total?.filter((item) => {
+      if (search === "") {
+        setProductsFilter(sneakers);
+      } else if (item.name.toLowerCase().includes(search.toLocaleLowerCase())) {
+        array.push(item);
+        setProductsFilter(array);
+      }
+    });
+  }, [search]);
 
   useEffect(() => {
     dispatch(setCounterState(count));
@@ -115,36 +127,26 @@ const Collections = (props: any) => {
             placeItems="center"
           >
             {producfilter &&
-              producfilter
-                ?.filter((item) => {
-                  if (search === "") {
-                    return item;
-                  } else if (
-                    item.name.toLowerCase().includes(search.toLocaleLowerCase())
-                  ) {
-                    return item;
-                  }
-                })
-                .map((sneaker: ISneaker, index: number) => (
-                  <Link
-                    to={`/${sneaker?._id}`}
-                    key={index}
-                    onClick={() => dispatch(setSneakerActive(sneaker))}
+              producfilter?.map((sneaker: ISneaker, index: number) => (
+                <Link
+                  to={`/${sneaker?._id}`}
+                  key={index}
+                  onClick={() => dispatch(setSneakerActive(sneaker))}
+                >
+                  <GridItem
+                    padding={2}
+                    maxWidth="250px"
+                    minHeight="250px"
+                    height="100%"
+                    borderRadius="15px"
+                    textAlign="center"
+                    boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
                   >
-                    <GridItem
-                      padding={2}
-                      maxWidth="250px"
-                      minHeight="250px"
-                      height="100%"
-                      borderRadius="15px"
-                      textAlign="center"
-                      boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
-                    >
-                      <Image src={sneaker.posterPathImage} />
-                      <p>{sneaker.name}</p>
-                    </GridItem>
-                  </Link>
-                ))}
+                    <Image src={sneaker.posterPathImage} />
+                    <p>{sneaker.name}</p>
+                  </GridItem>
+                </Link>
+              ))}
           </Grid>
         </>
       )}
