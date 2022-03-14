@@ -45,9 +45,9 @@ const Settings = () => {
     profileIMG: currentUser.profileIMG,
     rol: currentUser.rol,
   });
-  const [disabledstate, setDisabled] = useState<boolean>(true);
+  const [disabledstate, setDisabled] = useState<boolean>(false);
   const [foto, setFoto] = useState<any>(undefined);
-  const [fotopreview, setPreview] = useState<any>(undefined);
+  const [fotopreview, setPreview] = useState<any>(currentUser.profileIMG);
   const { firstName, email } = usersettigns;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +131,7 @@ const Settings = () => {
               overflow="hidden"
               position="absolute"
             >
-              <Image src={currentUser.profileIMG} />
+              <Image src={fotopreview} />
             </Stack>
           </Stack>
         </Stack>
@@ -194,6 +194,7 @@ const Settings = () => {
                 Image:
               </Text>
               <Input
+                disabled={!disabledstate ? true : false}
                 w="fit-content"
                 type="file"
                 accept=".jpg"
