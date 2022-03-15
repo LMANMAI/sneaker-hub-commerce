@@ -7,6 +7,7 @@ import {
   Grid,
   GridItem,
   Input,
+  useColorMode,
 } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
@@ -73,7 +74,7 @@ const Header = () => {
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-
+  const { colorMode } = useColorMode();
   useEffect(() => {
     const handleReq = async () => {
       const reqLength = await fetch(
@@ -106,11 +107,11 @@ const Header = () => {
         alignItems="center"
         h="60px"
         as="nav"
+        backgroundColor={colorMode === "light" ? "white" : "gray.800"}
         className="header"
         position="fixed"
         width="98%"
         left="15px"
-        backgroundColor="white"
         zIndex="99"
       >
         <Stack
@@ -135,14 +136,15 @@ const Header = () => {
               w="100vw"
               h="100vh"
               top="0"
-              backgroundColor="#000"
               opacity="70%"
               transition="all 220ms ease-in-out"
             />
           )}
-          <NavLink to="/">
-            <Image src={logo} />
-          </NavLink>
+          <Stack display={{ base: "none", md: "initial" }}>
+            <NavLink to="/">
+              <Image src={logo} />
+            </NavLink>
+          </Stack>
           <Stack
             direction={{ base: "column", md: "row" }}
             fontSize="sm"
@@ -151,7 +153,6 @@ const Header = () => {
             position={{ base: "fixed", md: "initial" }}
             zIndex="99"
             width={{ base: "45vw", md: "initial" }}
-            backgroundColor="white"
             color={{ base: "#000", md: "gray.400" }}
             top={{ base: 0, md: "initial" }}
             left={{ base: menuposition ? "0" : "-50vw", md: "initial" }}
@@ -201,7 +202,7 @@ const Header = () => {
         </Stack>
         <Stack
           flex="1"
-          maxWidth="30%"
+          maxWidth={{ base: "50%", md: "30%" }}
           direction="row"
           alignItems="center"
           border="1px solid #e3e3e3"
@@ -233,7 +234,7 @@ const Header = () => {
               <Stack position="absolute">
                 {basket.length > 0 && (
                   <Text
-                    backgroundColor="primary.500"
+                    backgroundColor="primary"
                     color="white"
                     borderRadius="100%"
                     w="15px"
@@ -325,7 +326,10 @@ const Header = () => {
                       >
                         <Text
                           width="fit-content"
-                          backgroundColor="white"
+                          // backgroundColor="white"
+                          backgroundColor={
+                            colorMode === "light" ? "white" : "gray.800"
+                          }
                           padding="5px 10px"
                         >
                           {item.name}

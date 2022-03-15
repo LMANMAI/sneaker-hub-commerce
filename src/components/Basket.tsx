@@ -10,6 +10,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { RemoveIcon } from "../icons";
 import { ISneaker } from "../interfaces";
+import { Link } from "react-router-dom";
 interface IProps {
   Fn: Function;
 }
@@ -37,16 +38,21 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
       transition="all 250ms ease"
       backgroundColor="#FFF"
       borderRadius="15px"
-      w={{ base: "90vw", md: "300px" }}
-      minHeight="200px"
-      p={6}
+      w={{ base: "98vw", md: "500px" }}
+      height="fit-content"
+      p={4}
       spacing={2}
       zIndex="99"
       textAlign="center"
     >
       {basket.length > 0 ? (
         basket.map((sneaker, index) => (
-          <Stack direction="row" alignItems="center" key={index}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            key={index}
+            justifyContent="center"
+          >
             <Image w="40px" h="40px" src={sneaker.posterPathImage} />
             <Stack>
               <Text fontSize="12px">{sneaker.name}</Text>
@@ -58,7 +64,12 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
                 </Text>
               </Stack>
             </Stack>
-            <Stack direction="row" w="20%" alignItems="center">
+            <Stack
+              direction="row"
+              w="20%"
+              alignItems="center"
+              justifyContent="center"
+            >
               <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
 
               <button onClick={() => handleAddBasket(sneaker)}>+</button>
@@ -82,7 +93,14 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
       {totalbasket != 0 ? (
         <>
           <Text>Total: $ {totalbasket}</Text>
-          <Button colorScheme="primary">Checkout</Button>
+          <Button
+            variant="primary"
+            backgroundColor="primary"
+            width="250px"
+            alignSelf="center"
+          >
+            <Link to="/checkout">Checkout</Link>
+          </Button>
         </>
       ) : null}
     </Stack>

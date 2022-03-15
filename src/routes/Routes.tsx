@@ -3,7 +3,7 @@ import {
   Collections,
   Reports,
   NotFound,
-  MyOrders,
+  CheckOut,
   Settings,
   Favorites,
   Verification,
@@ -27,10 +27,10 @@ const RoutesComponent = () => {
         }
       />
       <Route
-        path="/orders"
+        path="/checkout"
         element={
           <ProtectedComponent>
-            <MyOrders />
+            <CheckOut />
           </ProtectedComponent>
         }
       />

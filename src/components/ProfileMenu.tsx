@@ -9,6 +9,9 @@ import {
   Icon,
   ListItem,
   UnorderedList,
+  useColorMode,
+  Button,
+  Text,
 } from "@chakra-ui/react";
 import { AuthComponent } from "./";
 import styled from "@emotion/styled";
@@ -18,7 +21,7 @@ import {
   MdFavoriteBorder,
   MdOutlineExitToApp,
 } from "react-icons/md";
-import { selectUser, setLogOut, setUser } from "../features/userSlice";
+import { selectUser, setUser } from "../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { ProtectedComponent } from "./";
 import { setUserSignOut } from "../controllers/Sesion";
@@ -46,7 +49,7 @@ const ListLink = styled(ListItem)`
   svg {
     width: 20px;
     height: 20px;
-    color: #a8a8a8;
+    //color: #a8a8a8;
   }
   &:hover {
     background-color: rgba(219, 219, 219, 0.6);
@@ -64,29 +67,27 @@ interface IProps {
   iconRight?: any;
   children: React.ReactNode;
 }
-
+function ItemMenu(props: IProps) {
+  return (
+    <ListLink>
+      <Icon className="icon_button" as={props.iconleft} />
+      {props.children}
+      <Icon className="icon_right" as={props.iconRight} />
+    </ListLink>
+  );
+}
 const ProfileMenu = (props: { fn: Function }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-
-  function ItemMenu(props: IProps) {
-    return (
-      <ListLink>
-        <Icon className="icon_button" as={props.iconleft} />
-        {props.children}
-        <Icon className="icon_right" as={props.iconRight} />
-      </ListLink>
-    );
-  }
+  const { colorMode, toggleColorMode } = useColorMode();
   const handdleOut = () => {
-    console.log("saliendooo");
     setUserSignOut();
     dispatch(setUser(null));
   };
   return (
     <Stack
       position="absolute"
-      backgroundColor="white"
+      backgroundColor={colorMode === "light" ? "white" : "gray.800"}
       top="58px"
       right="9px"
       w="300px"
@@ -105,7 +106,6 @@ const ProfileMenu = (props: { fn: Function }) => {
         {user ? (
           <ProtectedComponent>
             <Stack
-              backgroundColor="white"
               w="100%"
               padding="1rem"
               transition="all 350ms ease"
@@ -126,7 +126,9 @@ const ProfileMenu = (props: { fn: Function }) => {
                 <Link onClick={() => props.fn(false)} to="/favorites">
                   <ListLink>
                     <Icon className="icon_button" as={MdFavoriteBorder} />
-                    <span>Favorites</span>
+                    <Text color={colorMode === "light" ? "gray.800" : "white"}>
+                      Favorites
+                    </Text>
                   </ListLink>
                 </Link>
 
@@ -135,17 +137,23 @@ const ProfileMenu = (props: { fn: Function }) => {
                     iconleft={MdSettings}
                     iconRight={MdOutlineArrowForwardIos}
                   >
-                    <span>Settings</span>
+                    <Text color={colorMode === "light" ? "gray.800" : "white"}>
+                      Settings
+                    </Text>
                   </ItemMenu>
                 </Link>
 
                 <ListLink>
-                  <FormControl display="flex" alignItems="center">
+                  {/* <FormControl display="flex" alignItems="center">
                     <FormLabel ml="30px" mb="0">
                       Dark mode
                     </FormLabel>
-                    <Switch id="dark_mode" />
-                  </FormControl>
+                    <Switch
+                      id="dark_mode"
+                      onChange={(e) => console.log(e.target.checked)}
+                    />
+                  </FormControl> */}
+                  <Button onClick={toggleColorMode}>Theme</Button>
                 </ListLink>
                 <ListLink
                   onClick={() => {
@@ -153,7 +161,9 @@ const ProfileMenu = (props: { fn: Function }) => {
                   }}
                 >
                   <Icon className="icon_button" as={MdOutlineExitToApp} />
-                  <span>Close</span>
+                  <Text color={colorMode === "light" ? "gray.800" : "white"}>
+                    Close
+                  </Text>
                 </ListLink>
               </UnorderedList>
             </Stack>

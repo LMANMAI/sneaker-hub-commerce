@@ -85,7 +85,7 @@ const BodyContent: React.FC = () => {
               textTransform="uppercase"
               fontWeight="bold"
               letterSpacing={2}
-              color="primary.500"
+              color="primary"
               fontSize="sm"
             >
               Sneaker Company
@@ -117,7 +117,7 @@ const BodyContent: React.FC = () => {
                 $ {sneakerActive?.price}
               </Text>
               <Badge
-                color="primary.500"
+                color="primary"
                 colorScheme="primary"
                 fontSize="md"
                 borderRadius="md"
@@ -136,7 +136,7 @@ const BodyContent: React.FC = () => {
                     <Button
                       fontSize="2xl"
                       fontWeight="bold"
-                      color="primary.500"
+                      color="primary"
                       size="lg"
                       onClick={() => {
                         if (!currentUser) {
@@ -153,7 +153,7 @@ const BodyContent: React.FC = () => {
                     <Button
                       fontSize="2xl"
                       fontWeight="bold"
-                      color="primary.500"
+                      color="primary"
                       size="lg"
                       onClick={() => {
                         if (!currentUser) {

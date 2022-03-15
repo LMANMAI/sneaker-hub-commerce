@@ -124,7 +124,9 @@ const ButtonCount = (props: { direction?: string }) => {
         </Button>
       </Stack>
       <Button
-        colorScheme="primary"
+        // colorScheme="primary"
+        // backgroundColor="primary"
+        variant="primary"
         color="white"
         leftIcon={<CartIcon color="#FFF" />}
         size="lg"

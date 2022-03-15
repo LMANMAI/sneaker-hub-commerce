@@ -75,7 +75,7 @@ const Favorites = () => {
                       </Link>
                       <Button
                         variant="unstyled"
-                        color="primary.500"
+                        color="primary"
                         border="2px solid"
                         h="fit-content"
                         w="80px"

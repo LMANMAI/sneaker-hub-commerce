@@ -135,7 +135,7 @@ const Settings = () => {
             </Stack>
           </Stack>
         </Stack>
-        <FormControl>
+        <FormControl onSubmit={(e) => handleSubmit(e)}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -149,12 +149,9 @@ const Settings = () => {
             </Stack>
             <Stack direction="row">
               <Button
-                type={disabledstate ? "submit" : "button"}
+                type={disabledstate ? "button" : "button"}
                 onClick={(e) => {
                   setDisabled(!disabledstate);
-                  if (disabledstate) {
-                    handleSubmit(e);
-                  }
                 }}
               >
                 {disabledstate ? "Save" : "Update"}
