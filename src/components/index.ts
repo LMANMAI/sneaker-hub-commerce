@@ -9,3 +9,5 @@ export { default as AuthComponent } from "./AuthComponent";
 export { default as ProtectedComponent } from "./ProtectedComponent";
 export { default as ButtonCount } from "./ButtonCount";
 export { default as SearchC } from "./SearchC";
+export { default as SelectList } from "./SelectList";
+export { default as SelectBody } from "./SelectBody";

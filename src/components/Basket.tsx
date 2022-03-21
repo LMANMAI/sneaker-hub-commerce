@@ -1,5 +1,12 @@
-import React, { useMemo } from "react";
-import { Stack, Image, Icon, Text, Button } from "@chakra-ui/react";
+import React from "react";
+import {
+  Stack,
+  Image,
+  Icon,
+  Text,
+  Button,
+  useColorMode,
+} from "@chakra-ui/react";
 import {
   selectBasket,
   selectTotal,
@@ -10,6 +17,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { RemoveIcon } from "../icons";
 import { ISneaker } from "../interfaces";
+import { Link } from "react-router-dom";
 interface IProps {
   Fn: Function;
 }
@@ -26,27 +34,31 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
   const handleAddBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
   };
-
+  const { colorMode } = useColorMode();
   return (
     <Stack
       position="absolute"
-      border="1px solid #e9e9e9"
-      boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+      boxShadow="rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px"
       right="0px"
       top="60px"
       transition="all 250ms ease"
-      backgroundColor="#FFF"
       borderRadius="15px"
-      w={{ base: "90vw", md: "300px" }}
-      minHeight="200px"
-      p={6}
+      w={{ base: "98vw", md: "500px" }}
+      height="fit-content"
+      p={4}
       spacing={2}
       zIndex="99"
       textAlign="center"
+      backgroundColor={colorMode === "light" ? "white" : "#1a202c"}
     >
       {basket.length > 0 ? (
         basket.map((sneaker, index) => (
-          <Stack direction="row" alignItems="center" key={index}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            key={index}
+            justifyContent="center"
+          >
             <Image w="40px" h="40px" src={sneaker.posterPathImage} />
             <Stack>
               <Text fontSize="12px">{sneaker.name}</Text>
@@ -58,7 +70,12 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
                 </Text>
               </Stack>
             </Stack>
-            <Stack direction="row" w="20%" alignItems="center">
+            <Stack
+              direction="row"
+              w="20%"
+              alignItems="center"
+              justifyContent="center"
+            >
               <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
 
               <button onClick={() => handleAddBasket(sneaker)}>+</button>
@@ -82,7 +99,14 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
       {totalbasket != 0 ? (
         <>
           <Text>Total: $ {totalbasket}</Text>
-          <Button colorScheme="primary">Checkout</Button>
+          <Button
+            variant="primary"
+            //backgroundColor="primary"
+            width="250px"
+            alignSelf="center"
+          >
+            <Link to="/checkout">Checkout</Link>
+          </Button>
         </>
       ) : null}
     </Stack>

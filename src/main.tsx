@@ -9,7 +9,7 @@ import { store } from "./app/store";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider resetCSS theme={theme}>
       <Router>
         <Provider store={store}>
           <App />

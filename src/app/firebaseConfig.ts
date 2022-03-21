@@ -13,14 +13,14 @@ const firebaseConfig = {
   messagingSenderId: "792842318173",
   appId: "1:792842318173:web:8d3e732fda64b8cc0cb8b4",
 };
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDkGrT3YCt6EnXmxQxbGD_-IASmupo-iH4",
-//   authDomain: "commerce-168bf.firebaseapp.com",
-//   projectId: "commerce-168bf",
-//   storageBucket: "commerce-168bf.appspot.com",
-//   messagingSenderId: "653344790593",
-//   appId: "1:653344790593:web:da1ba8a38d140faef10ec0",
-// };
+// // const firebaseConfig = {
+// //   apiKey: "AIzaSyDkGrT3YCt6EnXmxQxbGD_-IASmupo-iH4",
+// //   authDomain: "commerce-168bf.firebaseapp.com",
+// //   projectId: "commerce-168bf",
+// //   storageBucket: "commerce-168bf.appspot.com",
+// //   messagingSenderId: "653344790593",
+// //   appId: "1:653344790593:web:da1ba8a38d140faef10ec0",
+// // };
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);

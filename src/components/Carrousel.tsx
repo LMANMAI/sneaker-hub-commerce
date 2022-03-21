@@ -117,7 +117,7 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
             cursor="pointer"
             opacity={selectedimage === image ? 0.5 : 1}
             borderColor={
-              selectedimage === image ? "5px solid primary.500" : "transparent"
+              selectedimage === image ? "5px solid primary" : "transparent"
             }
             borderRadius="lg"
             key={image}
