@@ -6,13 +6,29 @@ import {
   Input,
   FormControl,
   Image,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Divider,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateProfile, updateProfileWhithPhoto } from "../controllers/Profile";
+import {
+  updateProfile,
+  updateProfileWhithPhoto,
+  setUserShippingAddress,
+  getAddresses,
+} from "../controllers/Profile";
 import { clearFavs } from "../controllers/Products";
 import { selectUser, setUser } from "../features/userSlice";
-
+import { SelectBody } from "../components";
 interface IPropsStack {
   children: React.ReactNode;
   border?: boolean;
@@ -21,8 +37,8 @@ function StackContainer({ children, border }: IPropsStack) {
   return (
     <Stack
       borderY={border ? "1px solid #f0f0f0" : "none"}
-      padding="25px"
-      marginY={4}
+      padding="15px"
+      marginY={2}
       alignItems="center"
       justifyContent="center"
       direction="row"
@@ -35,6 +51,7 @@ function StackContainer({ children, border }: IPropsStack) {
 const Settings = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
+  //states
   const [usersettigns, setUSerSettings] = useState<any>({
     email: currentUser.email,
     firstName: currentUser.firstName,
@@ -45,11 +62,20 @@ const Settings = () => {
     profileIMG: currentUser.profileIMG,
     rol: currentUser.rol,
   });
+  const [adress, setAdress] = useState({
+    prov: "",
+    mun: "",
+    locald: "",
+    direc: {},
+  });
   const [disabledstate, setDisabled] = useState<boolean>(false);
   const [foto, setFoto] = useState<any>(undefined);
   const [fotopreview, setPreview] = useState<any>(currentUser.profileIMG);
+  const [addressarray, setArrayAddresses] = useState<any[]>([]);
+  const [value, setValue] = useState<any>();
+  //modal
   const { firstName, email } = usersettigns;
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUSerSettings({
@@ -70,7 +96,6 @@ const Settings = () => {
     setFoto(undefined);
     setPreview(undefined);
   };
-
   const saveImage = (e: any) => {
     e.preventDefault();
     const userId = currentUser.idUser;
@@ -84,7 +109,6 @@ const Settings = () => {
       setPreview(fotopreview);
     }
   };
-
   const changeImage = (e: any) => {
     let selectImage;
     if (e.target.files && e.target.files.length === 1) {
@@ -103,6 +127,15 @@ const Settings = () => {
     };
     fotcargada.readAsDataURL(foto);
   }, [foto]);
+  useEffect(() => {
+    (async () => {
+      const res = await getAddresses(currentUser.idUser);
+      if (typeof res !== "string") setArrayAddresses(res);
+    })();
+  }, [addressarray]);
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
   return (
     <Stack h="100%" p={2}>
       <Text as="h1" fontSize="2.125rem" fontWeight="bold">
@@ -149,7 +182,8 @@ const Settings = () => {
             </Stack>
             <Stack direction="row">
               <Button
-                type={disabledstate ? "button" : "button"}
+                variant="primary"
+                type={disabledstate ? "submit" : "button"}
                 onClick={(e) => {
                   setDisabled(!disabledstate);
                 }}
@@ -158,90 +192,165 @@ const Settings = () => {
               </Button>
             </Stack>
           </Stack>
-          <StackContainer>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-evenly"
-            >
-              <Text w="30%" mb="8px" textAlign="end">
-                Name:
-              </Text>
-              <Input
-                disabled={!disabledstate ? true : false}
-                defaultValue={firstName}
-                onChange={handleChange}
-                placeholder="Primer Nombre"
-                size="sm"
-                maxWidth="450px"
-                type="text"
-                borderRadius="10px"
-                padding="20px"
-                name="firstName"
-              />
-            </Stack>
-          </StackContainer>
-          <StackContainer>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-evenly"
-            >
-              <Text w="30%" mb="8px" textAlign="end">
-                Image:
-              </Text>
-              <Input
-                disabled={!disabledstate ? true : false}
-                w="fit-content"
-                type="file"
-                accept=".jpg"
-                variant="unstyled"
-                alignSelf="center"
-                border="none"
-                onChange={(e) => changeImage(e)}
-              />
-              {foto !== undefined && (
-                <Stack direction="row">
-                  <Button
+          <Divider orientation="horizontal" marginY={4} />
+          <Stack direction={{ base: "column", md: "row" }}>
+            {/* Datos del usuario */}
+            <Stack alignItems="baseline">
+              <StackContainer>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                >
+                  <Text w="30%" mb="8px" textAlign="end">
+                    Name:
+                  </Text>
+                  <Input
+                    disabled={!disabledstate ? true : false}
+                    defaultValue={firstName}
+                    onChange={handleChange}
+                    placeholder="Primer Nombre"
                     size="sm"
-                    colorScheme="primary"
-                    onClick={(e) => saveImage(e)}
-                  >
-                    Change Image
-                  </Button>
-                  <Button
-                    size="sm"
-                    colorScheme="primary"
-                    onClick={() => eliminarImage()}
-                  >
-                    Cancel
-                  </Button>
+                    maxWidth="450px"
+                    type="text"
+                    borderRadius="10px"
+                    padding="20px"
+                    name="firstName"
+                  />
                 </Stack>
-              )}
+              </StackContainer>
+              <StackContainer>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                >
+                  <Text w="30%" mb="8px" textAlign="end">
+                    Password:
+                  </Text>
+                  <Input
+                    disabled
+                    placeholder="You will be able to change the password soon"
+                    size="sm"
+                    maxWidth="450px"
+                    type="text"
+                    borderRadius="10px"
+                    padding="20px"
+                  />
+                </Stack>
+              </StackContainer>
+              <StackContainer>
+                <Stack direction="column">
+                  <Text mb="8px">Image:</Text>
+                  <Input
+                    disabled={!disabledstate ? true : false}
+                    w="fit-content"
+                    type="file"
+                    accept=".jpg"
+                    alignSelf="center"
+                    border="none"
+                    onChange={(e) => changeImage(e)}
+                  />
+                  {foto !== undefined && (
+                    <Stack direction="row">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={(e) => saveImage(e)}
+                      >
+                        Change Image
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => eliminarImage()}
+                      >
+                        Cancel
+                      </Button>
+                    </Stack>
+                  )}
+                </Stack>
+              </StackContainer>
+
+              <StackContainer>
+                <Button variant="primary" onClick={onOpen}>
+                  Add addresses
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => clearFavs(currentUser)}
+                >
+                  Clear Favorites
+                </Button>
+                <Modal
+                  closeOnOverlayClick={false}
+                  blockScrollOnMount={true}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Add addresses</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <SelectBody setObjetc={setAdress} />
+                    </ModalBody>
+
+                    <ModalFooter>
+                      <Button
+                        variant="primary"
+                        mr={3}
+                        onClick={() => {
+                          if (adress) {
+                            setUserShippingAddress(adress, currentUser.idUser);
+                          }
+                          setAdress({
+                            prov: "",
+                            mun: "",
+                            locald: "",
+                            direc: {},
+                          });
+                          onClose();
+                        }}
+                      >
+                        Add address
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+              </StackContainer>
             </Stack>
-          </StackContainer>
-          <StackContainer>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-evenly"
-            >
-              <Text w="30%" mb="8px" textAlign="end">
-                Password:
+
+            {/* Direcciones del usuario */}
+            <Stack w="100%">
+              <Text as="h3" textAlign="center">
+                My addresses
               </Text>
-              <Input
-                disabled
-                placeholder="You will be able to change the password soon"
-                size="sm"
-                maxWidth="450px"
-                type="text"
-                borderRadius="10px"
-                padding="20px"
-              />
+              <Stack alignItems="center" p={4} justifyContent="center">
+                <RadioGroup value={value} onChange={setValue}>
+                  {addressarray.map((item) => (
+                    <Radio
+                      name="direccion"
+                      value={`${item.direc.calle} ${item.direc.alt}`}
+                    >
+                      <Stack p={4} direction="row" alignItems="center" w="80%">
+                        <Stack>
+                          <Text>
+                            {`${item.direc.calle} ${item.direc.alt}`} -{" "}
+                            {item.locald}
+                          </Text>
+                          <Stack>
+                            <Text>{`${item.prov} ${item.mun}`}</Text>
+                          </Stack>
+                        </Stack>
+                      </Stack>
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              </Stack>
             </Stack>
-          </StackContainer>
+          </Stack>
         </FormControl>
-        <Button onClick={() => clearFavs(currentUser)}>Clear Favorites</Button>
       </Box>
     </Stack>
   );

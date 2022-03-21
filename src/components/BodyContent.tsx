@@ -8,6 +8,7 @@ import {
   Button,
   Box,
   Icon,
+  useColorMode,
 } from "@chakra-ui/react";
 import { ISneaker } from "../interfaces";
 import PrevIcon from "../icons/PrevIcon";
@@ -25,7 +26,7 @@ const BodyContent: React.FC = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState<boolean>(false);
   const [showmessage, setShowMessage] = useState<boolean>(false);
-
+  const { colorMode } = useColorMode();
   useEffect(() => {
     if (sneakerActive) {
       verificated(currentUser, sneakerActive);
@@ -85,8 +86,9 @@ const BodyContent: React.FC = () => {
               textTransform="uppercase"
               fontWeight="bold"
               letterSpacing={2}
-              color="primary"
+              variant="primary"
               fontSize="sm"
+              color={colorMode === "light" ? "primary" : " secondary"}
             >
               Sneaker Company
             </Text>
@@ -117,8 +119,10 @@ const BodyContent: React.FC = () => {
                 $ {sneakerActive?.price}
               </Text>
               <Badge
-                color="primary"
-                colorScheme="primary"
+                backgroundColor={
+                  colorMode === "light" ? "primary" : " secondary"
+                }
+                color="white"
                 fontSize="md"
                 borderRadius="md"
                 paddingX={2}
@@ -136,7 +140,7 @@ const BodyContent: React.FC = () => {
                     <Button
                       fontSize="2xl"
                       fontWeight="bold"
-                      color="primary"
+                      variant="primary"
                       size="lg"
                       onClick={() => {
                         if (!currentUser) {
@@ -153,7 +157,7 @@ const BodyContent: React.FC = () => {
                     <Button
                       fontSize="2xl"
                       fontWeight="bold"
-                      color="primary"
+                      variant="primary"
                       size="lg"
                       onClick={() => {
                         if (!currentUser) {

@@ -42,7 +42,10 @@ const Favorites = () => {
           {itexmsFav && itexmsFav?.length > 0 ? (
             <>
               <Stack direction="row" justifyContent="space-between">
-                <Button onClick={() => clearFavs(currentUser)}>
+                <Button
+                  variant="primary"
+                  onClick={() => clearFavs(currentUser)}
+                >
                   Delete all
                 </Button>
                 <Text>Favorites {itexmsFav?.length}</Text>
@@ -58,7 +61,6 @@ const Favorites = () => {
                   <Stack key={index} direction="row">
                     <Stack
                       direction="row"
-                      backgroundColor="white"
                       alignItems="center"
                       borderTop="1px solid #e4e4e4"
                       borderBottom="1px solid #e4e4e4"
@@ -74,8 +76,7 @@ const Favorites = () => {
                         </Stack>
                       </Link>
                       <Button
-                        variant="unstyled"
-                        color="primary"
+                        variant="secondary"
                         border="2px solid"
                         h="fit-content"
                         w="80px"

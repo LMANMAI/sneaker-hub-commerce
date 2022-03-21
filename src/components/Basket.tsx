@@ -1,5 +1,12 @@
-import React, { useMemo } from "react";
-import { Stack, Image, Icon, Text, Button } from "@chakra-ui/react";
+import React from "react";
+import {
+  Stack,
+  Image,
+  Icon,
+  Text,
+  Button,
+  useColorMode,
+} from "@chakra-ui/react";
 import {
   selectBasket,
   selectTotal,
@@ -27,16 +34,14 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
   const handleAddBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
   };
-
+  const { colorMode } = useColorMode();
   return (
     <Stack
       position="absolute"
-      border="1px solid #e9e9e9"
-      boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+      boxShadow="rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px"
       right="0px"
       top="60px"
       transition="all 250ms ease"
-      backgroundColor="#FFF"
       borderRadius="15px"
       w={{ base: "98vw", md: "500px" }}
       height="fit-content"
@@ -44,6 +49,7 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
       spacing={2}
       zIndex="99"
       textAlign="center"
+      backgroundColor={colorMode === "light" ? "white" : "#1a202c"}
     >
       {basket.length > 0 ? (
         basket.map((sneaker, index) => (
@@ -95,7 +101,7 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
           <Text>Total: $ {totalbasket}</Text>
           <Button
             variant="primary"
-            backgroundColor="primary"
+            //backgroundColor="primary"
             width="250px"
             alignSelf="center"
           >

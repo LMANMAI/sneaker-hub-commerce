@@ -29,9 +29,10 @@ const RoutesComponent = () => {
       <Route
         path="/checkout"
         element={
-          <ProtectedComponent>
-            <CheckOut />
-          </ProtectedComponent>
+          // <ProtectedComponent>
+          //   <CheckOut />
+          // </ProtectedComponent>
+          <CheckOut />
         }
       />
       <Route

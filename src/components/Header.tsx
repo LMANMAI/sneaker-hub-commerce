@@ -8,6 +8,7 @@ import {
   GridItem,
   Input,
   useColorMode,
+  Button,
 } from "@chakra-ui/react";
 import logo from "../assets/logo.svg";
 import { Cart, MenuIcon, CloseIcon } from "../icons";
@@ -74,7 +75,7 @@ const Header = () => {
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-  const { colorMode } = useColorMode();
+  //const { colorMode } = useColorMode();
   useEffect(() => {
     const handleReq = async () => {
       const reqLength = await fetch(
@@ -91,7 +92,7 @@ const Header = () => {
     };
     handleReq();
   }, [pathname, counter]);
-
+  const { colorMode, toggleColorMode } = useColorMode();
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
     setBasketShows(value);
@@ -142,7 +143,10 @@ const Header = () => {
           )}
           <Stack display={{ base: "none", md: "initial" }}>
             <NavLink to="/">
-              <Image src={logo} />
+              <Image
+                filter={colorMode === "light" ? "" : "invert(100%)"}
+                src={logo}
+              />
             </NavLink>
           </Stack>
           <Stack
@@ -234,7 +238,9 @@ const Header = () => {
               <Stack position="absolute">
                 {basket.length > 0 && (
                   <Text
-                    backgroundColor="primary"
+                    backgroundColor={
+                      colorMode === "light" ? "primary" : "secondary"
+                    }
                     color="white"
                     borderRadius="100%"
                     w="15px"
@@ -263,7 +269,7 @@ const Header = () => {
             />
           </Stack>
         </Stack>
-
+        <Button onClick={toggleColorMode}>Theme</Button>
         {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>
@@ -326,7 +332,6 @@ const Header = () => {
                       >
                         <Text
                           width="fit-content"
-                          // backgroundColor="white"
                           backgroundColor={
                             colorMode === "light" ? "white" : "gray.800"
                           }

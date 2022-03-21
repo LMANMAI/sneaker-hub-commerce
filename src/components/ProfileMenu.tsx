@@ -39,7 +39,6 @@ const ListLink = styled(ListItem)`
     padding: 5px;
     width: calc(60px * 0.5);
     height: calc(60px * 0.5);
-    background-color: #d4d4d4;
     border-radius: 50%;
     padding: 5px;
     margin: 2px 5px;
@@ -49,7 +48,6 @@ const ListLink = styled(ListItem)`
   svg {
     width: 20px;
     height: 20px;
-    //color: #a8a8a8;
   }
   &:hover {
     background-color: rgba(219, 219, 219, 0.6);
@@ -66,11 +64,17 @@ interface IProps {
   iconleft?: any;
   iconRight?: any;
   children: React.ReactNode;
+  colormode: any;
 }
 function ItemMenu(props: IProps) {
   return (
     <ListLink>
-      <Icon className="icon_button" as={props.iconleft} />
+      <Icon
+        color="white"
+        className="icon_button"
+        as={props.iconleft}
+        backgroundColor={props.colormode === "light" ? "primary" : "secondary"}
+      />
       {props.children}
       <Icon className="icon_right" as={props.iconRight} />
     </ListLink>
@@ -87,12 +91,12 @@ const ProfileMenu = (props: { fn: Function }) => {
   return (
     <Stack
       position="absolute"
+      boxShadow="rgba(0, 0, 0, 0.35) 0px 8px 18px"
       backgroundColor={colorMode === "light" ? "white" : "gray.800"}
       top="58px"
       right="9px"
       w="300px"
       p="10px"
-      boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
       borderRadius="15px"
       overflow="hidden"
       overflowY="auto"
@@ -125,7 +129,14 @@ const ProfileMenu = (props: { fn: Function }) => {
                 <hr />
                 <Link onClick={() => props.fn(false)} to="/favorites">
                   <ListLink>
-                    <Icon className="icon_button" as={MdFavoriteBorder} />
+                    <Icon
+                      color="white"
+                      className="icon_button"
+                      as={MdFavoriteBorder}
+                      backgroundColor={
+                        colorMode === "light" ? "primary" : "secondary"
+                      }
+                    />
                     <Text color={colorMode === "light" ? "gray.800" : "white"}>
                       Favorites
                     </Text>
@@ -136,6 +147,7 @@ const ProfileMenu = (props: { fn: Function }) => {
                   <ItemMenu
                     iconleft={MdSettings}
                     iconRight={MdOutlineArrowForwardIos}
+                    colormode={colorMode}
                   >
                     <Text color={colorMode === "light" ? "gray.800" : "white"}>
                       Settings
@@ -143,7 +155,7 @@ const ProfileMenu = (props: { fn: Function }) => {
                   </ItemMenu>
                 </Link>
 
-                <ListLink>
+                {/* <ListLink>
                   {/* <FormControl display="flex" alignItems="center">
                     <FormLabel ml="30px" mb="0">
                       Dark mode
@@ -152,15 +164,22 @@ const ProfileMenu = (props: { fn: Function }) => {
                       id="dark_mode"
                       onChange={(e) => console.log(e.target.checked)}
                     />
-                  </FormControl> */}
-                  <Button onClick={toggleColorMode}>Theme</Button>
-                </ListLink>
+                  </FormControl> 
+                  
+                </ListLink> */}
                 <ListLink
                   onClick={() => {
                     handdleOut();
                   }}
                 >
-                  <Icon className="icon_button" as={MdOutlineExitToApp} />
+                  <Icon
+                    color="white"
+                    className="icon_button"
+                    as={MdOutlineExitToApp}
+                    backgroundColor={
+                      colorMode === "light" ? "primary" : "secondary"
+                    }
+                  />
                   <Text color={colorMode === "light" ? "gray.800" : "white"}>
                     Close
                   </Text>

@@ -93,9 +93,10 @@ const Collections = (props: any) => {
         <Spinkit />
       ) : (
         <>
-          <Stack direction="row" justifyContent="center">
+          <Stack direction="row" justifyContent="center" alignItems="center">
             {count <= 0 ? null : (
               <Button
+                variant="primary"
                 onClick={() => {
                   setCountPage(countPage - 1);
                   setCount(count - 10);
@@ -109,6 +110,7 @@ const Collections = (props: any) => {
             </Text>
             {count + 10 > limit ? null : (
               <Button
+                variant="primary"
                 onClick={() => {
                   setCount(count + 10);
                   setCountPage(countPage + 1);

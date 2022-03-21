@@ -72,16 +72,14 @@ const ButtonCount = (props: { direction?: string }) => {
     >
       <Stack
         direction="row"
-        backgroundColor="gray.100"
         borderRadius="md"
         padding={1}
         alignItems="center"
         justifyContent="center"
       >
         <Button
-          colorScheme="primary"
           size="md"
-          variant="ghost"
+          variant="primary"
           fontSize="2xl"
           disabled={contador <= 0 ? true : false}
           onClick={() => {
@@ -104,15 +102,13 @@ const ButtonCount = (props: { direction?: string }) => {
           name="contador"
           textAlign="center"
           justifyContent="center"
-          width={4}
           border="none"
-          variant="unstyled"
-          minWidth="35px"
+          backgroundColor="transparent"
+          width="50px"
         />
         <Button
-          colorScheme="primary"
           size="md"
-          variant="ghost"
+          variant="primary"
           fontSize="2xl"
           onClick={() => {
             setIsAdd(true);
@@ -124,8 +120,6 @@ const ButtonCount = (props: { direction?: string }) => {
         </Button>
       </Stack>
       <Button
-        // colorScheme="primary"
-        // backgroundColor="primary"
         variant="primary"
         color="white"
         leftIcon={<CartIcon color="#FFF" />}

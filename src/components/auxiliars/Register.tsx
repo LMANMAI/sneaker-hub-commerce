@@ -111,7 +111,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
               </Button>
             </Text>
             <Button
-              colorScheme="primary"
+              variant="primary"
               type="submit"
               mt={2}
               w="100%"
