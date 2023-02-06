@@ -78,12 +78,12 @@ const Header = () => {
   //const { colorMode } = useColorMode();
   useEffect(() => {
     const handleReq = async () => {
-      const reqLength = await fetch(`https://sneakeers-api.vercel.app/`);
+      const reqLength = await fetch(`https://sneakeers-api.vercel.app/sneaker`);
       const data = await reqLength.json();
       dispatch(setTotalSneaker(data.sneakers));
       dispatch(setCounterLimit(data.sneakers.length));
       const req = await fetch(
-        `https://sneakeers-api.vercel.app/?limit=10&offset=${counter}`
+        `https://sneakersapinest.herokuapp.com/sneaker?limit=10&offset=${counter}`
       );
       const res = await req.json();
       dispatch(setSneaker(res.sneakers));
