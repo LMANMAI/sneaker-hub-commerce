@@ -78,7 +78,9 @@ const Header = () => {
   //const { colorMode } = useColorMode();
   useEffect(() => {
     const handleReq = async () => {
-      const reqLength = await fetch(`https://sneakeers-api.vercel.app/sneaker`);
+      const reqLength = await fetch(
+        `https://sneakeers-api-vb8y-fvm1flabf-lmanmai.vercel.app/sneaker?page=1&pageSize=10`
+      );
       const data = await reqLength.json();
       dispatch(setTotalSneaker(data.sneakers));
       dispatch(setCounterLimit(data.sneakers.length));
