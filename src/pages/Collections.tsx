@@ -137,19 +137,23 @@ const Collections = (props: any) => {
                 >
                   <GridItem
                     padding={2}
-                    maxWidth="250px"
-                    minHeight="250px"
-                    height="100%"
-                    borderRadius="15px"
+                    // width="250px"
+                    // height="250px"
+                    // borderRadius="15px"
+                    width="200px"
+                    height="200px"
                     textAlign="center"
                     boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
                   >
                     <Image
+                      width="100%"
+                      height="85%"
                       src={`${import.meta.env.VITE_URL_EP_CLOUD}${
                         sneaker.posterPathImage
                       }`}
+                      objectFit={"cover"}
                     />
-                    <p>{sneaker.name}</p>
+                    <p style={{ fontSize: "12px" }}>{sneaker.name}</p>
                   </GridItem>
                 </Link>
               ))}
