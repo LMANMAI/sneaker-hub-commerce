@@ -1,5 +1,4 @@
 import { Select, Text } from "@chakra-ui/react";
-import React from "react";
 import { useRequest } from "../hooks/useRequest";
 import SpinKit from "./SpinKit";
 const SelectList = (props: {
@@ -7,7 +6,7 @@ const SelectList = (props: {
   url: string;
   handleFuncion: any;
 }) => {
-  const { data, error, loading } = useRequest(props.url);
+  const { data, loading } = useRequest(props.url);
   if (!data) return null;
   let id = `select-${props.tittle}`;
 

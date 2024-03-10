@@ -74,7 +74,7 @@ const Settings = () => {
   const [addressarray, setArrayAddresses] = useState<any[]>([]);
   const [value, setValue] = useState<any>();
   //modal
-  const { firstName, email } = usersettigns;
+  const { firstName } = usersettigns;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -185,7 +185,7 @@ const Settings = () => {
               <Button
                 variant="primary"
                 type={disabledstate ? "submit" : "button"}
-                onClick={(e) => {
+                onClick={() => {
                   setDisabled(!disabledstate);
                 }}
               >

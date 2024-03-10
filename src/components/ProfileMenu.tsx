@@ -2,15 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   Stack,
-  Switch,
-  FormControl,
-  FormLabel,
   Avatar,
   Icon,
   ListItem,
   UnorderedList,
   useColorMode,
-  Button,
   Text,
 } from "@chakra-ui/react";
 import { AuthComponent } from "./";
@@ -83,7 +79,7 @@ function ItemMenu(props: IProps) {
 const ProfileMenu = (props: { fn: Function }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const handdleOut = () => {
     setUserSignOut();
     dispatch(setUser(null));
@@ -100,7 +96,6 @@ const ProfileMenu = (props: { fn: Function }) => {
       borderRadius="15px"
       overflow="hidden"
       overflowY="auto"
-      // height={height}
       minHeight="400px"
       zIndex="99"
       transition="height 250ms ease"

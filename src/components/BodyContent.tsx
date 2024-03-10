@@ -13,7 +13,7 @@ import {
 import { ISneaker } from "../interfaces";
 import PrevIcon from "../icons/PrevIcon";
 import { Carrousel, ButtonCount } from "./";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectSneakerActive } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,6 @@ const BodyContent: React.FC = () => {
   const currentUser = useSelector(selectUser);
   const navigate = useNavigate();
   const [toggle, setToggle] = useState<boolean>(false);
-  const [showmessage, setShowMessage] = useState<boolean>(false);
   const { colorMode } = useColorMode();
   useEffect(() => {
     if (sneakerActive) {
@@ -146,7 +145,6 @@ const BodyContent: React.FC = () => {
                       size="lg"
                       onClick={() => {
                         if (!currentUser) {
-                          setShowMessage(true);
                           return;
                         } else if (sneakerActive) {
                           deleteFav(sneakerActive);
@@ -163,7 +161,6 @@ const BodyContent: React.FC = () => {
                       size="lg"
                       onClick={() => {
                         if (!currentUser) {
-                          setShowMessage(true);
                           return;
                         } else if (sneakerActive) {
                           handleAddStore(currentUser, sneakerActive);

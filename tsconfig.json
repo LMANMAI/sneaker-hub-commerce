@@ -9,7 +9,6 @@
     /* Bundler mode */
     "moduleResolution": "node",
     "allowJs": true,
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -30,7 +29,7 @@
       "@types": ["src/types/index.ts"]
     }
   },
-  "allowUnreachableUnionTypes": true,
+  "allowUnreachableUnionTypes": true, 
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

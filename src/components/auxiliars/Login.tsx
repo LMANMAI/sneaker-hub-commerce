@@ -16,14 +16,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getUserAuth, signAuthUser } from "../../controllers/Sesion";
 
-interface IUserVerified {
-  idUsuario: string;
-  token: any;
-}
 interface IProps {
   fn: Function;
 }
-const Login: React.FC<IProps> = (props, { fn, setCheck }) => {
+const Login: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
   const current_user = useSelector(selectUser);

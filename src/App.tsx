@@ -17,7 +17,7 @@ function App(props: any) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user?.uid === token) {
         const clientRef = doc(db, "users", token);
-        const docClient = getDoc(clientRef).then((item) => {
+        getDoc(clientRef).then((item) => {
           dispatch(setUser(item.data()));
         });
       }

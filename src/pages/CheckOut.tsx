@@ -1,10 +1,8 @@
 import { Box, Stack, Text } from "@chakra-ui/react";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectBasket, selectTotal } from "../features/sneakersSlice";
 
 const CheckOut = () => {
-  const dispatch = useDispatch();
   const basket = useSelector(selectBasket);
   const totalBasket = useSelector(selectTotal);
 

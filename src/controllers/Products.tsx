@@ -16,7 +16,7 @@ export const setFavItems = async (
   const docRef = doc(db, "users", userID.idUser);
   const collRef = collection(docRef, "favorites");
   try {
-    // console.log(idRef);
+    console.log(idRef);
     const faav = await addDoc(collRef, sneaker);
     return faav;
   } catch (error) {

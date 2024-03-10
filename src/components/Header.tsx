@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Stack,
   Image,
@@ -23,11 +23,9 @@ import {
   setSneaker,
   setBrandFilter,
   setSearch,
-  setCounterLimit,
-  setTotalSneaker,
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
-import { Basket, ProfileMenu, SearchC } from "./";
+import { Basket, ProfileMenu } from "./";
 import instance from "../config";
 const brands = [
   {

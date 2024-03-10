@@ -1,5 +1,4 @@
 import { Icon, Stack, Text } from "@chakra-ui/react";
-import React from "react";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 
 const CheckView = () => {

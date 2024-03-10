@@ -7,7 +7,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { setError, selectError, setUser } from "../../features/userSlice";
+import { setError, selectError } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { authClient } from "../../controllers/Sesion";
 import { CheckView } from "./";

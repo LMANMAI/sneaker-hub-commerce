@@ -1,4 +1,4 @@
-import { Button, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Login, Register } from "./auxiliars";
 import { useDispatch } from "react-redux";

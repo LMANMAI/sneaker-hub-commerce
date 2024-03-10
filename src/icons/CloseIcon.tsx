@@ -1,5 +1,3 @@
-import React from "react";
-
 const CloseIcon = () => {
   return (
     <svg width="14" height="15" xmlns="http://www.w3.org/2000/svg">

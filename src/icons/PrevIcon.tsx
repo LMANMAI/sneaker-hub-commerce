@@ -1,5 +1,3 @@
-import React from "react";
-
 const PrevIcon = () => {
   return (
     <svg width="12" height="18" xmlns="http://www.w3.org/2000/svg">
