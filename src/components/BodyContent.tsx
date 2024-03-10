@@ -69,9 +69,11 @@ const BodyContent: React.FC = () => {
         justifyContent="center"
       >
         <Box flex={1}>
-          <Carrousel images={sneakerActive?.imgs} />
+          <Carrousel
+            posterPath={sneakerActive ? sneakerActive?.posterPathImage : ""}
+            images={sneakerActive?.imgs}
+          />
         </Box>
-
         <Stack
           flex={1}
           spacing={6}

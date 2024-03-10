@@ -28,6 +28,7 @@ import {
 } from "../features/sneakersSlice";
 import { selectUser } from "../features/userSlice";
 import { Basket, ProfileMenu, SearchC } from "./";
+import instance from "../config";
 const brands = [
   {
     name: "Adidas",
@@ -76,20 +77,20 @@ const Header = () => {
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
   //const { colorMode } = useColorMode();
+  const handleReq = async () => {
+    // const reqLength = await fetch(`${import.meta.env.VITE_URL_EP}`);
+    // const data = await reqLength.json();
+    // dispatch(setTotalSneaker(data.sneakers));
+    // dispatch(setCounterLimit(data.sneakers.length));
+    // const req = await fetch(
+    //   `${import.meta.env.VITE_URL_EP}?limit=10&offset=${counter}`
+    // );
+    // const res = await req.json();
+    // dispatch(setSneaker(res.sneakers));
+    const { data } = await instance.get(`?page=${1}&pageSize=${10}`);
+    dispatch(setSneaker(data.data));
+  };
   useEffect(() => {
-    const handleReq = async () => {
-      const reqLength = await fetch(
-        `https://sneakersapinest.herokuapp.com/sneaker`
-      );
-      const data = await reqLength.json();
-      dispatch(setTotalSneaker(data.sneakers));
-      dispatch(setCounterLimit(data.sneakers.length));
-      const req = await fetch(
-        `https://sneakersapinest.herokuapp.com/sneaker?limit=10&offset=${counter}`
-      );
-      const res = await req.json();
-      dispatch(setSneaker(res.sneakers));
-    };
     handleReq();
   }, [pathname, counter]);
   const { colorMode, toggleColorMode } = useColorMode();

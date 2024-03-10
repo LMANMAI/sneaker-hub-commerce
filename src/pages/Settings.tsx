@@ -136,6 +136,7 @@ const Settings = () => {
   useEffect(() => {
     console.log(value);
   }, [value]);
+
   return (
     <Stack h="100%" p={2}>
       <Text as="h1" fontSize="2.125rem" fontWeight="bold">

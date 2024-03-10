@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 
 interface ICarrouselProps {
   images?: string[];
+  posterPath: string;
 }
-const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
-  const [selectedimage, setSelectedImage] = useState<string>();
+const Carrousel: React.FC<ICarrouselProps> = ({ images, posterPath }) => {
+  const [selectedimage, setSelectedImage] = useState<string>(posterPath);
   const [render, setRender] = useState<boolean>(false);
   const [cursor, setCursorPosition] = useState({
     cursor_x: 0,
@@ -16,11 +17,6 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
     size: "",
     position: "",
   });
-  useEffect(() => {
-    if (images !== undefined) {
-      setSelectedImage(images[0]);
-    }
-  }, [images]);
 
   const img_container = document.querySelector<HTMLElement>(".img_container");
   const zoomer = document.querySelector<HTMLElement>(".cursorZoom");
@@ -89,6 +85,7 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
       resultcontainer.style.display = "none";
     }
   }, [render]);
+
   return (
     <Stack alignItems="center" marginY={5}>
       <Stack
@@ -101,7 +98,7 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
         <Image
           cursor="pointer"
           borderRadius="lg"
-          src={selectedimage}
+          src={`${import.meta.env.VITE_URL_EP_CLOUD}${selectedimage}`}
           width={{ base: "initial", md: 345 }}
           className="img"
         />
@@ -112,21 +109,31 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images }) => {
         ></Stack>
       </Stack>
       <Stack direction="row">
-        {images?.map((image) => (
-          <Image
-            cursor="pointer"
-            opacity={selectedimage === image ? 0.5 : 1}
-            borderColor={
-              selectedimage === image ? "5px solid primary" : "transparent"
-            }
-            borderRadius="lg"
-            key={image}
-            src={image}
-            width={{ base: 14, md: 20 }}
-            height={{ base: 14, md: 20 }}
-            onClick={() => setSelectedImage(image)}
-          />
-        ))}
+        <Image
+          cursor="pointer"
+          borderRadius="lg"
+          src={`${import.meta.env.VITE_URL_EP_CLOUD}${posterPath}`}
+          width={{ base: 14, md: 20 }}
+          height={{ base: 14, md: 20 }}
+          onClick={() => setSelectedImage(posterPath)}
+        />
+        {images?.map((image) => {
+          return (
+            <Image
+              cursor="pointer"
+              opacity={selectedimage === image ? 0.5 : 1}
+              borderColor={
+                selectedimage === image ? "5px solid primary" : "transparent"
+              }
+              borderRadius="lg"
+              key={image}
+              src={`${import.meta.env.VITE_URL_EP_CLOUD}${image}`}
+              width={{ base: 14, md: 20 }}
+              height={{ base: 14, md: 20 }}
+              onClick={() => setSelectedImage(image)}
+            />
+          );
+        })}
       </Stack>
     </Stack>
   );

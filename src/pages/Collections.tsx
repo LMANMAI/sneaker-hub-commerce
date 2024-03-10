@@ -144,7 +144,11 @@ const Collections = (props: any) => {
                     textAlign="center"
                     boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
                   >
-                    <Image src={sneaker.posterPathImage} />
+                    <Image
+                      src={`${import.meta.env.VITE_URL_EP_CLOUD}${
+                        sneaker.posterPathImage
+                      }`}
+                    />
                     <p>{sneaker.name}</p>
                   </GridItem>
                 </Link>
