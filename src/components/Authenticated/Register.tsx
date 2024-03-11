@@ -9,8 +9,8 @@ import {
 import React, { useState } from "react";
 import { setError, selectError } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { authClient } from "../../controllers/Sesion";
-import { CheckView } from "./";
+import { authClient } from "../../functions/Sesion";
+import { CheckView } from ".";
 interface IPropsFn {
   fn: Function;
 }
@@ -74,18 +74,18 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
       ) : (
         <>
           <Text as="h3" textAlign="center" fontWeight="bold">
-            Don't have an account?
+            Registrate
           </Text>
           <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-            <FormLabel htmlFor="firstName">Name</FormLabel>
+            {/* <FormLabel htmlFor="firstName">Nombre</FormLabel>
             <Input
               onChange={(e) => handleChange(e)}
               name="firstName"
               id="firstName"
               type="text"
-            />
+            /> */}
 
-            <FormLabel htmlFor="emailr">Email</FormLabel>
+            <FormLabel htmlFor="emailr">Correo electronico</FormLabel>
             <Input
               onChange={(e) => handleChange(e)}
               name="emailr"
@@ -93,7 +93,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
               type="email"
             />
 
-            <FormLabel htmlFor="passwordr">Password</FormLabel>
+            <FormLabel htmlFor="passwordr">Contraseña</FormLabel>
             <Input
               onChange={(e) => handleChange(e)}
               name="passwordr"
@@ -101,13 +101,13 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
               id="passwordr"
             />
             <Text fontSize="13px" textAlign="center">
-              Do you already have an account?
+              ¿Ya tenes una cuenta?{" "}
               <Button
                 variant="unstyled"
                 size="fit-content"
                 onClick={() => fn(false)}
               >
-                log in
+                Ingresar
               </Button>
             </Text>
             <Button

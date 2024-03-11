@@ -1,5 +1,4 @@
-import { Layout } from "./components";
-import { Container, Stack, StackDivider } from "@chakra-ui/react";
+import { Container, Stack, StackDivider, Box } from "@chakra-ui/react";
 import RoutesComponent from "./routes/Routes";
 import "./assets/global.css";
 import { useEffect } from "react";
@@ -8,6 +7,7 @@ import { selectUser, setUser } from "./features/userSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./app/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { Header, Footer } from "./components";
 
 function App(props: any) {
   const dispatch = useDispatch();
@@ -28,9 +28,12 @@ function App(props: any) {
   return (
     <Container maxWidth="container.xl" position="relative">
       <Stack spacing={0} divider={<StackDivider />}>
-        <Layout>
+        <Header />
+        <Box height="fit-content" minHeight="100vh" marginTop={2} p={4}>
           <RoutesComponent />
-        </Layout>
+        </Box>
+        <Stack alignItems="center" justifyContent="center"></Stack>
+        <Footer />
       </Stack>
     </Container>
   );

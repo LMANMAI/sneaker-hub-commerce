@@ -8,10 +8,9 @@ import {
   GridItem,
   Input,
   useColorMode,
-  Button,
 } from "@chakra-ui/react";
-import logo from "../assets/logo.svg";
-import { Cart, MenuIcon, CloseIcon } from "../icons";
+import logo from "../../assets/logo.svg";
+import { Cart, MenuIcon, CloseIcon } from "../../icons";
 import { IoCaretDownOutline, IoSearchOutline } from "react-icons/io5";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,10 +22,11 @@ import {
   setSneaker,
   setBrandFilter,
   setSearch,
-} from "../features/sneakersSlice";
-import { selectUser } from "../features/userSlice";
-import { Basket, ProfileMenu } from "./";
-import instance from "../config";
+} from "../../features/sneakersSlice";
+
+import { selectUser } from "../../features/userSlice";
+import { Basket, ProfileMenu } from "..";
+import instance from "../../config";
 const brands = [
   {
     name: "Adidas",
@@ -91,7 +91,7 @@ const Header = () => {
   useEffect(() => {
     handleReq();
   }, [pathname, counter]);
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
     setBasketShows(value);
@@ -268,7 +268,7 @@ const Header = () => {
             />
           </Stack>
         </Stack>
-        <Button onClick={toggleColorMode}>Theme</Button>
+
         {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
         {basketshows ? <Basket Fn={setBasketShows} /> : null}
       </Stack>

@@ -10,15 +10,15 @@ import {
   Icon,
   useColorMode,
 } from "@chakra-ui/react";
-import { ISneaker } from "../interfaces";
-import PrevIcon from "../icons/PrevIcon";
-import { Carrousel, ButtonCount } from "./";
+import { ISneaker } from "../../interfaces";
+import PrevIcon from "../../icons/PrevIcon";
+import { Carrousel, ButtonCount } from "..";
 import { useSelector } from "react-redux";
-import { selectSneakerActive } from "../features/sneakersSlice";
-import { selectUser } from "../features/userSlice";
+import { selectSneakerActive } from "../../features/sneakersSlice";
+import { selectUser } from "../../features/userSlice";
 import { useNavigate } from "react-router-dom";
 
-import { checkFavs, removeFav } from "../controllers/Products";
+import { checkFavs, removeFav } from "../../functions/Products";
 
 const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);

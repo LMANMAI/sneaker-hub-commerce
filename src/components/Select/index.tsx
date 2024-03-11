@@ -1,6 +1,6 @@
 import { Input, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { SelectList } from "./";
+import { SelectList } from "..";
 const SelectBody = (props: { setObjetc: Function }) => {
   const [prov, setProv] = useState("");
   const [municipio, setMunicipio] = useState("");

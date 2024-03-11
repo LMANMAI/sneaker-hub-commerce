@@ -25,10 +25,10 @@ import {
   updateProfileWhithPhoto,
   setUserShippingAddress,
   getAddresses,
-} from "../controllers/Profile";
-import { clearFavs } from "../controllers/Products";
-import { selectUser, setUser } from "../features/userSlice";
-import { SelectBody } from "../components";
+} from "../../functions/Profile";
+import { clearFavs } from "../../functions/Products";
+import { selectUser, setUser } from "../../features/userSlice";
+import { SelectBody } from "../../components";
 interface IPropsStack {
   children: React.ReactNode;
   border?: boolean;

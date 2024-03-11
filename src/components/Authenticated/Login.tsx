@@ -14,7 +14,7 @@ import {
   selectUser,
 } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserAuth, signAuthUser } from "../../controllers/Sesion";
+import { getUserAuth, signAuthUser } from "../../functions/Sesion";
 
 interface IProps {
   fn: Function;
@@ -83,10 +83,10 @@ const Login: React.FC<IProps> = (props) => {
         </Text>
       )}
       <Text as="h3" textAlign="center" fontWeight="bold">
-        Log in
+        Ingresar
       </Text>
       <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-        <FormLabel htmlFor="email">Email</FormLabel>
+        <FormLabel htmlFor="email">Correo electronico</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
           name="email"
@@ -94,34 +94,35 @@ const Login: React.FC<IProps> = (props) => {
           type="email"
         />
 
-        <FormLabel htmlFor="password">Password</FormLabel>
+        <FormLabel htmlFor="password">Contraseña</FormLabel>
         <Input
           onChange={(e) => handleChange(e)}
           name="password"
           type="password"
           id="password"
         />
-        <Text fontSize="13px" textAlign="center" alignItems="center">
-          You do not have an account?
-          <Button
-            variant="unstyled"
-            size="fit-content"
-            onClick={() => props.fn(true)}
-          >
-            register
-          </Button>
-        </Text>
-        <Button
-          variant="primary"
-          type="submit"
-          mt={2}
-          w="100%"
-          border="none"
-          outline="none"
-        >
-          Entrar
-        </Button>
       </FormControl>
+
+      <Text fontSize="13px" textAlign="center" alignItems="center">
+        ¿No tenes una cuenta?{" "}
+        <Button
+          variant="unstyled"
+          size="fit-content"
+          onClick={() => props.fn(true)}
+        >
+          Registrar
+        </Button>
+      </Text>
+      <Button
+        variant="primary"
+        type="submit"
+        mt={2}
+        w="100%"
+        border="none"
+        outline="none"
+      >
+        Entrar
+      </Button>
     </Stack>
   );
 };

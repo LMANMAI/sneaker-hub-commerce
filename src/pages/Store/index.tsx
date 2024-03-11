@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Grid, GridItem, Image, Stack, Button, Text } from "@chakra-ui/react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ISneaker } from "../interfaces";
+import { ISneaker } from "../../interfaces";
 import {
   selecBrands,
   selectSneakers,
@@ -10,10 +10,10 @@ import {
   selectTotalSneakers,
   setSneakerActive,
   setCounterState,
-} from "../features/sneakersSlice";
-import Spinkit from "../components/SpinKit";
+} from "../../features/sneakersSlice";
+import Spinkit from "../../components/SpinKit";
 import { useDispatch, useSelector } from "react-redux";
-import { filterByBrand, filterByGender } from "../app/helper";
+import { filterByBrand, filterByGender } from "../../app/helper";
 
 const Collections = (props: any) => {
   //states

@@ -9,7 +9,7 @@ import {
   useColorMode,
   Text,
 } from "@chakra-ui/react";
-import { AuthComponent } from "./";
+import { AuthComponent } from "..";
 import styled from "@emotion/styled";
 import {
   MdOutlineArrowForwardIos,
@@ -17,10 +17,10 @@ import {
   MdFavoriteBorder,
   MdOutlineExitToApp,
 } from "react-icons/md";
-import { selectUser, setUser } from "../features/userSlice";
+import { selectUser, setUser } from "../../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { ProtectedComponent } from "./";
-import { setUserSignOut } from "../controllers/Sesion";
+import { ProtectedComponent } from "..";
+import { setUserSignOut } from "../../functions/Sesion";
 const ListLink = styled(ListItem)`
   height: 50px;
   margin: 7px 0px;
@@ -96,7 +96,7 @@ const ProfileMenu = (props: { fn: Function }) => {
       borderRadius="15px"
       overflow="hidden"
       overflowY="auto"
-      minHeight="400px"
+      minHeight="345px"
       zIndex="99"
       transition="height 250ms ease"
       className="menu_main"

@@ -1,14 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { Input, Stack, Button } from "@chakra-ui/react";
-import CartIcon from "../icons/Cart";
+import CartIcon from "../../icons/Cart";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectSneakerActive,
   setBasket,
   removeOnefromBasket,
   selectBasket,
-} from "../features/sneakersSlice";
-import { ISneaker } from "../interfaces";
+} from "../../features/sneakersSlice";
+import { ISneaker } from "../../interfaces";
 
 const ButtonCount = (props: { direction?: string }) => {
   const sneakerActive = useSelector(selectSneakerActive);

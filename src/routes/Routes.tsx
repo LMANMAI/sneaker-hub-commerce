@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import {
   Collections,
-  Reports,
   NotFound,
   CheckOut,
   Settings,
@@ -15,7 +14,6 @@ const RoutesComponent = () => {
     <Routes>
       <Route path="/" element={<Collections />} />
       <Route path="/:id" element={<BodyContent />} />
-      <Route path="/reports" element={<Reports />} />
 
       <Route path="checkverification/*" element={<Verification />} />
       <Route

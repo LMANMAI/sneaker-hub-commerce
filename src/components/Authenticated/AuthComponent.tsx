@@ -1,8 +1,8 @@
 import { Stack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Login, Register } from "./auxiliars";
+import { Login, Register } from ".";
 import { useDispatch } from "react-redux";
-import { setMenuHeight } from "../features/userSlice";
+import { setMenuHeight } from "../../features/userSlice";
 
 const AuthComponent = () => {
   const [login, setLogin] = useState<boolean>(false);

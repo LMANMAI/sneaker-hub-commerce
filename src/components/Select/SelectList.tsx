@@ -1,6 +1,6 @@
 import { Select, Text } from "@chakra-ui/react";
-import { useRequest } from "../hooks/useRequest";
-import SpinKit from "./SpinKit";
+import { useRequest } from "../../hooks/useRequest";
+import SpinKit from "../SpinKit";
 const SelectList = (props: {
   tittle: string;
   url: string;

@@ -13,10 +13,10 @@ import {
   setBasket,
   removeOnefromBasket,
   removeSneakerBasket,
-} from "../features/sneakersSlice";
+} from "../../features/sneakersSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { RemoveIcon } from "../icons";
-import { ISneaker } from "../interfaces";
+import { RemoveIcon } from "../../icons";
+import { ISneaker } from "../../interfaces";
 import { Link } from "react-router-dom";
 interface IProps {
   Fn: Function;

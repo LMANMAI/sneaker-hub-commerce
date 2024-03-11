@@ -1,6 +1,6 @@
 import { Box, Stack, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import { selectBasket, selectTotal } from "../features/sneakersSlice";
+import { selectBasket, selectTotal } from "../../features/sneakersSlice";
 
 const CheckOut = () => {
   const basket = useSelector(selectBasket);

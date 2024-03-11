@@ -6,7 +6,7 @@ import {
   BsFillXCircleFill,
 } from "react-icons/bs";
 import { Link, useLocation } from "react-router-dom";
-import { verifyEmail } from "../controllers/Sesion";
+import { verifyEmail } from "../../functions/Sesion";
 const Verification = () => {
   const [checkEmail, setCheckEmail] = useState<string>("waiting");
   const [clientEmail, setClientEmail] = useState<any>("");
