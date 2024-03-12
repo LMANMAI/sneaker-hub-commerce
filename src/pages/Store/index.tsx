@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { Grid, GridItem, Image, Stack, Button, Text } from "@chakra-ui/react";
-import { Link, useSearchParams } from "react-router-dom";
+import {
+  Grid,
+  GridItem,
+  Image,
+  Stack,
+  Button,
+  Text,
+  useColorMode,
+  Heading,
+} from "@chakra-ui/react";
+import { Card, CardBody } from "@chakra-ui/card";
+import { Link, NavLink, useLocation, useSearchParams } from "react-router-dom";
 import { ISneaker } from "../../interfaces";
 import {
   selecBrands,
@@ -10,10 +20,12 @@ import {
   selectTotalSneakers,
   setSneakerActive,
   setCounterState,
+  setBrandFilter,
 } from "../../features/sneakersSlice";
 import Spinkit from "../../components/SpinKit";
 import { useDispatch, useSelector } from "react-redux";
 import { filterByBrand, filterByGender } from "../../app/helper";
+import Slider from "../../components/Slider";
 
 const Collections = (props: any) => {
   //states
@@ -33,6 +45,8 @@ const Collections = (props: any) => {
   let brand = searchParams.get("brand");
   const [producfilter, setProductsFilter] = useState<any[]>([]);
   const [countPage, setCountPage] = useState<number>(1);
+  const { pathname } = useLocation();
+
   useEffect(() => {
     if (brandsArray.length === 0 && !gender) {
       setSecondArray([]);
@@ -87,12 +101,134 @@ const Collections = (props: any) => {
   useEffect(() => {
     dispatch(setCounterState(count));
   }, [count]);
+
+  const brands = [
+    {
+      name: "Adidas",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/adidas.jpg?alt=media&token=338b9349-f864-475f-816f-5f24615d1338",
+    },
+    {
+      name: "Nike",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/nike.jpg?alt=media&token=6fa99abf-8a57-41e2-bccf-8fc8d9c25f5a",
+    },
+    {
+      name: "New Balance",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/newbalance.jpg?alt=media&token=8f55aea1-8135-4a07-9951-cd2ccd1bf109",
+    },
+    {
+      name: "Air Jordan",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/airjordan.jpg?alt=media&token=07353f34-0766-40c5-8eac-22ea8bb6a47b",
+    },
+    {
+      name: "Yeezy",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/yeezy.jpg?alt=media&token=d11da7ee-b681-44d3-9264-e2602b7612ae",
+    },
+    {
+      name: "Converse",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/converse.jpg?alt=media&token=5558391f-5dc9-4b92-9f39-2869e72e207f",
+    },
+    {
+      name: "Vans",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/asics.jpg?alt=media&token=edb58f7f-3877-4ab8-9851-98e9eef9f1e3",
+    },
+    {
+      name: "revengexstorm",
+      bg: "https://firebasestorage.googleapis.com/v0/b/sneakers-commerce.appspot.com/o/revenge.jpg?alt=media&token=2023707a-bec4-4f1a-822b-eea188c9421c",
+    },
+  ];
+  const { colorMode } = useColorMode();
+  const handleBrandArray = (brand: string) => {
+    dispatch(setBrandFilter(brand));
+  };
   return (
     <Stack>
       {loadign ? (
         <Spinkit />
       ) : (
         <>
+          {/*Slider*/}
+          <Stack marginTop="60px">
+            <Slider />
+          </Stack>
+
+          {/*marcas seleccionadas*/}
+          <Stack>
+            {pathname === "/" && (
+              <Stack padding={2} direction="row">
+                {brandsArray.map((item, index) => (
+                  <Text
+                    key={index}
+                    backgroundColor="#cecece"
+                    w="fit-content"
+                    p="5px"
+                    borderRadius="10px"
+                    alignItems="center"
+                  >
+                    {item}
+                    <NavLink to={`/?brand=${item}`}>
+                      <Text
+                        as="strong"
+                        cursor="pointer"
+                        onClick={() => handleBrandArray(item)}
+                        marginLeft="7px"
+                      >
+                        X
+                      </Text>
+                    </NavLink>
+                  </Text>
+                ))}
+              </Stack>
+            )}
+          </Stack>
+          {/*marcas*/}
+          <Grid
+            templateColumns={{
+              base: "repeat(auto-fit, minmax(45%, 1fr))",
+              md: "repeat(auto-fit, minmax(25%, 1fr))",
+            }}
+          >
+            {pathname === "/" && (
+              <>
+                {brands.map((item, index) => (
+                  <Stack key={index} className="contenedor">
+                    <NavLink to={`/?brand=${item.name}`}>
+                      <Stack p={2}>
+                        <GridItem
+                          height={{ base: "100px", md: "120px" }}
+                          borderRadius="5px"
+                          padding={4}
+                          cursor="pointer"
+                          transition="transform 250ms ease"
+                          _hover={{
+                            transform: "scale(1.05)",
+                          }}
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          background={`url(${item.bg})`}
+                          backgroundPosition="center center"
+                          onClick={() => {
+                            handleBrandArray(item.name);
+                          }}
+                        >
+                          <Text
+                            width="fit-content"
+                            backgroundColor={
+                              colorMode === "light" ? "white" : "gray.800"
+                            }
+                            padding="5px 10px"
+                          >
+                            {item.name}
+                          </Text>
+                        </GridItem>
+                      </Stack>
+                    </NavLink>
+                  </Stack>
+                ))}
+              </>
+            )}
+          </Grid>
+
           <Stack direction="row" justifyContent="center" alignItems="center">
             {count <= 0 ? null : (
               <Button
@@ -120,6 +256,7 @@ const Collections = (props: any) => {
               </Button>
             )}
           </Stack>
+          {/*Productos*/}
           <Grid
             templateColumns={{
               base: "repeat(auto-fit, minmax(150px, 1fr))",
@@ -128,33 +265,36 @@ const Collections = (props: any) => {
             gap={4}
             placeItems="center"
           >
+            {/*Componente item*/}
             {producfilter &&
               producfilter?.map((sneaker: ISneaker, index: number) => (
                 <Link
                   to={`/${sneaker?._id}`}
                   key={index}
+                  style={{ padding: "10px" }}
                   onClick={() => dispatch(setSneakerActive(sneaker))}
                 >
-                  <GridItem
-                    padding={2}
-                    // width="250px"
-                    // height="250px"
-                    // borderRadius="15px"
-                    width="200px"
-                    height="200px"
-                    textAlign="center"
-                    boxShadow="rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
-                  >
-                    <Image
-                      width="100%"
-                      height="85%"
-                      src={`${import.meta.env.VITE_URL_EP_CLOUD}${
-                        sneaker.posterPathImage
-                      }`}
-                      objectFit={"cover"}
-                    />
-                    <p style={{ fontSize: "12px" }}>{sneaker.name}</p>
-                  </GridItem>
+                  <Card maxW="sm">
+                    <CardBody>
+                      <Image
+                        src={`${import.meta.env.VITE_URL_EP_CLOUD}${
+                          sneaker.posterPathImage
+                        }`}
+                        alt="Green double couch with wooden legs"
+                        borderRadius={"5px"}
+                        width={250}
+                        height={150}
+                        objectFit={"cover"}
+                      />
+                      <Stack mt="6" spacing="3">
+                        <Heading size="sm">{sneaker.name}</Heading>
+
+                        <Text color="blue.600" fontSize="2xl">
+                          ${sneaker.price.toFixed(2)}
+                        </Text>
+                      </Stack>
+                    </CardBody>
+                  </Card>
                 </Link>
               ))}
           </Grid>

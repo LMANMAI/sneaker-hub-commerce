@@ -26,16 +26,22 @@ function App(props: any) {
   }, [props.history, currentUser]);
 
   return (
-    <Container maxWidth="container.xl" position="relative">
-      <Stack spacing={0} divider={<StackDivider />}>
-        <Header />
-        <Box height="fit-content" minHeight="100vh" marginTop={2} p={4}>
-          <RoutesComponent />
-        </Box>
-        <Stack alignItems="center" justifyContent="center"></Stack>
-        <Footer />
-      </Stack>
-    </Container>
+    <div style={{ backgroundColor: "#F9FAFC" }}>
+      <Header />
+      <Container
+        maxWidth="container.xl"
+        position="relative"
+        backgroundColor={"#F9FAFC"}
+        padding={"0px"}
+      >
+        <Stack spacing={0} divider={<StackDivider />}>
+          <Box height="fit-content" minHeight="100dvh" marginTop={2} p={4}>
+            <RoutesComponent />
+          </Box>
+        </Stack>
+      </Container>
+      <Footer />
+    </div>
   );
 }
 

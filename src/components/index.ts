@@ -10,3 +10,4 @@ export { default as ButtonCount } from "./Basket/ButtonCount";
 export { default as SearchC } from "./Search";
 export { default as SelectList } from "./Select/SelectList";
 export { default as SelectBody } from "./Select";
+export { default as Slider } from "./Slider";
