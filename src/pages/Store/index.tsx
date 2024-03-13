@@ -150,7 +150,48 @@ const Collections = (props: any) => {
           <Stack marginTop="60px">
             <Slider />
           </Stack>
+          {/*Productos*/}
+          <Grid
+            templateColumns={{
+              base: "repeat(auto-fit, minmax(150px, 1fr))",
+              md: "repeat(auto-fit, minmax(210px, 1fr))",
+            }}
+            gap={4}
+            placeItems="center"
+          >
+            {/*Componente item*/}
+            {producfilter &&
+              producfilter?.map((sneaker: ISneaker, index: number) => (
+                <Link
+                  to={`/${sneaker?._id}`}
+                  key={index}
+                  style={{ padding: "10px" }}
+                  onClick={() => dispatch(setSneakerActive(sneaker))}
+                >
+                  <Card maxW="sm">
+                    <CardBody>
+                      <Image
+                        src={`${import.meta.env.VITE_URL_EP_CLOUD}${
+                          sneaker.posterPathImage
+                        }`}
+                        alt="Green double couch with wooden legs"
+                        borderRadius={"5px"}
+                        width={250}
+                        height={150}
+                        objectFit={"cover"}
+                      />
+                      <Stack mt="6" spacing="3">
+                        <Heading size="sm">{sneaker.name}</Heading>
 
+                        <Text color="blue.600" fontSize="2xl">
+                          ${sneaker.price.toFixed(2)}
+                        </Text>
+                      </Stack>
+                    </CardBody>
+                  </Card>
+                </Link>
+              ))}
+          </Grid>
           {/*marcas seleccionadas*/}
           <Stack>
             {pathname === "/" && (
