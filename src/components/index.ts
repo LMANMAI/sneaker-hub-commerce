@@ -11,3 +11,6 @@ export { default as SearchC } from "./Search";
 export { default as SelectList } from "./Select/SelectList";
 export { default as SelectBody } from "./Select";
 export { default as Slider } from "./Slider";
+export { default as CardComponent } from "./Card";
+export { default as BrandsComponent } from "./BrandsMenu";
+export { default as Spinkit } from "./SpinKit";
