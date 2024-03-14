@@ -6,7 +6,8 @@ const Footer = () => {
       alignItems="center"
       paddingY={2}
       fontSize={13}
-      backgroundColor={"RED"}
+      backgroundColor={"#9a3c09"}
+      color={"white"}
     >
       <p>Made with{" </> "}by Lucas Maidana</p>
     </Stack>

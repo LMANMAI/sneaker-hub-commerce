@@ -7,25 +7,23 @@ import {
   Text,
   Button,
   Box,
-  Icon,
   useColorMode,
 } from "@chakra-ui/react";
 import { ISneaker } from "../../interfaces";
-import PrevIcon from "../../icons/PrevIcon";
 import { Carrousel, ButtonCount } from "..";
 import { useSelector } from "react-redux";
 import { selectSneakerActive } from "../../features/sneakersSlice";
 import { selectUser } from "../../features/userSlice";
-import { useNavigate } from "react-router-dom";
-
+import { DetailContainer } from "./styles";
 import { checkFavs, removeFav } from "../../functions/Products";
+import { brands } from "../BrandsMenu/statics";
 
 const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
   const currentUser = useSelector(selectUser);
-  const navigate = useNavigate();
   const [toggle, setToggle] = useState<boolean>(false);
   const { colorMode } = useColorMode();
+
   useEffect(() => {
     if (sneakerActive) {
       verificated(currentUser, sneakerActive);
@@ -47,26 +45,26 @@ const BodyContent: React.FC = () => {
     removeFav(currentUser, sneaker);
   };
 
-  return (
-    <>
-      <Stack
-        marginTop={8}
-        onClick={() => {
-          navigate(-1);
-        }}
-        cursor="pointer"
-        w="fit-content"
-      >
-        <Icon as={PrevIcon} />
-      </Stack>
+  const checkBrandBG = (brandType: string) => {
+    const brand = brands.find(
+      (item) => item.name.toLocaleUpperCase() === brandType
+    );
+    if (brand) {
+      return brand.bg;
+    }
+  };
 
-      <Stack
-        marginTop={6}
-        minHeight="80vh"
-        direction={{ base: "column", md: "row" }}
-        alignItems="center"
-        justifyContent="center"
-      >
+  return (
+    <DetailContainer>
+      <div
+        className="detail__bg"
+        style={{
+          background: `url(${
+            sneakerActive ? checkBrandBG(sneakerActive?.brand) : ""
+          })`,
+        }}
+      ></div>
+      <Stack className="detail__content">
         <Box flex={1}>
           <Carrousel
             posterPath={sneakerActive ? sneakerActive?.posterPathImage : ""}
@@ -178,7 +176,7 @@ const BodyContent: React.FC = () => {
           </Stack>
         </Stack>
       </Stack>
-    </>
+    </DetailContainer>
   );
 };
 

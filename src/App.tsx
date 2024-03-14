@@ -26,12 +26,12 @@ function App(props: any) {
   }, [props.history, currentUser]);
 
   return (
-    <div style={{ backgroundColor: "#F9FAFC" }}>
+    <div style={{ backgroundColor: "#edeeef" }}>
       <Header />
       <Container
         maxWidth="container.xl"
         position="relative"
-        backgroundColor={"#F9FAFC"}
+        backgroundColor={"#edeeef"}
         padding={"0px"}
       >
         <Stack spacing={0} divider={<StackDivider />}>
