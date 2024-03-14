@@ -32,10 +32,9 @@ function App(props: any) {
         maxWidth="container.xl"
         position="relative"
         backgroundColor={"#edeeef"}
-        padding={"0px"}
       >
         <Stack spacing={0} divider={<StackDivider />}>
-          <Box height="fit-content" minHeight="100dvh" marginTop={2} p={4}>
+          <Box height="fit-content" minHeight="100dvh" p={"10px 0px"}>
             <RoutesComponent />
           </Box>
         </Stack>

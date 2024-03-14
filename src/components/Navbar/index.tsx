@@ -53,6 +53,7 @@ const Header = () => {
     handleReq();
   }, [pathname, counter]);
   const { colorMode } = useColorMode();
+
   const handleSwichtFilter = (value: boolean) => {
     setMenuPosition(value);
     setBasketShows(value);
@@ -70,6 +71,7 @@ const Header = () => {
       position="fixed"
       width="100%"
       left="0px"
+      top={"0px"}
       zIndex="99"
     >
       <Stack
@@ -129,34 +131,6 @@ const Header = () => {
           >
             <Icon as={CloseIcon} />
           </Stack>
-          <Stack
-            direction={{ base: "column", md: "row" }}
-            spacing={{ base: 0, md: 6 }}
-          >
-            <NavLink onClick={() => handleSwichtFilter(false)} to="/">
-              Collections
-            </NavLink>
-            <NavLink to={`/?gender=MEN`} onClick={() => setMenuPosition(false)}>
-              Men
-            </NavLink>
-            <NavLink
-              to={`/?gender=WOMAN`}
-              onClick={() => setMenuPosition(false)}
-            >
-              Woman
-            </NavLink>
-            {currentUser && (
-              <NavLink
-                onClick={() => {
-                  setMenuPosition(false);
-                  setProfileMenuState(false);
-                }}
-                to="reports"
-              >
-                Reports
-              </NavLink>
-            )}
-          </Stack>
         </Stack>
       </Stack>
       <Stack
@@ -185,7 +159,7 @@ const Header = () => {
             direction="row"
             cursor="pointer"
             onClick={() => {
-              setBasketShows(!basketshows);
+              setBasketShows(true);
               setProfileMenuState(false);
             }}
           >
@@ -226,7 +200,7 @@ const Header = () => {
       </Stack>
 
       {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
-      {basketshows ? <Basket Fn={setBasketShows} /> : null}
+      <Basket basketshows={basketshows} setBasketShows={setBasketShows} />
     </Stack>
   );
 };

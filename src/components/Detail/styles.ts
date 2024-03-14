@@ -19,7 +19,7 @@ export const DetailContainer = styled.div`
     min-height: 70dvh;
     background: #f9fafc;
     margin: 20px auto;
-    width: 80dvw;
+    width: 100%;
     border: 1px solid #c9c7c7;
     border-radius: 5px;
     position: relative;
@@ -30,6 +30,7 @@ export const DetailContainer = styled.div`
     .detail__content {
       flex-direction: row;
       margin-top: 100px;
+      max-width: 80dvw;
     }
   }
 `;

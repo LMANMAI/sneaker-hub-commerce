@@ -30,7 +30,7 @@ const CardComponent = ({ sneaker }: any) => {
               {sneaker.name}
             </CustomHeading>
 
-            <Text color="blue.600" fontSize="2xl">
+            <Text color="blue.600" fontSize=" 15px">
               ${sneaker.price.toFixed(2)}
             </Text>
           </Stack>

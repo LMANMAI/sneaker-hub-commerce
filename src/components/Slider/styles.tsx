@@ -4,6 +4,7 @@ export const SliderContainer = styled.div`
   width: 100%;
   margin: 10px auto;
   margin-bottom: 28px;
+  padding: 0px 20px;
   img {
     width: 100%;
     object-fit: contain;
@@ -16,6 +17,20 @@ export const Carrousel = styled(Slider)`
   & > button,
   .slick-prev:before,
   .slick-next:before {
-    color: #000 !important;
+    height: 100%;
+    background: #000;
+    color: white;
+  }
+  .slick-next {
+    right: -20px !important;
+    &:hover {
+      background: #000;
+    }
+  }
+  .slick-prev {
+    left: -20px !important;
+    &:hover {
+      background: #000;
+    }
   }
 `;

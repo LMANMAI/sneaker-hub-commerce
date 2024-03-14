@@ -87,20 +87,29 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images, posterPath }) => {
   }, [render]);
 
   return (
-    <Stack alignItems="center" marginY={5}>
+    <Stack
+      marginY={5}
+      direction={{ base: "column", md: "row-reverse" }}
+      justifyContent={"center"}
+      padding={"10px 15px"}
+    >
       <Stack
         position="relative"
         className="img_container"
         cursor="pointer"
         onMouseMoveCapture={handleMove}
         onMouseLeave={() => setRender(false)}
+        width={{ base: 245, md: 300, lg: 350 }}
+        height={{ base: 300, md: 350, lg: 400 }}
       >
         <Image
           cursor="pointer"
-          borderRadius="lg"
+          borderRadius="5px"
           src={`${import.meta.env.VITE_URL_EP_CLOUD}${selectedimage}`}
-          width={{ base: "initial", md: 345 }}
           className="img"
+          width={"100%"}
+          height={"100%"}
+          objectFit={"cover"}
         />
         <Stack
           className="cursorZoom"
@@ -108,13 +117,13 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images, posterPath }) => {
           left={cursor.cursor_x}
         ></Stack>
       </Stack>
-      <Stack direction="row">
+      <Stack direction={{ base: "row", md: "column" }} height={"100%"}>
         <Image
           cursor="pointer"
-          borderRadius="lg"
+          borderRadius="5px"
           src={`${import.meta.env.VITE_URL_EP_CLOUD}${posterPath}`}
-          width={{ base: 14, md: 20 }}
-          height={{ base: 14, md: 20 }}
+          width={{ base: "50px", md: "85px" }}
+          height={{ base: "50px", md: "85px" }}
           onClick={() => setSelectedImage(posterPath)}
         />
         {images?.map((image) => {
@@ -125,12 +134,14 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images, posterPath }) => {
               borderColor={
                 selectedimage === image ? "5px solid primary" : "transparent"
               }
-              borderRadius="lg"
+              borderRadius="5px"
               key={image}
               src={`${import.meta.env.VITE_URL_EP_CLOUD}${image}`}
-              width={{ base: 14, md: 20 }}
-              height={{ base: 14, md: 20 }}
+              width={{ base: "50px", md: "85px" }}
+              height={{ base: "50px", md: "85px" }}
+              flexDirection={"column"}
               onClick={() => setSelectedImage(image)}
+              objectFit={"cover"}
             />
           );
         })}

@@ -8,6 +8,7 @@ const Footer = () => {
       fontSize={13}
       backgroundColor={"#9a3c09"}
       color={"white"}
+      marginTop={"50px"}
     >
       <p>Made with{" </> "}by Lucas Maidana</p>
     </Stack>

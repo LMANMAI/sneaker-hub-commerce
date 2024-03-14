@@ -1,11 +1,17 @@
 import React from "react";
 import {
-  Stack,
-  Image,
-  Icon,
-  Text,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
   Button,
-  useColorMode,
+  Text,
+  Image,
+  Stack,
+  Icon,
 } from "@chakra-ui/react";
 import {
   selectBasket,
@@ -18,10 +24,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { RemoveIcon } from "../../icons";
 import { ISneaker } from "../../interfaces";
 import { Link } from "react-router-dom";
+
 interface IProps {
-  Fn: Function;
+  setBasketShows: Function;
+  basketshows: boolean;
 }
-const Basket: React.FC<IProps> = ({ Fn }) => {
+
+const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   const dispatch = useDispatch();
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
@@ -34,82 +43,83 @@ const Basket: React.FC<IProps> = ({ Fn }) => {
   const handleAddBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
   };
-  const { colorMode } = useColorMode();
   return (
-    <Stack
-      position="absolute"
-      boxShadow="rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px"
-      right="0px"
-      top="60px"
-      transition="all 250ms ease"
-      borderRadius="15px"
-      w={{ base: "98vw", md: "500px" }}
-      height="fit-content"
-      p={4}
-      spacing={2}
-      zIndex="99"
-      textAlign="center"
-      backgroundColor={colorMode === "light" ? "white" : "#1a202c"}
+    <Drawer
+      isOpen={basketshows}
+      placement="right"
+      onClose={() => setBasketShows(false)}
     >
-      {basket.length > 0 ? (
-        basket.map((sneaker, index) => (
-          <Stack
-            direction="row"
-            alignItems="center"
-            key={index}
-            justifyContent="center"
-          >
-            <Image w="40px" h="40px" src={sneaker.posterPathImage} />
-            <Stack>
-              <Text fontSize="12px">{sneaker.name}</Text>
-              <Stack direction="row">
-                <Text fontSize="12px">$ {sneaker.price}</Text>
-                <Text fontSize="12px">x {sneaker.quantity}</Text>
-                <Text fontSize="12px" fontWeight="bold">
-                  ${sneaker.price * sneaker.quantity}
-                </Text>
-              </Stack>
-            </Stack>
-            <Stack
-              direction="row"
-              w="20%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>Carrito</DrawerHeader>
 
-              <button onClick={() => handleAddBasket(sneaker)}>+</button>
+        <DrawerBody>
+          {basket.length > 0 ? (
+            basket.map((sneaker, index) => (
               <Stack
-                cursor="pointer"
-                onClick={() => (
-                  dispatch(removeSneakerBasket(sneaker)),
-                  setTimeout(() => {
-                    Fn(false);
-                  }, 1000)
-                )}
+                direction="row"
+                alignItems="center"
+                key={index}
+                justifyContent="center"
               >
-                <Icon as={RemoveIcon} />
+                <Image
+                  w="40px"
+                  h="40px"
+                  src={`${import.meta.env.VITE_URL_EP_CLOUD}${
+                    sneaker.posterPathImage
+                  }`}
+                />
+                <Stack>
+                  <Text fontSize="12px">{sneaker.name}</Text>
+                  <Stack direction="row">
+                    <Text fontSize="12px">$ {sneaker.price}</Text>
+                    <Text fontSize="12px">x {sneaker.quantity}</Text>
+                    <Text fontSize="12px" fontWeight="bold">
+                      ${sneaker.price * sneaker.quantity}
+                    </Text>
+                  </Stack>
+                </Stack>
+                <Stack
+                  direction="row"
+                  w="20%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
+
+                  <button onClick={() => handleAddBasket(sneaker)}>+</button>
+                  <Stack
+                    cursor="pointer"
+                    onClick={() => (
+                      dispatch(removeSneakerBasket(sneaker)),
+                      setTimeout(() => {
+                        setBasketShows(false);
+                      }, 1000)
+                    )}
+                  >
+                    <Icon as={RemoveIcon} />
+                  </Stack>
+                </Stack>
               </Stack>
-            </Stack>
-          </Stack>
-        ))
-      ) : (
-        <p>Todavia no hay productos en el carrito</p>
-      )}
-      {totalbasket != 0 ? (
-        <>
-          <Text>Total: $ {totalbasket}</Text>
-          <Button
-            variant="primary"
-            //backgroundColor="primary"
-            width="250px"
-            alignSelf="center"
-          >
-            <Link to="/checkout">Checkout</Link>
-          </Button>
-        </>
-      ) : null}
-    </Stack>
+            ))
+          ) : (
+            <p>Todavia no hay productos en el carrito</p>
+          )}
+        </DrawerBody>
+
+        <DrawerFooter display={"flex"} flexDirection={"column"}>
+          {totalbasket != 0 ? (
+            <>
+              <Text>Total: $ {totalbasket.toFixed(2)}</Text>
+              <Button variant="primary" width="250px" alignSelf="center">
+                <Link to="/checkout">Finalizar compra</Link>
+              </Button>
+            </>
+          ) : null}
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

@@ -54,6 +54,11 @@ const BodyContent: React.FC = () => {
     }
   };
 
+  console.log(sneakerActive);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <DetailContainer>
       <div
@@ -77,6 +82,7 @@ const BodyContent: React.FC = () => {
           textAlign={{ base: "center", md: "initial" }}
           position="relative"
           width="100%"
+          paddingRight={"15px"}
         >
           <Stack className="reflect" display="none"></Stack>
 
@@ -89,7 +95,7 @@ const BodyContent: React.FC = () => {
               fontSize="sm"
               color={colorMode === "light" ? "primary" : " secondary"}
             >
-              Sneaker Company
+              {sneakerActive?.brand.toLocaleUpperCase()}
             </Text>
             <Heading>{sneakerActive?.name}</Heading>
           </Stack>
@@ -102,76 +108,56 @@ const BodyContent: React.FC = () => {
           <Stack>
             <Stack
               spacing={4}
-              direction="row"
+              display={"flex"}
+              direction={{ base: "column", md: "row" }}
               alignItems="center"
               justifyContent="center"
+              // border={"1px solid red"}
             >
-              <Text
-                fontSize="sm"
-                fontWeight={700}
-                color="gray.400"
-                textDecoration="line-through"
-              >
-                $ {sneakerActive && sneakerActive?.price * 2}
-              </Text>
+              <Stack direction="row-reverse" justifyContent="center">
+                {currentUser && (
+                  <>
+                    {toggle ? (
+                      <Button
+                        fontSize="2xl"
+                        fontWeight="bold"
+                        variant="primary"
+                        size="lg"
+                        onClick={() => {
+                          if (!currentUser) {
+                            return;
+                          } else if (sneakerActive) {
+                            deleteFav(sneakerActive);
+                          }
+                        }}
+                      >
+                        <MdFavorite />
+                      </Button>
+                    ) : (
+                      <Button
+                        fontSize="2xl"
+                        fontWeight="bold"
+                        variant="primary"
+                        size="lg"
+                        onClick={() => {
+                          if (!currentUser) {
+                            return;
+                          } else if (sneakerActive) {
+                            handleAddStore(currentUser, sneakerActive);
+                          }
+                        }}
+                      >
+                        <MdFavoriteBorder />
+                      </Button>
+                    )}
+                  </>
+                )}
+
+                <ButtonCount />
+              </Stack>
               <Text fontWeight={700} fontSize="2xl">
-                $ {sneakerActive?.price}
+                $ {sneakerActive?.price.toFixed(2)}
               </Text>
-              <Badge
-                backgroundColor={
-                  colorMode === "light" ? "primary" : " secondary"
-                }
-                color="white"
-                fontSize="md"
-                borderRadius="md"
-                paddingX={2}
-              >
-                %50
-              </Badge>
-            </Stack>
-          </Stack>
-
-          <Stack alignItems="center">
-            <Stack direction="row-reverse" justifyContent="center">
-              {currentUser && (
-                <>
-                  {toggle ? (
-                    <Button
-                      fontSize="2xl"
-                      fontWeight="bold"
-                      variant="primary"
-                      size="lg"
-                      onClick={() => {
-                        if (!currentUser) {
-                          return;
-                        } else if (sneakerActive) {
-                          deleteFav(sneakerActive);
-                        }
-                      }}
-                    >
-                      <MdFavorite />
-                    </Button>
-                  ) : (
-                    <Button
-                      fontSize="2xl"
-                      fontWeight="bold"
-                      variant="primary"
-                      size="lg"
-                      onClick={() => {
-                        if (!currentUser) {
-                          return;
-                        } else if (sneakerActive) {
-                          handleAddStore(currentUser, sneakerActive);
-                        }
-                      }}
-                    >
-                      <MdFavoriteBorder />
-                    </Button>
-                  )}
-                </>
-              )}
-
-              <ButtonCount />
             </Stack>
           </Stack>
         </Stack>

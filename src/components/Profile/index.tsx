@@ -93,7 +93,7 @@ const ProfileMenu = (props: { fn: Function }) => {
       right="9px"
       w="300px"
       p="10px"
-      borderRadius="15px"
+      borderRadius="5px"
       overflow="hidden"
       overflowY="auto"
       minHeight="345px"
