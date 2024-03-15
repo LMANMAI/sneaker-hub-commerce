@@ -141,21 +141,9 @@ const Header = () => {
             </Stack>
           </Stack>
         </Stack>
-        <Stack direction="row" spacing={0} alignItems="center">
-          <Icon
-            as={IoCaretDownOutline}
-            width={`calc(60px * 0.8)`}
-            height={4}
-            cursor="pointer"
-            onClick={() => {
-              setProfileMenuState(!profilemenu);
-              setBasketShows(false);
-            }}
-          />
-        </Stack>
+        <ProfileMenu fn={setProfileMenuState} />
       </Stack>
 
-      {profilemenu && <ProfileMenu fn={setProfileMenuState} />}
       <Basket basketshows={basketshows} setBasketShows={setBasketShows} />
     </Stack>
   );
