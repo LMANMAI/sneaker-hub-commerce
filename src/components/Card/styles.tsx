@@ -24,6 +24,31 @@ export const CustomCard = styled(Card)`
     -webkit-box-shadow: 10px 10px 72px -25px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 10px 10px 72px -25px rgba(0, 0, 0, 0.75);
     box-shadow: 10px 10px 72px -25px rgba(0, 0, 0, 0.75);
+    .icon__favourite svg{  background: red;}
+  }
+
+  .icon__favourite{
+    align-items: center;
+    background: hsla(0, 0%, 100%, .7);
+    border: 0;
+    border-radius: 50%;
+    color: #3483fa;
+    content: "";
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    svg{
+      width: 15px;
+      height: 15px;
+      line-height: 1em;
+      -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+      flex-shrink: 0;
+        &:hover{
+          background: red;
+        }
+    }
+   }
   }
 `;
 

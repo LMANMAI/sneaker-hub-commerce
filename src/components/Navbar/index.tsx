@@ -62,7 +62,7 @@ const Header = () => {
   return (
     <Stack
       direction="row"
-      justifyContent="space-between"
+      justifyContent="space-around"
       alignItems="center"
       h="60px"
       as="nav"
@@ -80,28 +80,7 @@ const Header = () => {
         alignItems="center"
         paddingLeft={"15px"}
       >
-        <Stack
-          cursor="pointer"
-          display={{ base: "initial", md: "none" }}
-          w="30px"
-          onClick={() => {
-            setMenuPosition(!menuposition);
-            setBasketShows(false);
-          }}
-        >
-          <Icon as={MenuIcon} />
-        </Stack>
-        {menuposition && (
-          <Stack
-            position="absolute"
-            w="100vw"
-            h="100vh"
-            top="0"
-            opacity="70%"
-            transition="all 220ms ease-in-out"
-          />
-        )}
-        <Stack display={{ base: "none", md: "initial" }}>
+        <Stack>
           <NavLink to="/">
             <Image
               filter={colorMode === "light" ? "" : "invert(100%)"}
@@ -110,47 +89,24 @@ const Header = () => {
           </NavLink>
         </Stack>
         <Stack
-          direction={{ base: "column", md: "row" }}
-          fontSize="sm"
-          spacing={6}
-          h={{ base: "100vh", md: "initial" }}
-          position={{ base: "fixed", md: "initial" }}
-          zIndex="99"
-          width={{ base: "45vw", md: "initial" }}
-          color={{ base: "#000", md: "gray.400" }}
-          top={{ base: 0, md: "initial" }}
-          left={{ base: menuposition ? "0" : "-50vw", md: "initial" }}
-          transition="350ms ease"
+          flex="1"
+          maxWidth={"50%"}
+          direction="row"
+          alignItems="center"
+          border="1px solid #e3e3e3"
+          borderRadius="5px"
+          paddingX={2}
         >
-          <Stack
-            cursor="pointer"
-            display={{ base: "initial", md: "none" }}
-            w="30px"
-            onClick={() => setMenuPosition(!menuposition)}
-            marginTop={4}
-          >
-            <Icon as={CloseIcon} />
-          </Stack>
+          <Icon as={IoSearchOutline} cursor="pointer" />
+          <Input
+            type="text"
+            variant="unstyled"
+            padding={2}
+            onChange={(e) => {
+              dispatch(setSearch(e.target.value));
+            }}
+          />
         </Stack>
-      </Stack>
-      <Stack
-        flex="1"
-        maxWidth={{ base: "50%", md: "30%" }}
-        direction="row"
-        alignItems="center"
-        border="1px solid #e3e3e3"
-        borderRadius="15px"
-        paddingX={2}
-      >
-        <Icon as={IoSearchOutline} cursor="pointer" />
-        <Input
-          type="text"
-          variant="unstyled"
-          padding={2}
-          onChange={(e) => {
-            dispatch(setSearch(e.target.value));
-          }}
-        />
       </Stack>
 
       <Stack direction="row" spacing={2} alignItems="center">

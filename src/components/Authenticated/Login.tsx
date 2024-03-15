@@ -23,6 +23,7 @@ const Login: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const errorM = useSelector(selectError);
   const current_user = useSelector(selectUser);
+
   const [user, setUserM] = useState({
     email: "",
     password: "",
@@ -35,39 +36,31 @@ const Login: React.FC<IProps> = (props) => {
       [name]: value,
     });
   };
-  useEffect(() => {
-    if (userverificated) {
-      (async () => {
-        const userDB = await getUserAuth(userverificated);
-        localStorage.setItem("idCliente", userDB?.idCliente);
-        dispatch(setUser(userDB));
-      })();
-    }
-    setUserVerificated(null);
-  }, [userverificated, current_user]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    signAuthUser(user).then((res) => {
-      if (typeof res !== "string") {
-        setUserVerificated(res);
-      } else if (res === "contraseñaIncorreta") {
-        dispatch(setError("Contraseña incorrecta"));
-      } else if (res === "noverificado") {
-        dispatch(setError("Necesitas verificar el correo"));
-      } else {
-        dispatch(setError("Hay un error"));
-      }
-      setUserM({
-        email: "",
-        password: "",
-      });
-      setTimeout(() => {
-        dispatch(setError(""));
-      }, 1000);
-    });
-  };
 
+    if (!current_user) {
+      try {
+        const response = await signAuthUser(user);
+        console.log(response);
+        if (typeof response !== "string") {
+          setUserVerificated(response);
+          dispatch(setUser(response));
+          setUserM({
+            email: "",
+            password: "",
+          });
+          dispatch(setError(""));
+        } else {
+          dispatch(setError(response)); // Set error message from response
+        }
+      } catch (error) {
+        console.error("Error signing in:", error);
+        dispatch(setError("Ocurrió un error")); // Generic error message
+      }
+    }
+  };
   return (
     <Stack h="100%" p={4}>
       {errorM && (
@@ -101,28 +94,28 @@ const Login: React.FC<IProps> = (props) => {
           type="password"
           id="password"
         />
-      </FormControl>
 
-      <Text fontSize="13px" textAlign="center" alignItems="center">
-        ¿No tenes una cuenta?{" "}
+        <Text fontSize="13px" textAlign="center" alignItems="center">
+          ¿No tenes una cuenta?{" "}
+          <Button
+            variant="unstyled"
+            size="fit-content"
+            onClick={() => props.fn(true)}
+          >
+            Registrar
+          </Button>
+        </Text>
         <Button
-          variant="unstyled"
-          size="fit-content"
-          onClick={() => props.fn(true)}
+          variant="primary"
+          mt={2}
+          type="submit"
+          w="100%"
+          border="none"
+          outline="none"
         >
-          Registrar
+          Entrar
         </Button>
-      </Text>
-      <Button
-        variant="primary"
-        type="submit"
-        mt={2}
-        w="100%"
-        border="none"
-        outline="none"
-      >
-        Entrar
-      </Button>
+      </FormControl>
     </Stack>
   );
 };

@@ -42,78 +42,80 @@ export const registerClient = async (
 };
 
 export const authClient = async (formData: any) => {
-  return await createUserWithEmailAndPassword(
-    auth,
-    formData.emailr,
-    formData.passwordr
-  )
-    .then((userCredential) => {
-      const clientID = userCredential.user.uid;
-      let clientToken: string;
-      userCredential.user?.getIdTokenResult(true).then((idToken) => {
-        clientToken = idToken.token;
-      });
-
-      return sendEmailVerification(userCredential.user).then(() => {
-        registerClient(formData, clientID, clientToken);
-        return "Correcto";
-      });
-    })
-    .catch((error) => {
-      if (error.code === "auth/email-already-in-use") {
-        return "in_use";
-      } else if (error.code === "auth/weak-password") {
-        return "password";
-      } else {
-        console.log(error.message);
-      }
-    });
+  // return await createUserWithEmailAndPassword(
+  //   auth,
+  //   formData.emailr,
+  //   formData.passwordr
+  // )
+  //   .then((userCredential) => {
+  //     const clientID = userCredential.user.uid;
+  //     let clientToken: string;
+  //     userCredential.user?.getIdTokenResult(true).then((idToken) => {
+  //       clientToken = idToken.token;
+  //     });
+  //     return sendEmailVerification(userCredential.user).then(() => {
+  //       registerClient(formData, clientID, clientToken);
+  //       return "Correcto";
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     if (error.code === "auth/email-already-in-use") {
+  //       return "in_use";
+  //     } else if (error.code === "auth/weak-password") {
+  //       return "password";
+  //     } else {
+  //       console.log(error.message);
+  //     }
+  //   });
 };
 
 export const verifyEmail = (actionCode: any) => {
-  var clientEmail = null;
-  return checkActionCode(auth, actionCode)
-    .then((info) => {
-      clientEmail = info["data"]["email"];
-      applyActionCode(auth, actionCode);
-      return clientEmail;
-    })
-    .catch((error) => {
-      if (error.code === "auth/invalid-action-code") {
-        return "expire";
-      } else {
-        return "error";
-      }
-    });
+  // var clientEmail = null;
+  // return checkActionCode(auth, actionCode)
+  //   .then((info) => {
+  //     clientEmail = info["data"]["email"];
+  //     applyActionCode(auth, actionCode);
+  //     return clientEmail;
+  //   })
+  //   .catch((error) => {
+  //     if (error.code === "auth/invalid-action-code") {
+  //       return "expire";
+  //     } else {
+  //       return "error";
+  //     }
+  //   });
 };
 
-export const signAuthUser = (formData: any) => {
-  return signInWithEmailAndPassword(auth, formData.email, formData.password)
-    .then((userCredential) => {
-      const emailverified = userCredential.user.emailVerified;
-      const user = {
-        idUsuario: userCredential?.user?.uid,
-        token: userCredential?.user?.getIdTokenResult(true).then((idtoken) => {
-          return idtoken.token;
-        }),
+export const signAuthUser = async (formData: any) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
+
+    const user: { idUsuario: string; emailVerified: boolean; token?: string } =
+      {
+        idUsuario: userCredential.user.uid,
+        emailVerified: userCredential.user.emailVerified,
       };
-      if (emailverified) {
-        return user;
-      } else {
-        return "noverificado";
-      }
-    })
-    .catch((error) => {
-      if (error.code === "auth/wrog-password") {
-        return "contraseñaIncorreta";
-      }
-    });
+
+    if (user.emailVerified) {
+      const idTokenResult = await userCredential.user.getIdTokenResult(true);
+      user.token = idTokenResult.token;
+    }
+    localStorage.setItem("idCliente", user?.idUsuario);
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const getUserAuth = async (userverified: any) => {
+  console.log(userverified, "userverified");
   const id_user = userverified.idUsuario;
-  const clientRef = doc(db, collecion, id_user);
-  const docClient = await getDoc(clientRef);
+  const docClient = await getDoc(doc(db, collecion, id_user));
+
   return {
     idCliente: id_user,
     ...docClient.data(),

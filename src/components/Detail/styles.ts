@@ -29,7 +29,7 @@ export const DetailContainer = styled.div`
   @media (min-width: 768px) {
     .detail__content {
       flex-direction: row;
-      margin-top: 100px;
+      margin-top: 165px;
       max-width: 80dvw;
     }
   }

@@ -33,21 +33,21 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    authClient(user).then((res) => {
-      if (res === "Correcto") {
-        setCheck(true);
-        setTimeout(() => {
-          dispatch(setError(""));
-          setCheck(false);
-        }, 1500);
-      } else if (res === "in_use") {
-        setCheck(false);
-        dispatch(setError("email ya registrado"));
-      } else if (res === "password") {
-        setCheck(false);
-        dispatch(setError("password incorrecto"));
-      }
-    });
+    // authClient(user).then((res) => {
+    //   if (res === "Correcto") {
+    //     setCheck(true);
+    //     setTimeout(() => {
+    //       dispatch(setError(""));
+    //       setCheck(false);
+    //     }, 1500);
+    //   } else if (res === "in_use") {
+    //     setCheck(false);
+    //     dispatch(setError("email ya registrado"));
+    //   } else if (res === "password") {
+    //     setCheck(false);
+    //     dispatch(setError("password incorrecto"));
+    //   }
+    // });
     setUserRegister({
       firstName: "",
       emailr: "",
@@ -117,6 +117,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
               w="100%"
               border="none"
               outline="none"
+              onClick={(e) => handleSubmit(e)}
             >
               Registrar
             </Button>

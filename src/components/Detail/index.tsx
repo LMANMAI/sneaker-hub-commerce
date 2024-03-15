@@ -32,9 +32,9 @@ const BodyContent: React.FC = () => {
 
   const verificated = async (user: any, sneaker: ISneaker) => {
     const res = await checkFavs(user, sneaker);
-    if (res === "existe") {
-      setToggle(true);
-    }
+    // if (res === "existe") {
+    //   setToggle(true);
+    // }
   };
   const handleAddStore = async (user: any, sneaker: ISneaker) => {
     verificated(user, sneaker);

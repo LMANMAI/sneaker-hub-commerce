@@ -33,6 +33,7 @@ interface IPropsStack {
   children: React.ReactNode;
   border?: boolean;
 }
+
 function StackContainer({ children, border }: IPropsStack) {
   return (
     <Stack
@@ -76,6 +77,7 @@ const Settings = () => {
   //modal
   const { firstName } = usersettigns;
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUSerSettings({
@@ -127,15 +129,13 @@ const Settings = () => {
     };
     fotcargada.readAsDataURL(foto);
   }, [foto]);
-  useEffect(() => {
-    (async () => {
-      const res = await getAddresses(currentUser.idUser);
-      if (typeof res !== "string") setArrayAddresses(res);
-    })();
-  }, [addressarray]);
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await getAddresses(currentUser.idUser);
+  //     if (typeof res !== "string") setArrayAddresses(res);
+  //   })();
+  // }, [addressarray]);
 
   return (
     <Stack h="100%" p={2}>
