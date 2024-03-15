@@ -103,8 +103,10 @@ export const signAuthUser = async (formData: any) => {
     if (user.emailVerified) {
       const idTokenResult = await userCredential.user.getIdTokenResult(true);
       user.token = idTokenResult.token;
+      localStorage.setItem("authToken", user.token);
     }
-    localStorage.setItem("idCliente", user?.idUsuario);
+
+    localStorage.setItem("idCliente", user.idUsuario);
     return user;
   } catch (error) {
     console.error(error);

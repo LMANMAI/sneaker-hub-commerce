@@ -173,35 +173,6 @@ const Settings = () => {
           </Stack>
         </Stack>
         <FormControl onSubmit={(e) => handleSubmit(e)}>
-          <Stack
-            direction={{ base: "column", md: "row" }}
-            justifyContent="space-between"
-            alignItems="center"
-            marginTop={"50px"}
-          >
-            <Stack direction={{ base: "column", md: "row" }} width={"100%"}>
-              <Button variant="primary" onClick={onOpen}>
-                Agregar dirección
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => clearFavs(currentUser)}
-              >
-                Limpíar favoritos
-              </Button>
-            </Stack>
-
-            <Button
-              variant="primary"
-              width={{ base: "100%", md: "fit-content" }}
-              type={disabledstate ? "submit" : "button"}
-              onClick={() => {
-                setDisabled(!disabledstate);
-              }}
-            >
-              {disabledstate ? "Guardar" : "Actualizar"}
-            </Button>
-          </Stack>
           <Divider orientation="horizontal" marginY={4} />
           <Stack direction={"column"}>
             {/* Datos del usuario */}
@@ -355,6 +326,36 @@ const Settings = () => {
                 <Text>Por el momento no se ingreso ninguna direccion</Text>
               )}
             </Stack>
+          </Stack>
+
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            justifyContent="space-between"
+            alignItems="center"
+            marginTop={"50px"}
+          >
+            <Stack direction={{ base: "column", md: "row" }} width={"100%"}>
+              <Button variant="primary" onClick={onOpen}>
+                Agregar dirección
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => clearFavs(currentUser)}
+              >
+                Limpíar favoritos
+              </Button>
+            </Stack>
+
+            <Button
+              variant="primary"
+              width={{ base: "100%", md: "fit-content" }}
+              type={disabledstate ? "submit" : "button"}
+              onClick={() => {
+                setDisabled(!disabledstate);
+              }}
+            >
+              {disabledstate ? "Guardar" : "Actualizar"}
+            </Button>
           </Stack>
         </FormControl>
       </Box>
