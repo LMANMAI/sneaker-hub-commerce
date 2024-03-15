@@ -38,10 +38,9 @@ function StackContainer({ children, border }: IPropsStack) {
   return (
     <Stack
       borderY={border ? "1px solid #f0f0f0" : "none"}
-      padding="15px"
-      marginY={2}
+      padding="5px"
       alignItems="center"
-      justifyContent="center"
+      //justifyContent="center"
       direction="row"
     >
       {children}
@@ -138,30 +137,34 @@ const Settings = () => {
   // }, [addressarray]);
 
   return (
-    <Stack h="100%" p={2}>
-      <Text as="h1" fontSize="2.125rem" fontWeight="bold">
-        Settings
-      </Text>
+    <Stack h="100%" p={2} marginTop={"65px"}>
+      <Stack direction={"column"}>
+        <Text as="h1" fontSize="2.125rem" fontWeight="bold">
+          Configuraciones
+        </Text>
+        <Text>Actualizar foto y algunos datos del perfil.</Text>
+      </Stack>
       <Box minHeight="70vh">
         <Stack>
           <Box
             w="100%"
             minHeight="250px"
-            borderTopLeftRadius="100px"
-            background="linear-gradient(331deg, rgb(251 246 249) 0%, rgba(244,244,244,1) 35%, rgb(248 254 255) 100%)"
+            borderTopRightRadius="100px"
+            border="5px solid white"
+            background="linear-gradient(331deg, rgb(227 227 227) 0%, rgba(244, 244, 244, 1) 35%, rgb(235 235 235) 100%)"
             backdropBlur="18px"
           ></Box>
-          <Stack paddingLeft={{ base: "10px ", md: "250px" }}>
+          <Stack>
             <Stack
               w="100%"
               h="100%"
               maxHeight="150px"
               maxWidth="150px"
-              top={{ base: "240px", md: "280px" }}
+              top={{ base: "300px", md: "280px" }}
               left={{ base: "50px", md: "100px" }}
-              border="4px solid white"
+              border="5px solid white"
               borderRadius="100%"
-              backgroundColor="gray"
+              backgroundColor="#c1c1c1"
               overflow="hidden"
               position="absolute"
             >
@@ -171,41 +174,45 @@ const Settings = () => {
         </Stack>
         <FormControl onSubmit={(e) => handleSubmit(e)}>
           <Stack
-            direction="row"
-            justifyContent="space-evenly"
+            direction={{ base: "column", md: "row" }}
+            justifyContent="space-between"
             alignItems="center"
+            marginTop={"50px"}
           >
-            <Stack>
-              <Text as="h2" fontSize="2.125rem" fontWeight="bold">
-                Profile
-              </Text>
-              <Text>Update your photo and some details </Text>
-            </Stack>
-            <Stack direction="row">
+            <Stack direction={{ base: "column", md: "row" }} width={"100%"}>
+              <Button variant="primary" onClick={onOpen}>
+                Agregar dirección
+              </Button>
               <Button
-                variant="primary"
-                type={disabledstate ? "submit" : "button"}
-                onClick={() => {
-                  setDisabled(!disabledstate);
-                }}
+                variant="secondary"
+                onClick={() => clearFavs(currentUser)}
               >
-                {disabledstate ? "Save" : "Update"}
+                Limpíar favoritos
               </Button>
             </Stack>
+
+            <Button
+              variant="primary"
+              width={{ base: "100%", md: "fit-content" }}
+              type={disabledstate ? "submit" : "button"}
+              onClick={() => {
+                setDisabled(!disabledstate);
+              }}
+            >
+              {disabledstate ? "Guardar" : "Actualizar"}
+            </Button>
           </Stack>
           <Divider orientation="horizontal" marginY={4} />
-          <Stack direction={{ base: "column", md: "row" }}>
+          <Stack direction={"column"}>
             {/* Datos del usuario */}
-            <Stack alignItems="baseline">
+            <Stack alignItems="baseline" width={"100%"}>
               <StackContainer>
                 <Stack
                   direction="row"
                   alignItems="center"
                   justifyContent="space-evenly"
                 >
-                  <Text w="30%" mb="8px" textAlign="end">
-                    Name:
-                  </Text>
+                  <Text textAlign="end">Nombre:</Text>
                   <Input
                     disabled={!disabledstate ? true : false}
                     defaultValue={firstName}
@@ -215,7 +222,6 @@ const Settings = () => {
                     maxWidth="450px"
                     type="text"
                     borderRadius="10px"
-                    padding="20px"
                     name="firstName"
                   />
                 </Stack>
@@ -226,9 +232,7 @@ const Settings = () => {
                   alignItems="center"
                   justifyContent="space-evenly"
                 >
-                  <Text w="30%" mb="8px" textAlign="end">
-                    Password:
-                  </Text>
+                  <Text textAlign="end">Contraseña:</Text>
                   <Input
                     disabled
                     placeholder="You will be able to change the password soon"
@@ -236,20 +240,22 @@ const Settings = () => {
                     maxWidth="450px"
                     type="text"
                     borderRadius="10px"
-                    padding="20px"
                   />
                 </Stack>
               </StackContainer>
               <StackContainer>
-                <Stack direction="column">
-                  <Text mb="8px">Image:</Text>
+                <Stack direction={{ base: "column", sm: "row" }}>
+                  <Text width={{ base: "100%", md: "35%" }}>
+                    Foto de perfil
+                  </Text>
+
                   <Input
                     disabled={!disabledstate ? true : false}
-                    w="fit-content"
                     type="file"
                     accept=".jpg"
                     alignSelf="center"
                     border="none"
+                    paddingLeft={"0px"}
                     onChange={(e) => changeImage(e)}
                   />
                   {foto !== undefined && (
@@ -259,14 +265,14 @@ const Settings = () => {
                         variant="secondary"
                         onClick={(e) => saveImage(e)}
                       >
-                        Change Image
+                        Cambiar imagen
                       </Button>
                       <Button
                         size="sm"
                         variant="secondary"
                         onClick={() => eliminarImage()}
                       >
-                        Cancel
+                        Cancelar
                       </Button>
                     </Stack>
                   )}
@@ -274,15 +280,6 @@ const Settings = () => {
               </StackContainer>
 
               <StackContainer>
-                <Button variant="primary" onClick={onOpen}>
-                  Add addresses
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => clearFavs(currentUser)}
-                >
-                  Clear Favorites
-                </Button>
                 <Modal
                   closeOnOverlayClick={false}
                   blockScrollOnMount={true}
@@ -291,7 +288,7 @@ const Settings = () => {
                 >
                   <ModalOverlay />
                   <ModalContent>
-                    <ModalHeader>Add addresses</ModalHeader>
+                    <ModalHeader>Agregar direccion</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                       <SelectBody setObjetc={setAdress} />
@@ -314,41 +311,49 @@ const Settings = () => {
                           onClose();
                         }}
                       >
-                        Add address
+                        Guardar direccion
                       </Button>
                     </ModalFooter>
                   </ModalContent>
                 </Modal>
               </StackContainer>
             </Stack>
-
+            <Divider orientation="horizontal" marginY={4} />
             {/* Direcciones del usuario */}
             <Stack w="100%">
-              <Text as="h3" textAlign="center">
-                My addresses
-              </Text>
-              <Stack alignItems="center" p={4} justifyContent="center">
-                <RadioGroup value={value} onChange={setValue}>
-                  {addressarray.map((item) => (
-                    <Radio
-                      name="direccion"
-                      value={`${item.direc.calle} ${item.direc.alt}`}
-                    >
-                      <Stack p={4} direction="row" alignItems="center" w="80%">
-                        <Stack>
-                          <Text>
-                            {`${item.direc.calle} ${item.direc.alt}`} -{" "}
-                            {item.locald}
-                          </Text>
+              <Text as="h3">Mis direcciones</Text>
+
+              {addressarray.length != 0 ? (
+                <Stack alignItems="center" p={4}>
+                  <RadioGroup value={value} onChange={setValue}>
+                    {addressarray.map((item) => (
+                      <Radio
+                        name="direccion"
+                        value={`${item.direc.calle} ${item.direc.alt}`}
+                      >
+                        <Stack
+                          p={4}
+                          direction="row"
+                          alignItems="center"
+                          w="80%"
+                        >
                           <Stack>
-                            <Text>{`${item.prov} ${item.mun}`}</Text>
+                            <Text>
+                              {`${item.direc.calle} ${item.direc.alt}`} -{" "}
+                              {item.locald}
+                            </Text>
+                            <Stack>
+                              <Text>{`${item.prov} ${item.mun}`}</Text>
+                            </Stack>
                           </Stack>
                         </Stack>
-                      </Stack>
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              </Stack>
+                      </Radio>
+                    ))}
+                  </RadioGroup>
+                </Stack>
+              ) : (
+                <Text>Por el momento no se ingreso ninguna direccion</Text>
+              )}
             </Stack>
           </Stack>
         </FormControl>
