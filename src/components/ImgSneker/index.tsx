@@ -99,8 +99,8 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images, posterPath }) => {
         cursor="pointer"
         onMouseMoveCapture={handleMove}
         onMouseLeave={() => setRender(false)}
-        width={{ base: 245, md: 300, lg: 350 }}
-        height={{ base: 300, md: 350, lg: 400 }}
+        width={{ base: 300, md: 400, lg: 500 }}
+        height={{ base: 300, md: 400, lg: 500 }}
       >
         <Image
           cursor="pointer"

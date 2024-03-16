@@ -73,10 +73,21 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                 <Stack>
                   <Text fontSize="12px">{sneaker.name}</Text>
                   <Stack direction="row">
-                    <Text fontSize="12px">$ {sneaker.price}</Text>
+                    <Text fontSize="12px">
+                      {sneaker.price.toLocaleString("es-AR", {
+                        style: "currency",
+                        currency: "ARS",
+                      })}
+                    </Text>
                     <Text fontSize="12px">x {sneaker.quantity}</Text>
                     <Text fontSize="12px" fontWeight="bold">
-                      ${sneaker.price * sneaker.quantity}
+                      {(sneaker.price * sneaker.quantity).toLocaleString(
+                        "es-AR",
+                        {
+                          style: "currency",
+                          currency: "ARS",
+                        }
+                      )}
                     </Text>
                   </Stack>
                 </Stack>
@@ -111,7 +122,13 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
         <DrawerFooter display={"flex"} flexDirection={"column"}>
           {totalbasket != 0 ? (
             <>
-              <Text>Total: $ {totalbasket.toFixed(2)}</Text>
+              <Text>
+                Total:
+                {totalbasket.toLocaleString("es-AR", {
+                  style: "currency",
+                  currency: "ARS",
+                })}
+              </Text>
               <Button variant="primary" width="250px" alignSelf="center">
                 <Link to="/checkout">Finalizar compra</Link>
               </Button>

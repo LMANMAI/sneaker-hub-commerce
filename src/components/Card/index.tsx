@@ -31,7 +31,10 @@ const CardComponent = ({ sneaker }: any) => {
             </CustomHeading>
 
             <Text color="blue.600" fontSize=" 15px">
-              ${sneaker.price.toFixed(2)}
+              {sneaker?.price.toLocaleString("es-AR", {
+                style: "currency",
+                currency: "ARS",
+              })}
             </Text>
           </Stack>
         </CardBody>

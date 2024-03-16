@@ -18,6 +18,7 @@ import {
   selectCount,
   setSneaker,
   setSearch,
+  setCounterLimit,
 } from "../../features/sneakersSlice";
 
 import { selectUser } from "../../features/userSlice";
@@ -47,6 +48,8 @@ const Header = () => {
     // const res = await req.json();
     // dispatch(setSneaker(res.sneakers));
     const { data } = await instance.get(`?page=${1}&pageSize=${10}`);
+    dispatch(setCounterLimit(data.totalPages));
+    console.log(data.totalPages);
     dispatch(setSneaker(data.data));
   };
   useEffect(() => {
@@ -109,7 +112,12 @@ const Header = () => {
         </Stack>
       </Stack>
 
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        padding={"0px 10px"}
+      >
         <Stack>
           <Stack
             direction="row"

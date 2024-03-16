@@ -34,6 +34,7 @@ const Collections = (props: any) => {
   const [producfilter, setProductsFilter] = useState<any[]>([]);
   const [countPage, setCountPage] = useState<number>(1);
 
+  console.log("limit", limit);
   useEffect(() => {
     if (brandsArray.length === 0 && !gender) {
       setSecondArray([]);
@@ -130,7 +131,7 @@ const Collections = (props: any) => {
               </Button>
             )}
             <Text>
-              Page {countPage} to {Math.ceil(limit / 10)}
+              Page {countPage} to {limit}
             </Text>
             {count + 10 > limit ? null : (
               <Button

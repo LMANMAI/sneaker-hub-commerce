@@ -24,6 +24,7 @@ export const DetailContainer = styled.div`
     border-radius: 5px;
     position: relative;
     margin-top: 80px;
+    flex-wrap: wrap;
   }
 
   @media (min-width: 768px) {
@@ -31,6 +32,7 @@ export const DetailContainer = styled.div`
       flex-direction: row;
       margin-top: 165px;
       max-width: 80dvw;
+      padding: 10px;
     }
   }
 `;

@@ -41,15 +41,13 @@ interface IProps {
 }
 function ItemMenu(props: IProps) {
   return (
-    <Stack direction={"row"}>
+    <Stack direction={"row"} alignItems={"center"}>
       <Icon
-        color="white"
         className="icon_button"
         as={props.iconleft}
-        backgroundColor={props.colormode === "light" ? "primary" : "secondary"}
+        color={props.colormode === "light" ? "primary" : "secondary"}
       />
       {props.children}
-      <Icon className="icon_right" as={props.iconRight} />
     </Stack>
   );
 }
@@ -63,7 +61,13 @@ const ProfileMenu = (props: { fn: Function }) => {
   };
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}></MenuButton>
+      <MenuButton
+        background={"transparent"}
+        _hover={{ background: "transparent" }}
+        _active={{ background: "transparent" }}
+        as={Button}
+        rightIcon={<ChevronDownIcon />}
+      ></MenuButton>
       {user ? (
         <MenuList>
           <MenuItem>
@@ -72,47 +76,46 @@ const ProfileMenu = (props: { fn: Function }) => {
               <p>{user.firstName}</p>
             </Stack>
           </MenuItem>
+
           <MenuItem onClick={() => props.fn(false)}>
-            {/* <Link  to="/favorites"> */}
-            <Stack
-              direction={"row"}
-              onClick={() => (window.location.href = "/favorites")}
-            >
-              <Icon
-                color="white"
-                className="icon_button"
-                as={MdFavoriteBorder}
-                backgroundColor={
-                  colorMode === "light" ? "primary" : "secondary"
-                }
-              />
-              <Text color={colorMode === "light" ? "gray.800" : "white"}>
-                Favorites
-              </Text>
-            </Stack>
+            <Link to="/favorites" style={{ width: "100%" }}>
+              <Stack direction={"row"} alignItems={"center"}>
+                <Icon
+                  className="icon_button"
+                  as={MdFavoriteBorder}
+                  color={colorMode === "light" ? "primary" : "secondary"}
+                />
+                <Text color={colorMode === "light" ? "gray.800" : "white"}>
+                  Favorites
+                </Text>
+              </Stack>
+            </Link>
           </MenuItem>
+
           <MenuItem onClick={() => props.fn(false)}>
-            {/* <Link  to="/settings"> */}
-            <ItemMenu
-              iconleft={MdSettings}
-              iconRight={MdOutlineArrowForwardIos}
-              colormode={colorMode}
-            >
-              <Text color={colorMode === "light" ? "gray.800" : "white"}>
-                Settings
-              </Text>
-            </ItemMenu>
+            <Link to="/settings" style={{ width: "100%" }}>
+              <ItemMenu
+                iconleft={MdSettings}
+                iconRight={MdOutlineArrowForwardIos}
+                colormode={colorMode}
+              >
+                <Text color={colorMode === "light" ? "gray.800" : "white"}>
+                  Settings
+                </Text>
+              </ItemMenu>
+            </Link>
           </MenuItem>
+
           <MenuItem
             onClick={() => {
               handdleOut();
             }}
+            gap={"0.5rem"}
           >
             <Icon
-              color="white"
               className="icon_button"
               as={MdOutlineExitToApp}
-              backgroundColor={colorMode === "light" ? "primary" : "secondary"}
+              color={colorMode === "light" ? "primary" : "secondary"}
             />
             <Text color={colorMode === "light" ? "gray.800" : "white"}>
               Close
@@ -122,7 +125,6 @@ const ProfileMenu = (props: { fn: Function }) => {
       ) : (
         <MenuList>
           <MenuItem>
-            {" "}
             <AuthComponent />
           </MenuItem>
         </MenuList>

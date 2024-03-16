@@ -79,10 +79,10 @@ const BodyContent: React.FC = () => {
         <Stack
           flex={1}
           spacing={6}
-          textAlign={{ base: "center", md: "initial" }}
+          textAlign={"start"}
           position="relative"
           width="100%"
-          paddingRight={"15px"}
+          padding={"0px 15px"}
         >
           <Stack className="reflect" display="none"></Stack>
 
@@ -98,6 +98,12 @@ const BodyContent: React.FC = () => {
               {sneakerActive?.brand.toLocaleUpperCase()}
             </Text>
             <Heading>{sneakerActive?.name}</Heading>
+            <Text fontWeight={700} fontSize="2xl">
+              {sneakerActive?.price.toLocaleString("es-AR", {
+                style: "currency",
+                currency: "ARS",
+              })}
+            </Text>
           </Stack>
           <Text color="gray.400">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quam
@@ -112,7 +118,6 @@ const BodyContent: React.FC = () => {
               direction={{ base: "column", md: "row" }}
               alignItems="center"
               justifyContent="center"
-              // border={"1px solid red"}
             >
               <Stack direction="row-reverse" justifyContent="center">
                 {currentUser && (
@@ -155,9 +160,6 @@ const BodyContent: React.FC = () => {
 
                 <ButtonCount />
               </Stack>
-              <Text fontWeight={700} fontSize="2xl">
-                $ {sneakerActive?.price.toFixed(2)}
-              </Text>
             </Stack>
           </Stack>
         </Stack>
