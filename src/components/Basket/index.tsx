@@ -71,6 +71,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
       isOpen={basketshows}
       placement="right"
       onClose={() => setBasketShows(false)}
+      size={"sm"}
     >
       <DrawerOverlay />
       <DrawerContent>
