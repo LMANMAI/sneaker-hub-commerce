@@ -120,9 +120,31 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <button onClick={() => handleRemoveBasket(sneaker)}>-</button>
-
-                  <button onClick={() => handleAddBasket(sneaker)}>+</button>
+                  <Stack direction={"row"}>
+                    <button
+                      style={{
+                        padding: "2px 5px",
+                        background: "#e4e4e4",
+                        color: "black",
+                        borderRadius: "5px",
+                      }}
+                      onClick={() => handleRemoveBasket(sneaker)}
+                    >
+                      -
+                    </button>
+                    <Text> {sneaker.quantity}</Text>
+                    <button
+                      style={{
+                        padding: "2px 5px",
+                        background: "#e4e4e4",
+                        color: "black",
+                        borderRadius: "5px",
+                      }}
+                      onClick={() => handleAddBasket(sneaker)}
+                    >
+                      +
+                    </button>
+                  </Stack>
                   <Stack
                     cursor="pointer"
                     onClick={() => (
