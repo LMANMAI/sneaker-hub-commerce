@@ -124,9 +124,7 @@ const ProfileMenu = (props: { fn: Function }) => {
         </MenuList>
       ) : (
         <MenuList>
-          <MenuItem>
-            <AuthComponent />
-          </MenuItem>
+          <AuthComponent />
         </MenuList>
       )}
     </Menu>

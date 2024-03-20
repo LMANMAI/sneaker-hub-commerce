@@ -6,7 +6,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   setUser,
   setError,
@@ -14,7 +14,7 @@ import {
   selectUser,
 } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserAuth, signAuthUser } from "../../functions/Sesion";
+import { signAuthUser } from "../../functions/Sesion";
 
 interface IProps {
   fn: Function;
@@ -43,7 +43,6 @@ const Login: React.FC<IProps> = (props) => {
     if (!current_user) {
       try {
         const response = await signAuthUser(user);
-        console.log(response);
         if (typeof response !== "string") {
           setUserVerificated(response);
           dispatch(setUser(response));

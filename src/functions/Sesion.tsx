@@ -114,7 +114,6 @@ export const signAuthUser = async (formData: any) => {
 };
 
 export const getUserAuth = async (userverified: any) => {
-  console.log(userverified, "userverified");
   const id_user = userverified.idUsuario;
   const docClient = await getDoc(doc(db, collecion, id_user));
 

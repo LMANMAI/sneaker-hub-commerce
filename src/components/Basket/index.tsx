@@ -12,6 +12,7 @@ import {
   Image,
   Stack,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
 import {
   selectBasket,
@@ -23,8 +24,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { RemoveIcon } from "../../icons";
 import { ISneaker } from "../../interfaces";
-import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { selectUser } from "../../features/userSlice";
 interface IProps {
   setBasketShows: Function;
   basketshows: boolean;
@@ -32,8 +33,11 @@ interface IProps {
 
 const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   const dispatch = useDispatch();
+  const toast = useToast();
+  const history = useNavigate();
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
+  const currentUser = useSelector(selectUser);
 
   const handleRemoveBasket = (sneaker: ISneaker) => {
     if (sneaker.quantity < 1) return;
@@ -43,6 +47,25 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   const handleAddBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
   };
+
+  const handleCheckout = () => {
+    if (currentUser !== null) {
+      history("/checkout");
+      setBasketShows(false);
+    } else {
+      setBasketShows(false);
+      toast({
+        title: "Inicia sesion.",
+        description:
+          "Es necesario que inicies sesion para completar la compra.",
+        status: "warning",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+  };
+
   return (
     <Drawer
       isOpen={basketshows}
@@ -129,8 +152,13 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                   currency: "ARS",
                 })}
               </Text>
-              <Button variant="primary" width="250px" alignSelf="center">
-                <Link to="/checkout">Finalizar compra</Link>
+              <Button
+                variant="primary"
+                width="250px"
+                alignSelf="center"
+                onClick={handleCheckout}
+              >
+                Finalizar compra
               </Button>
             </>
           ) : null}

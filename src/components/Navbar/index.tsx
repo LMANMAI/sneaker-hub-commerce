@@ -8,8 +8,8 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import logo from "../../assets/logo.svg";
-import { Cart, MenuIcon, CloseIcon } from "../../icons";
-import { IoCaretDownOutline, IoSearchOutline } from "react-icons/io5";
+import { Cart } from "../../icons";
+import { IoSearchOutline } from "react-icons/io5";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -49,7 +49,6 @@ const Header = () => {
     // dispatch(setSneaker(res.sneakers));
     const { data } = await instance.get(`?page=${1}&pageSize=${10}`);
     dispatch(setCounterLimit(data.totalPages));
-    console.log(data.totalPages);
     dispatch(setSneaker(data.data));
   };
   useEffect(() => {

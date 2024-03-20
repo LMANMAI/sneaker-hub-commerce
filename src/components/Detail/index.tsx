@@ -54,7 +54,6 @@ const BodyContent: React.FC = () => {
     }
   };
 
-  console.log(sneakerActive);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
