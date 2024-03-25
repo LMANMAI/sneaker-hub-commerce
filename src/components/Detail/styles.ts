@@ -26,7 +26,19 @@ export const DetailContainer = styled.div`
     margin-top: 80px;
     flex-wrap: wrap;
   }
+  .size_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 0.33fr));
 
+    li {
+      width: 100%;
+      text-align: center;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 12px;
+    }
+  }
   @media (min-width: 768px) {
     .detail__content {
       flex-direction: row;

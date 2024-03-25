@@ -39,7 +39,11 @@ function App() {
       }}
     >
       <Header />
-      <Container maxWidth="container.xl" position="relative">
+      <Container
+        maxWidth={!shouldApplyBackgroundColor ? "container.xl" : ""}
+        p="inherit"
+        position="relative"
+      >
         <Stack spacing={0} divider={<StackDivider />}>
           <Box height="fit-content" minHeight="100dvh" p={"10px 0px"}>
             <RoutesComponent />

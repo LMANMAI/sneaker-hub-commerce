@@ -1,3 +1,4 @@
+import { Container } from "@chakra-ui/react";
 import { brands } from "../../components/BrandsMenu/statics";
 import { BrandDetailContainer } from "./styles";
 
@@ -25,9 +26,9 @@ const BrandDetail = () => {
         />
       </div>
 
-      <div className="content">
+      <Container maxWidth="container.xl" className="content">
         <p> brand detail : {lastSegment}</p>
-      </div>
+      </Container>
 
       <div className="background"></div>
     </BrandDetailContainer>

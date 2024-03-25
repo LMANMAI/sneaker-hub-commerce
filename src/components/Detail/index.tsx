@@ -104,12 +104,45 @@ const BodyContent: React.FC = () => {
               })}
             </Text>
           </Stack>
-          <Text color="gray.400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quam
-            temporibus cupiditate eum quasi quae assumenda commodi earum amet
-            accusantium, adipisci vero eos eligendi repellat aperiam,
-            repudiandae quidem dolorem voluptatum!
-          </Text>
+          <Stack>
+            <Stack display={"flex"} direction={"row"}>
+              <Button>US</Button>
+              <Button>EU</Button>
+              <Button>CM</Button>
+            </Stack>
+            <ul className="size_grid">
+              <li>3.5 us</li>
+              <li>4 us</li>
+              <li>4.5 us</li>
+              <li>5 us</li>
+              <li>5.5 us</li>
+              <li>6 us</li>
+              <li>6.5 us</li>
+              <li>7 us</li>
+              <li>7.5 us</li>
+              <li>8 us</li>
+              <li>8.5 us</li>
+              <li>9 us</li>
+              <li>9.5 us</li>
+              <li>10 us</li>
+              <li>10.5 us</li>
+              <li>11 us</li>
+              <li>11.5 us</li>
+              <li>12 us</li>
+              <li>12.5 us</li>
+              <li>13 us</li>
+              <li>13.5 us</li>
+              <li>14 us</li>
+              <li>14.5 us</li>
+              <li>15 us</li>
+              <li>15.5 us</li>
+              <li>16 us</li>
+              <li>16.5 us</li>
+              <li>17 us</li>
+              <li>17.5 us</li>
+              <li>18 us</li>
+            </ul>
+          </Stack>
           <Stack>
             <Stack
               spacing={4}
