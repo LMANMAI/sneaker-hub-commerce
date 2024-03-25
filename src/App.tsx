@@ -6,8 +6,12 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "./features/userSlice";
 import { auth } from "./app/firebaseConfig";
+import { useLocation } from "react-router-dom";
+
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const shouldApplyBackgroundColor = location.pathname.startsWith("/brand");
 
   useEffect(() => {
     // Mantengo la sesion iniciada
@@ -25,14 +29,17 @@ function App() {
     return unsubscribe;
   }, []);
 
+  console.log(shouldApplyBackgroundColor);
   return (
-    <div style={{ backgroundColor: "#edeeef" }}>
+    <div
+      style={{
+        backgroundColor: !shouldApplyBackgroundColor
+          ? "#edeeef"
+          : "transparent",
+      }}
+    >
       <Header />
-      <Container
-        maxWidth="container.xl"
-        position="relative"
-        backgroundColor={"#edeeef"}
-      >
+      <Container maxWidth="container.xl" position="relative">
         <Stack spacing={0} divider={<StackDivider />}>
           <Box height="fit-content" minHeight="100dvh" p={"10px 0px"}>
             <RoutesComponent />

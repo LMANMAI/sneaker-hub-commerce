@@ -36,6 +36,7 @@ const Header = () => {
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
+
   //const { colorMode } = useColorMode();
   const handleReq = async () => {
     // const reqLength = await fetch(`${import.meta.env.VITE_URL_EP}`);
@@ -48,6 +49,7 @@ const Header = () => {
     // const res = await req.json();
     // dispatch(setSneaker(res.sneakers));
     const { data } = await instance.get(`?page=${1}&pageSize=${10}`);
+
     dispatch(setCounterLimit(data.totalPages));
     dispatch(setSneaker(data.data));
   };

@@ -1,49 +1,18 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Grid, GridItem, Stack, Text, useColorMode } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
-import { selecBrands, setBrandFilter } from "../../features/sneakersSlice";
+import { useDispatch } from "react-redux";
+import { setBrandFilter } from "../../features/sneakersSlice";
 import { brands } from "./statics";
 const BrandsComponent = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { colorMode } = useColorMode();
-  const brandsArray = useSelector(selecBrands);
 
   const handleBrandArray = (brand: string) => {
     dispatch(setBrandFilter(brand));
   };
   return (
     <div>
-      {/*marcas seleccionadas*/}
-      <Stack>
-        {pathname === "/" && (
-          <Stack padding={"8px 0px"} direction="row">
-            {brandsArray.map((item: any, index: number) => (
-              <Text
-                key={index}
-                backgroundColor="#cecece"
-                w="fit-content"
-                p="2.5px 5px"
-                borderRadius="5px"
-                alignItems="center"
-              >
-                {item}
-                <NavLink to={`/?brand=${item}`}>
-                  <Text
-                    as="strong"
-                    cursor="pointer"
-                    onClick={() => handleBrandArray(item)}
-                    marginLeft="5px"
-                    fontSize={"10px"}
-                  >
-                    X
-                  </Text>
-                </NavLink>
-              </Text>
-            ))}
-          </Stack>
-        )}
-      </Stack>
       {/*marcas*/}
       <Grid
         templateColumns={{
@@ -56,7 +25,7 @@ const BrandsComponent = () => {
           <>
             {brands.map((item, index) => (
               <Stack key={index} className="contenedor">
-                <NavLink to={`/?brand=${item.name}`}>
+                <NavLink to={`/brand/${item.name}`}>
                   <Stack>
                     <GridItem
                       height={{ base: "100px", md: "120px" }}
