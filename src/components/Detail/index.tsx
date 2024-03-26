@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import {
-  Badge,
   Heading,
   Stack,
   Text,
@@ -9,41 +7,16 @@ import {
   Box,
   useColorMode,
 } from "@chakra-ui/react";
-import { ISneaker } from "../../interfaces";
 import { Carrousel, ButtonCount } from "..";
 import { useSelector } from "react-redux";
 import { selectSneakerActive } from "../../features/sneakersSlice";
-import { selectUser } from "../../features/userSlice";
 import { DetailContainer } from "./styles";
-import { checkFavs, removeFav } from "../../functions/Products";
 import { brands } from "../BrandsMenu/statics";
-
+import { sizes } from "./statics";
 const BodyContent: React.FC = () => {
   const sneakerActive = useSelector(selectSneakerActive);
-  const currentUser = useSelector(selectUser);
-  const [toggle, setToggle] = useState<boolean>(false);
   const { colorMode } = useColorMode();
-
-  useEffect(() => {
-    if (sneakerActive) {
-      verificated(currentUser, sneakerActive);
-    }
-  }, []);
-
-  const verificated = async (user: any, sneaker: ISneaker) => {
-    const res = await checkFavs(user, sneaker);
-    // if (res === "existe") {
-    //   setToggle(true);
-    // }
-  };
-  const handleAddStore = async (user: any, sneaker: ISneaker) => {
-    verificated(user, sneaker);
-    setToggle(true);
-  };
-  const deleteFav = async (sneaker: ISneaker) => {
-    setToggle(false);
-    removeFav(currentUser, sneaker);
-  };
+  const [tipoTalle, setTipoTalle] = useState("US");
 
   const checkBrandBG = (brandType: string) => {
     const brand = brands.find(
@@ -54,10 +27,42 @@ const BodyContent: React.FC = () => {
     }
   };
 
+  const converSize = (tipo: string) => {
+    if (!sneakerActive || sneakerActive.sizes.length === 0) return [];
+
+    return sizes.map((talle: any, index) => {
+      const isActive = sneakerActive.sizes.some(
+        (s: any) => s.size === talle.US
+      );
+
+      const isActiveEU = sneakerActive.sizes.some(
+        (s: any) => s.size === talle.EU
+      );
+      const isActiveCM = sneakerActive.sizes.some(
+        (s: any) => s.size === talle.CM
+      );
+
+      return (
+        <li key={index}>
+          <button
+            disabled={!isActive || isActiveEU || isActiveCM}
+            onClick={() => console.log("desde el talle:", talle[tipo])}
+          >
+            {`${talle[tipo]} ${tipo}`}
+          </button>
+        </li>
+      );
+    });
+  };
+
+  const handleType = (tipo: string) => {
+    setTipoTalle(tipo);
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  console.log(sneakerActive);
   return (
     <DetailContainer>
       <div
@@ -104,95 +109,38 @@ const BodyContent: React.FC = () => {
               })}
             </Text>
           </Stack>
+
           <Stack>
             <Stack display={"flex"} direction={"row"}>
-              <Button>US</Button>
-              <Button>EU</Button>
-              <Button>CM</Button>
+              <Button
+                variant={tipoTalle === "US" ? "primary" : "secondary"}
+                size="sm"
+                fontSize="xs"
+                onClick={() => handleType("US")}
+              >
+                US
+              </Button>
+              <Button
+                variant={tipoTalle === "EU" ? "primary" : "secondary"}
+                size="sm"
+                fontSize="xs"
+                onClick={() => handleType("EU")}
+              >
+                EU
+              </Button>
+              <Button
+                variant={tipoTalle === "CM" ? "primary" : "secondary"}
+                size="sm"
+                fontSize="xs"
+                onClick={() => handleType("CM")}
+              >
+                CM
+              </Button>
             </Stack>
-            <ul className="size_grid">
-              <li>3.5 us</li>
-              <li>4 us</li>
-              <li>4.5 us</li>
-              <li>5 us</li>
-              <li>5.5 us</li>
-              <li>6 us</li>
-              <li>6.5 us</li>
-              <li>7 us</li>
-              <li>7.5 us</li>
-              <li>8 us</li>
-              <li>8.5 us</li>
-              <li>9 us</li>
-              <li>9.5 us</li>
-              <li>10 us</li>
-              <li>10.5 us</li>
-              <li>11 us</li>
-              <li>11.5 us</li>
-              <li>12 us</li>
-              <li>12.5 us</li>
-              <li>13 us</li>
-              <li>13.5 us</li>
-              <li>14 us</li>
-              <li>14.5 us</li>
-              <li>15 us</li>
-              <li>15.5 us</li>
-              <li>16 us</li>
-              <li>16.5 us</li>
-              <li>17 us</li>
-              <li>17.5 us</li>
-              <li>18 us</li>
-            </ul>
+            <ul className="size_grid">{converSize(tipoTalle)}</ul>
           </Stack>
           <Stack>
-            <Stack
-              spacing={4}
-              display={"flex"}
-              direction={{ base: "column", md: "row" }}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Stack direction="row-reverse" justifyContent="center">
-                {currentUser && (
-                  <>
-                    {toggle ? (
-                      <Button
-                        fontSize="2xl"
-                        fontWeight="bold"
-                        variant="primary"
-                        size="lg"
-                        onClick={() => {
-                          if (!currentUser) {
-                            return;
-                          } else if (sneakerActive) {
-                            deleteFav(sneakerActive);
-                          }
-                        }}
-                      >
-                        <MdFavorite />
-                      </Button>
-                    ) : (
-                      <Button
-                        fontSize="2xl"
-                        fontWeight="bold"
-                        variant="primary"
-                        size="lg"
-                        onClick={() => {
-                          if (!currentUser) {
-                            return;
-                          } else if (sneakerActive) {
-                            handleAddStore(currentUser, sneakerActive);
-                          }
-                        }}
-                      >
-                        <MdFavoriteBorder />
-                      </Button>
-                    )}
-                  </>
-                )}
-
-                <ButtonCount />
-              </Stack>
-            </Stack>
+            <ButtonCount />
           </Stack>
         </Stack>
       </Stack>

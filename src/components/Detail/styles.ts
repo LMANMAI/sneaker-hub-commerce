@@ -28,15 +28,24 @@ export const DetailContainer = styled.div`
   }
   .size_grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 0.33fr));
-
+    grid-template-columns: repeat(auto-fit, minmax(60px, 0.33fr));
+    gap: 10px;
     li {
-      width: 100%;
-      text-align: center;
-      padding: 5px 10px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      font-size: 12px;
+      button {
+        width: 100%;
+        text-align: center;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        font-size: 10px;
+        border-radius: 5px;
+        &:disabled {
+          border: 1px solid rgb(153, 153, 153);
+          background-color: rgb(209, 209, 209);
+          color: rgb(102, 102, 102);
+          cursor: not-allowed;
+        }
+      }
     }
   }
   @media (min-width: 768px) {

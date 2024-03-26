@@ -1,9 +1,7 @@
 import styled from "@emotion/styled";
 export const BrandDetailContainer = styled.div`
   .detail__bg {
-    //position: absolute;
     width: 100%;
-
     height: 250px;
     left: 0px;
     img {
