@@ -46,9 +46,9 @@ const BodyContent: React.FC = () => {
         <li key={index}>
           <button
             disabled={!isActive || isActiveEU || isActiveCM}
-            onClick={() => console.log("desde el talle:", talle[tipo])}
+            onClick={() => console.log("desde el talle:", talle["US"])}
           >
-            {`${talle[tipo]} ${tipo}`}
+            {`${tipo} ${talle[tipo]} `}
           </button>
         </li>
       );
