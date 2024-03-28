@@ -20,6 +20,7 @@ const BrandsComponent = () => {
           md: "repeat(auto-fit, minmax(22%, 1fr))",
         }}
         gap={"10px"}
+        marginTop={"20px"}
       >
         {pathname === "/" && (
           <>
@@ -28,7 +29,7 @@ const BrandsComponent = () => {
                 <NavLink to={`/brand/${item.name}`}>
                   <Stack>
                     <GridItem
-                      height={{ base: "100px", md: "120px" }}
+                      height={{ base: "70px", md: "90px" }}
                       borderRadius="5px"
                       cursor="pointer"
                       transition="transform 250ms ease"

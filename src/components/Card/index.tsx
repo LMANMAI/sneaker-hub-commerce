@@ -1,19 +1,20 @@
 import { Link } from "react-router-dom";
 import { CardBody } from "@chakra-ui/card";
-import { Image, Stack, Text } from "@chakra-ui/react";
+import { Image, Stack, Text, position } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { setSneakerActive } from "../../features/sneakersSlice";
 import { ImgProductContainer, CustomCard, CustomHeading } from "./styles";
+import FavButton from "../FavouriteButton";
 
 const CardComponent = ({ sneaker }: any) => {
   const dispatch = useDispatch();
   return (
-    <Link
-      to={`/${sneaker?._id}`}
-      key={sneaker?._id}
-      onClick={() => dispatch(setSneakerActive(sneaker))}
-    >
-      <CustomCard maxW="sm">
+    <CustomCard maxW="sm">
+      <Link
+        to={`/${sneaker?._id}`}
+        key={sneaker?._id}
+        onClick={() => dispatch(setSneakerActive(sneaker))}
+      >
         <CardBody padding={"0px"}>
           <ImgProductContainer>
             <Image
@@ -30,16 +31,25 @@ const CardComponent = ({ sneaker }: any) => {
               {sneaker.name}
             </CustomHeading>
 
-            <Text color="blue.600" fontSize=" 15px">
-              {sneaker?.price.toLocaleString("es-AR", {
-                style: "currency",
-                currency: "ARS",
-              })}
-            </Text>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-around"}
+            >
+              <Text color="blue.600" fontSize=" 15px">
+                {sneaker?.price.toLocaleString("es-AR", {
+                  style: "currency",
+                  currency: "ARS",
+                })}
+              </Text>
+            </Stack>
           </Stack>
         </CardBody>
-      </CustomCard>
-    </Link>
+      </Link>
+      <div className="favouritebutton">
+        <FavButton />
+      </div>
+    </CustomCard>
   );
 };
 

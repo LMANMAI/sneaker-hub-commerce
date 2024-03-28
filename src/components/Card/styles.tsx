@@ -14,17 +14,22 @@ export const ImgProductContainer = styled.div`
   }
 
   .sneaker-image:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 `;
 
 export const CustomCard = styled(Card)`
   transition: all 250ms ease-in-out;
+  position: relative;
+  z-index: 1;
   &:hover {
     -webkit-box-shadow: 10px 10px 72px -25px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 10px 10px 72px -25px rgba(0, 0, 0, 0.75);
     box-shadow: 10px 10px 72px -25px rgba(0, 0, 0, 0.75);
     .icon__favourite svg{  background: red;}
+    .favouritebutton{
+      display: block;
+    }
   }
 
   .icon__favourite{
@@ -49,6 +54,14 @@ export const CustomCard = styled(Card)`
         }
     }
    }
+  }
+
+  .favouritebutton {
+    position: absolute;
+    z-index: 99;
+    right: 5px;
+    top: 5px;
+    display: none;
   }
 `;
 

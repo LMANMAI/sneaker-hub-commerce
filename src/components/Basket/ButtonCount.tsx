@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Input, Stack, Button } from "@chakra-ui/react";
 import CartIcon from "../../icons/Cart";
-import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectSneakerActive,
@@ -10,14 +9,13 @@ import {
   selectBasket,
 } from "../../features/sneakersSlice";
 import { ISneaker } from "../../interfaces";
-import { checkFavs, removeFav } from "../../functions/Products";
-import { selectUser } from "../../features/userSlice";
-const ButtonCount = (props: { direction?: string }) => {
+import { CustomStack } from "./styles";
+import FavButton from "../FavouriteButton";
+
+const ButtonCount = (props: { products?: any }) => {
   const sneakerActive = useSelector(selectSneakerActive);
   const basket = useSelector(selectBasket);
-  const currentUser = useSelector(selectUser);
 
-  const [toggle, setToggle] = useState<boolean>(false);
   const [contador, setContador] = useState<number>(0);
   const [conttem, setContTemp] = useState<number>(0);
   const [isadd, setIsAdd] = useState<boolean>(true);
@@ -52,27 +50,7 @@ const ButtonCount = (props: { direction?: string }) => {
       dispatch(removeOnefromBasket(sneaker));
     }
   };
-  useEffect(() => {
-    if (sneakerActive) {
-      verificated(currentUser, sneakerActive);
-    }
-  }, []);
 
-  const verificated = async (user: any, sneaker: ISneaker) => {
-    const res = await checkFavs(user, sneaker);
-    // if (res === "existe") {
-    //   setToggle(true);
-    // }
-  };
-
-  const handleAddStore = async (user: any, sneaker: ISneaker) => {
-    verificated(user, sneaker);
-    setToggle(true);
-  };
-  const deleteFav = async (sneaker: ISneaker) => {
-    setToggle(false);
-    removeFav(currentUser, sneaker);
-  };
   useEffect(() => {
     if (newBasketItemCount.length === 1) {
       setContador(newBasketItemCount[0].quantity);
@@ -82,19 +60,8 @@ const ButtonCount = (props: { direction?: string }) => {
     }
   }, [newBasketItemCount, basket]);
   return (
-    <Stack
-      direction={{
-        base: `${
-          props.direction === "column" || props.direction === "row"
-            ? props.direction
-            : "row"
-        }`,
-        md: "row",
-      }}
-      alignItems="center"
-      w="fit-content"
-    >
-      <Stack
+    <Stack direction={"row"} alignItems="center" w="fit-content">
+      <CustomStack
         direction="row"
         borderRadius="md"
         padding={1}
@@ -105,7 +72,10 @@ const ButtonCount = (props: { direction?: string }) => {
           size="sm"
           variant="primary"
           fontSize="2xl"
-          disabled={contador <= 0 ? true : false}
+          className={
+            contador <= 0 && props.products.length === 0 ? `disabled` : ""
+          }
+          disabled={contador <= 0 && props.products.length == 0 ? true : false}
           onClick={() => {
             setContTemp(conttem + 1);
             setContador(contador - 1);
@@ -134,6 +104,8 @@ const ButtonCount = (props: { direction?: string }) => {
           size="sm"
           variant="primary"
           fontSize="2xl"
+          className={props.products.length === 0 ? `disabled` : ""}
+          disabled={props.products.length === 0}
           onClick={() => {
             setIsAdd(true);
             setContTemp(conttem + 1);
@@ -142,7 +114,8 @@ const ButtonCount = (props: { direction?: string }) => {
         >
           +
         </Button>
-      </Stack>
+      </CustomStack>
+
       <Button
         variant="primary"
         color="white"
@@ -159,43 +132,7 @@ const ButtonCount = (props: { direction?: string }) => {
       >
         {isadd ? "Add to cart" : "Remove"}
       </Button>
-      {currentUser && (
-        <>
-          {toggle ? (
-            <Button
-              fontSize="2xl"
-              fontWeight="bold"
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                if (!currentUser) {
-                  return;
-                } else if (sneakerActive) {
-                  deleteFav(sneakerActive);
-                }
-              }}
-            >
-              <MdFavorite />
-            </Button>
-          ) : (
-            <Button
-              fontSize="2xl"
-              fontWeight="bold"
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                if (!currentUser) {
-                  return;
-                } else if (sneakerActive) {
-                  handleAddStore(currentUser, sneakerActive);
-                }
-              }}
-            >
-              <MdFavoriteBorder />
-            </Button>
-          )}
-        </>
-      )}
+      <FavButton />
     </Stack>
   );
 };

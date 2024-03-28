@@ -90,6 +90,22 @@ const Collections = (props: any) => {
 
           <BrandsComponent />
 
+          {/*Productos*/}
+          <Grid
+            templateColumns={{
+              base: "repeat(auto-fit, minmax(150px, 1fr))",
+              md: "repeat(auto-fit, minmax(210px, 1fr))",
+            }}
+            gap={4}
+            margin={"20px 0px"}
+          >
+            {/*Componente item*/}
+            {producfilter &&
+              producfilter?.map((sneaker: ISneaker) => (
+                <CardComponent sneaker={sneaker} />
+              ))}
+          </Grid>
+
           <Stack direction="row" justifyContent="center" alignItems="center">
             {count <= 0 ? null : (
               <Button
@@ -102,9 +118,7 @@ const Collections = (props: any) => {
                 {"<"}
               </Button>
             )}
-            <Text>
-              Page {countPage} to {limit}
-            </Text>
+            <Text>ver mas</Text>
             {count + 10 > limit ? null : (
               <Button
                 variant="primary"
@@ -117,20 +131,6 @@ const Collections = (props: any) => {
               </Button>
             )}
           </Stack>
-          {/*Productos*/}
-          <Grid
-            templateColumns={{
-              base: "repeat(auto-fit, minmax(150px, 1fr))",
-              md: "repeat(auto-fit, minmax(210px, 1fr))",
-            }}
-            gap={4}
-          >
-            {/*Componente item*/}
-            {producfilter &&
-              producfilter?.map((sneaker: ISneaker) => (
-                <CardComponent sneaker={sneaker} />
-              ))}
-          </Grid>
         </>
       )}
     </Stack>

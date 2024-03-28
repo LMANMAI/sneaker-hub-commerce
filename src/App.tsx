@@ -41,7 +41,7 @@ function App() {
       <Header />
       <Container
         maxWidth={!shouldApplyBackgroundColor ? "container.xl" : ""}
-        p="inherit"
+        p={!shouldApplyBackgroundColor ? "0px 20px" : "0px"}
         position="relative"
       >
         <Stack spacing={0} divider={<StackDivider />}>

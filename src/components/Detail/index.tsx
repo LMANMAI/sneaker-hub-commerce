@@ -14,9 +14,11 @@ import { DetailContainer } from "./styles";
 import { brands } from "../BrandsMenu/statics";
 import { sizes } from "./statics";
 const BodyContent: React.FC = () => {
+  const [tipoTalle, setTipoTalle] = useState("US");
+  const [products, setProducts] = useState<any>([]);
+
   const sneakerActive = useSelector(selectSneakerActive);
   const { colorMode } = useColorMode();
-  const [tipoTalle, setTipoTalle] = useState("US");
 
   const checkBrandBG = (brandType: string) => {
     const brand = brands.find(
@@ -46,7 +48,10 @@ const BodyContent: React.FC = () => {
         <li key={index}>
           <button
             disabled={!isActive || isActiveEU || isActiveCM}
-            onClick={() => console.log("desde el talle:", talle["US"])}
+            onClick={() => {
+              console.log("desde el talle:", talle["US"]);
+              setProducts(sneakerActive);
+            }}
           >
             {`${tipo} ${talle[tipo]} `}
           </button>
@@ -61,6 +66,10 @@ const BodyContent: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    console.log(products, "products");
+  }, [products]);
 
   console.log(sneakerActive);
   return (
@@ -140,7 +149,7 @@ const BodyContent: React.FC = () => {
             <ul className="size_grid">{converSize(tipoTalle)}</ul>
           </Stack>
           <Stack>
-            <ButtonCount />
+            <ButtonCount products={products} />
           </Stack>
         </Stack>
       </Stack>
