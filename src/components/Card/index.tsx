@@ -47,7 +47,7 @@ const CardComponent = ({ sneaker }: any) => {
         </CardBody>
       </Link>
       <div className="favouritebutton">
-        <FavButton />
+        <FavButton variant="ghost" />
       </div>
     </CustomCard>
   );

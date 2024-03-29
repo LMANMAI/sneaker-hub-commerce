@@ -10,52 +10,27 @@ import {
 import logo from "../../assets/logo.svg";
 import { Cart } from "../../icons";
 import { IoSearchOutline } from "react-icons/io5";
-import { NavLink, useLocation } from "react-router-dom";
+import { CloseIcon } from "@chakra-ui/icons";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectBasket,
   selectBasketQuantity,
-  selectCount,
-  setSneaker,
   setSearch,
-  setCounterLimit,
+  selectSearch,
 } from "../../features/sneakersSlice";
 
-import { selectUser } from "../../features/userSlice";
 import { Basket, ProfileMenu } from "..";
-import instance from "../../config";
-
 const Header = () => {
+  const navigate = useNavigate();
   const basket = useSelector(selectBasket);
   const basketQ = useSelector(selectBasketQuantity);
-  const currentUser = useSelector(selectUser);
-  const counter = useSelector(selectCount);
-  const { pathname } = useLocation();
+  const searchParams = useSelector(selectSearch);
   const dispatch = useDispatch();
   ///states
   const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
-
-  //const { colorMode } = useColorMode();
-  const handleReq = async () => {
-    // const reqLength = await fetch(`${import.meta.env.VITE_URL_EP}`);
-    // const data = await reqLength.json();
-    // dispatch(setTotalSneaker(data.sneakers));
-    // dispatch(setCounterLimit(data.sneakers.length));
-    // const req = await fetch(
-    //   `${import.meta.env.VITE_URL_EP}?limit=10&offset=${counter}`
-    // );
-    // const res = await req.json();
-    // dispatch(setSneaker(res.sneakers));
-    const { data } = await instance.get(`?page=${1}&pageSize=${10}`);
-
-    dispatch(setCounterLimit(data.totalPages));
-    dispatch(setSneaker(data.data));
-  };
-  useEffect(() => {
-    handleReq();
-  }, [pathname, counter]);
   const { colorMode } = useColorMode();
 
   const handleSwichtFilter = (value: boolean) => {
@@ -105,11 +80,27 @@ const Header = () => {
           <Input
             type="text"
             variant="unstyled"
+            value={searchParams}
             padding={2}
             onChange={(e) => {
+              if (window.location.pathname !== "/") {
+                navigate("/");
+              }
               dispatch(setSearch(e.target.value));
             }}
           />
+          {searchParams.length > 0 && (
+            <CloseIcon
+              w={2.5}
+              h={2.5}
+              _hover={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                dispatch(setSearch(""));
+              }}
+            />
+          )}
         </Stack>
       </Stack>
 

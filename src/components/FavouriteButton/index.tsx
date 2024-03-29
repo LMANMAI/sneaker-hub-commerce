@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { ISneaker } from "../../interfaces";
 import { selectSneakerActive } from "../../features/sneakersSlice";
 
-const FavButton = () => {
+const FavButton = ({ variant = "primary" }: { variant?: string }) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const currentUser = useSelector(selectUser);
   const sneakerActive = useSelector(selectSneakerActive);
@@ -41,7 +41,7 @@ const FavButton = () => {
             <Button
               fontSize="2xl"
               fontWeight="bold"
-              variant="primary"
+              variant={variant}
               size="sm"
               onClick={() => {
                 if (!currentUser) {
@@ -57,7 +57,7 @@ const FavButton = () => {
             <Button
               fontSize="2xl"
               fontWeight="bold"
-              variant="primary"
+              variant={variant}
               size="sm"
               onClick={() => {
                 if (!currentUser) {

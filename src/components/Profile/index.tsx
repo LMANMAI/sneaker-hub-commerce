@@ -66,17 +66,24 @@ const ProfileMenu = (props: { fn: Function }) => {
         _hover={{ background: "transparent" }}
         _active={{ background: "transparent" }}
         as={Button}
-        rightIcon={<ChevronDownIcon />}
+        rightIcon={
+          <Stack direction={"row"} alignItems={"center"} gap={0}>
+            {user && (
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Avatar width={8} height={8} src={user.profileIMG} />
+                <p>{user.firstName}</p>
+              </Stack>
+            )}
+            <ChevronDownIcon />
+          </Stack>
+        }
       ></MenuButton>
       {user ? (
         <MenuList>
-          <MenuItem>
-            <Stack direction="row" alignItems="center" justifyContent="center">
-              <Avatar width={8} height={8} src={user.profileIMG} />
-              <p>{user.firstName}</p>
-            </Stack>
-          </MenuItem>
-
           <MenuItem onClick={() => props.fn(false)}>
             <Link to="/favorites" style={{ width: "100%" }}>
               <Stack direction={"row"} alignItems={"center"}>
@@ -86,7 +93,7 @@ const ProfileMenu = (props: { fn: Function }) => {
                   color={colorMode === "light" ? "primary" : "secondary"}
                 />
                 <Text color={colorMode === "light" ? "gray.800" : "white"}>
-                  Favorites
+                  Favoritos
                 </Text>
               </Stack>
             </Link>
@@ -100,7 +107,7 @@ const ProfileMenu = (props: { fn: Function }) => {
                 colormode={colorMode}
               >
                 <Text color={colorMode === "light" ? "gray.800" : "white"}>
-                  Settings
+                  Configuraciones
                 </Text>
               </ItemMenu>
             </Link>
@@ -118,7 +125,7 @@ const ProfileMenu = (props: { fn: Function }) => {
               color={colorMode === "light" ? "primary" : "secondary"}
             />
             <Text color={colorMode === "light" ? "gray.800" : "white"}>
-              Close
+              Salir
             </Text>
           </MenuItem>
         </MenuList>

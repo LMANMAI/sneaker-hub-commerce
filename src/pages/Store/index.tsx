@@ -1,72 +1,102 @@
 import { useEffect, useState } from "react";
-import { Grid, Stack, Button, Text } from "@chakra-ui/react";
+import { Grid, Stack, Button, Text, Skeleton } from "@chakra-ui/react";
 import { ISneaker } from "../../interfaces";
-import {
-  selectSneakers,
-  selectSearch,
-  selectCountLimit,
-  selectTotalSneakers,
-  setCounterState,
-} from "../../features/sneakersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "../../components/Slider";
 import { CardComponent, BrandsComponent, Spinkit } from "../../components";
 import instance from "../../config";
+import { CustomButtonContainer } from "./styles";
+import { selectSearch } from "../../features/sneakersSlice";
 
-const Collections = (props: any) => {
-  //states
-  const [loadign, setLoadign] = useState<boolean>(true);
-  const [count, setCount] = useState<number>(0);
-  //selectors
+const Collections = () => {
   const dispatch = useDispatch();
-  const sneakers = useSelector(selectSneakers);
-  const search = useSelector(selectSearch);
-  const limit = useSelector(selectCountLimit);
-  const total = useSelector(selectTotalSneakers);
-  //query params
-  const [producfilter, setProductsFilter] = useState<any[]>([]);
-  const [countPage, setCountPage] = useState<number>(1);
-  const [lastadd, setLastAdd] = useState<any>([]);
+  //selectors
+  const searchParams = useSelector(selectSearch);
+
+  //states
+  const [loadign, setLoadign] = useState<boolean>(false);
+  const [products, setProducts] = useState<ISneaker[]>([]);
+  const [searchedProducts, setSearchedProducts] = useState<ISneaker[]>([]);
+  const [lastadd, setLastAdd] = useState<ISneaker[]>([]);
+
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [currentpage, setCurrentPage] = useState<number>(1);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
 
   const handleLastProducts = async () => {
     const { data } = await instance.get(`last`);
     setLastAdd(data.data);
   };
 
+  const getMoreProducts = async () => {
+    if (currentpage < totalPages && !loadingMore) {
+      setLoadingMore(true);
+      await getProducts(currentpage + 1);
+      setLoadingMore(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    const { data } = await instance.get(
+      `/search?name=${searchParams.toLocaleUpperCase()}&genre=&brand=`
+    );
+    if (data.status === 200) {
+      setSearchedProducts(data.data);
+    } else {
+      setSearchedProducts([]);
+    }
+  };
+  const getProducts = async (page: number) => {
+    const { data } = await instance.get(`?page=${page}&pageSize=${10}`);
+    setProducts((prevProducts) => {
+      const uniqueNewProducts = data.data.filter(
+        (newProduct: ISneaker) =>
+          !prevProducts.some(
+            (prevProduct) => prevProduct._id === newProduct._id
+          )
+      );
+      return [...prevProducts, ...uniqueNewProducts];
+    });
+    setTotalPages(data.totalPages);
+    setCurrentPage(data.currenPage);
+  };
+
   useEffect(() => {
     handleLastProducts();
+    getProducts(1);
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (sneakers) {
-        setLoadign(false);
-        setProductsFilter(sneakers);
-      }
-    }, 300);
-  }, [props.history, sneakers]);
-  useEffect(() => {
-    let array: any = [];
-    total?.filter((item) => {
-      if (search === "") {
-        setProductsFilter(sneakers);
-      } else if (item.name.toLowerCase().includes(search.toLocaleLowerCase())) {
-        array.push(item);
-        setProductsFilter(array);
-      }
-    });
-  }, [search]);
-
-  useEffect(() => {
-    dispatch(setCounterState(count));
-  }, [count]);
-
+    if (searchParams !== "") {
+      handleSearch();
+    }
+  }, [searchParams]);
   return (
     <Stack>
       {loadign ? (
         <Spinkit />
+      ) : searchParams !== "" ? (
+        <Stack marginTop="60px">
+          <Text>Resultado de la busqueda de :{searchParams}</Text>
+
+          <Grid
+            templateColumns={{
+              base: "repeat(auto-fit, minmax(150px, 1fr))",
+              md: "repeat(auto-fit, minmax(210px, 1fr))",
+            }}
+            gap={4}
+            margin={"20px 0px"}
+          >
+            {/*Componente item*/}
+            {searchedProducts &&
+              searchedProducts?.map((sneaker: ISneaker) => (
+                <CardComponent sneaker={sneaker} />
+              ))}
+            {loadingMore && <Skeleton />}
+          </Grid>
+        </Stack>
       ) : (
-        <>
+        <Stack>
           {/*Slider*/}
           <Stack marginTop="60px">
             <Slider />
@@ -100,38 +130,35 @@ const Collections = (props: any) => {
             margin={"20px 0px"}
           >
             {/*Componente item*/}
-            {producfilter &&
-              producfilter?.map((sneaker: ISneaker) => (
+            {products &&
+              products?.map((sneaker: ISneaker) => (
                 <CardComponent sneaker={sneaker} />
               ))}
+            {loadingMore && (
+              <>
+                <Skeleton height={330} />
+                <Skeleton height={330} />
+              </>
+            )}
           </Grid>
 
-          <Stack direction="row" justifyContent="center" alignItems="center">
-            {count <= 0 ? null : (
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setCountPage(countPage - 1);
-                  setCount(count - 10);
-                }}
-              >
-                {"<"}
-              </Button>
-            )}
-            <Text>ver mas</Text>
-            {count + 10 > limit ? null : (
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setCount(count + 10);
-                  setCountPage(countPage + 1);
-                }}
-              >
-                {">"}
-              </Button>
-            )}
-          </Stack>
-        </>
+          <CustomButtonContainer
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Button
+              variant="primary"
+              onClick={() => getMoreProducts()}
+              className={
+                loadingMore || currentpage === totalPages ? "disabled" : ""
+              }
+              disabled={loadingMore || currentpage === totalPages}
+            >
+              Ver más
+            </Button>
+          </CustomButtonContainer>
+        </Stack>
       )}
     </Stack>
   );

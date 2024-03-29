@@ -49,7 +49,7 @@ const CheckOut = () => {
   const handleAddBasket = (sneaker: ISneaker) => {
     dispatch(setBasket(sneaker));
   };
-  console.log(basket);
+
   return (
     <Box marginTop={"60px"}>
       <Text as="h2" margin={"20px 0px"} fontWeight={"bold"}>

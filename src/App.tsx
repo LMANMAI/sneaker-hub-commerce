@@ -36,6 +36,7 @@ function App() {
         backgroundColor: !shouldApplyBackgroundColor
           ? "#edeeef"
           : "transparent",
+        overflow: "hidden",
       }}
     >
       <Header />
