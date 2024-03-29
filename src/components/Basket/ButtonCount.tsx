@@ -130,7 +130,7 @@ const ButtonCount = (props: { products?: any }) => {
           }
         }}
       >
-        {isadd ? "Add to cart" : "Remove"}
+        {isadd ? "Agregar al carrito" : "Eliminar del carrito"}
       </Button>
       <FavButton />
     </Stack>

@@ -3,7 +3,7 @@ import { brands } from "../../components/BrandsMenu/statics";
 import { BrandDetailContainer } from "./styles";
 import { useEffect, useState } from "react";
 import instance from "../../../src/config";
-import { CardComponent } from "../../../src/components";
+import { ProductList } from "../../../src/components";
 import { ISneaker } from "../../../src/interfaces";
 
 const BrandDetail = () => {
@@ -69,29 +69,11 @@ const BrandDetail = () => {
       <Container maxWidth="container.xl" className="content">
         <Stack direction={"row"}>
           <Stack flex={2}>
-            <Grid
-              templateColumns={{
-                base: "repeat(auto-fit, minmax(150px, 1fr))",
-                md: "repeat(auto-fit, minmax(210px, 1fr))",
-              }}
-              gap={4}
-              margin={"20px 0px"}
-            >
-              {load ? (
-                <>
-                  <Skeleton height={330} />
-                  <Skeleton height={330} />
-                  <Skeleton height={330} />
-                  <Skeleton height={330} />
-                  <Skeleton height={330} />
-                </>
-              ) : (
-                products &&
-                products?.map((sneaker: ISneaker) => (
-                  <CardComponent sneaker={sneaker} />
-                ))
-              )}
-            </Grid>
+            <ProductList
+              products={products}
+              loadingMore={load}
+              skeletonCount={3}
+            />
             {errorMessage && <p>{errorMessage}</p>}
           </Stack>
         </Stack>

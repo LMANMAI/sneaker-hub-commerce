@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Grid, Stack, Button, Text, Skeleton } from "@chakra-ui/react";
+import { Stack, Button, Text } from "@chakra-ui/react";
 import { ISneaker } from "../../interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "../../components/Slider";
-import { CardComponent, BrandsComponent, Spinkit } from "../../components";
+import { ProductList, BrandsComponent, Spinkit } from "../../components";
 import instance from "../../config";
 import { CustomButtonContainer } from "./styles";
 import { selectSearch } from "../../features/sneakersSlice";
@@ -14,18 +14,26 @@ const Collections = () => {
   const searchParams = useSelector(selectSearch);
 
   //states
-  const [loadign, setLoadign] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<ISneaker[]>([]);
   const [searchedProducts, setSearchedProducts] = useState<ISneaker[]>([]);
-  const [lastadd, setLastAdd] = useState<ISneaker[]>([]);
+  const [lastedProducts, setLastAdd] = useState<ISneaker[]>([]);
 
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentpage, setCurrentPage] = useState<number>(1);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [loadLatestProducts, setLoadLatestProducts] = useState<boolean>(false);
 
   const handleLastProducts = async () => {
+    setLoadLatestProducts(true);
     const { data } = await instance.get(`last`);
-    setLastAdd(data.data);
+    if (data.status === 200) {
+      setLoadLatestProducts(false);
+      setLastAdd(data.data);
+    } else {
+      setLoadLatestProducts(false);
+      setLastAdd([]);
+    }
   };
 
   const getMoreProducts = async () => {
@@ -37,12 +45,15 @@ const Collections = () => {
   };
 
   const handleSearch = async () => {
+    setLoading(true);
     const { data } = await instance.get(
       `/search?name=${searchParams.toLocaleUpperCase()}&genre=&brand=`
     );
     if (data.status === 200) {
+      setLoading(false);
       setSearchedProducts(data.data);
     } else {
+      setLoading(false);
       setSearchedProducts([]);
     }
   };
@@ -73,27 +84,14 @@ const Collections = () => {
   }, [searchParams]);
   return (
     <Stack>
-      {loadign ? (
+      {loading ? (
         <Spinkit />
       ) : searchParams !== "" ? (
         <Stack marginTop="60px">
-          <Text>Resultado de la busqueda de :{searchParams}</Text>
-
-          <Grid
-            templateColumns={{
-              base: "repeat(auto-fit, minmax(150px, 1fr))",
-              md: "repeat(auto-fit, minmax(210px, 1fr))",
-            }}
-            gap={4}
-            margin={"20px 0px"}
-          >
-            {/*Componente item*/}
-            {searchedProducts &&
-              searchedProducts?.map((sneaker: ISneaker) => (
-                <CardComponent sneaker={sneaker} />
-              ))}
-            {loadingMore && <Skeleton />}
-          </Grid>
+          <Text>
+            Resultado de la busqueda de: {searchParams.toLocaleUpperCase()}
+          </Text>
+          <ProductList products={searchedProducts} loadingMore={loadingMore} />
         </Stack>
       ) : (
         <Stack>
@@ -102,46 +100,21 @@ const Collections = () => {
             <Slider />
           </Stack>
 
-          {/*Productos*/}
+          {/*Ultimos Productos*/}
           <Text>Ultimos lanzamientos</Text>
-          <Grid
-            templateColumns={{
-              base: "repeat(auto-fit, minmax(150px, 1fr))",
-              md: "repeat(auto-fit, minmax(210px, 1fr))",
-            }}
-            gap={4}
-          >
-            {/*Componente item*/}
-            {lastadd &&
-              lastadd?.map((sneaker: ISneaker) => (
-                <CardComponent sneaker={sneaker} />
-              ))}
-          </Grid>
+          <ProductList
+            products={lastedProducts}
+            loadingMore={loadLatestProducts}
+          />
 
           <BrandsComponent />
 
           {/*Productos*/}
-          <Grid
-            templateColumns={{
-              base: "repeat(auto-fit, minmax(150px, 1fr))",
-              md: "repeat(auto-fit, minmax(210px, 1fr))",
-            }}
-            gap={4}
-            margin={"20px 0px"}
-          >
-            {/*Componente item*/}
-            {products &&
-              products?.map((sneaker: ISneaker) => (
-                <CardComponent sneaker={sneaker} />
-              ))}
-            {loadingMore && (
-              <>
-                <Skeleton height={330} />
-                <Skeleton height={330} />
-              </>
-            )}
-          </Grid>
-
+          <ProductList
+            products={products}
+            loadingMore={loadingMore}
+            skeletonCount={2}
+          />
           <CustomButtonContainer
             direction="row"
             justifyContent="center"
