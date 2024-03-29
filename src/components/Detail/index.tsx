@@ -6,20 +6,51 @@ import {
   Button,
   Box,
   useColorMode,
+  useToast,
 } from "@chakra-ui/react";
 import { Carrousel, ButtonCount } from "..";
-import { useSelector } from "react-redux";
-import { selectSneakerActive } from "../../features/sneakersSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectSneakerActive,
+  setSneakerActive,
+} from "../../features/sneakersSlice";
 import { DetailContainer } from "./styles";
 import { brands } from "../BrandsMenu/statics";
 import { sizes } from "./statics";
+import instance from "../../../src/config";
+import { useNavigate } from "react-router-dom";
+
 const BodyContent: React.FC = () => {
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const history = useNavigate();
   const [tipoTalle, setTipoTalle] = useState("US");
   const [products, setProducts] = useState<any>([]);
 
   const sneakerActive = useSelector(selectSneakerActive);
   const { colorMode } = useColorMode();
+  const getSneakerActive = async () => {
+    const url = window.location.href;
+    const segments = url.split("/");
+    const lastSegment = segments[segments.length - 1];
 
+    try {
+      const { data } = await instance.get(`/${lastSegment}`);
+      dispatch(setSneakerActive(data.product));
+    } catch (error) {
+      toast({
+        title: "Ocurrio un error al consultar el producto.",
+        description: "Es posible que el producto no se encuentre disponible.",
+        status: "warning",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+      setTimeout(() => {
+        history("/");
+      }, 500);
+    }
+  };
   const checkBrandBG = (brandType: string) => {
     const brand = brands.find(
       (item) => item.name.toLocaleUpperCase() === brandType
@@ -49,7 +80,6 @@ const BodyContent: React.FC = () => {
           <button
             disabled={!isActive || isActiveEU || isActiveCM}
             onClick={() => {
-              console.log("desde el talle:", talle["US"]);
               setProducts(sneakerActive);
             }}
           >
@@ -65,13 +95,17 @@ const BodyContent: React.FC = () => {
   };
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (!sneakerActive) {
+      getSneakerActive();
+    }
   }, []);
 
   useEffect(() => {
-    console.log(products, "products");
+    if (products.length !== 0) {
+      console.log(products, "products");
+    }
   }, [products]);
 
-  console.log(sneakerActive);
   return (
     <DetailContainer>
       <div
@@ -84,10 +118,12 @@ const BodyContent: React.FC = () => {
       ></div>
       <Stack className="detail__content">
         <Box flex={1}>
-          <Carrousel
-            posterPath={sneakerActive ? sneakerActive?.posterPathImage : ""}
-            images={sneakerActive?.imgs}
-          />
+          {sneakerActive && (
+            <Carrousel
+              posterPath={sneakerActive ? sneakerActive?.posterPathImage : ""}
+              images={sneakerActive?.imgs}
+            />
+          )}
         </Box>
         <Stack
           flex={1}

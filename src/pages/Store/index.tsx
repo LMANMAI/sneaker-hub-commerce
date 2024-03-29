@@ -123,6 +123,7 @@ const Collections = () => {
             <Button
               variant="primary"
               onClick={() => getMoreProducts()}
+              isLoading={loadingMore}
               className={
                 loadingMore || currentpage === totalPages ? "disabled" : ""
               }

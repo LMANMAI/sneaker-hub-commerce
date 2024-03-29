@@ -29,7 +29,6 @@ function App() {
     return unsubscribe;
   }, []);
 
-  console.log(shouldApplyBackgroundColor);
   return (
     <div
       style={{

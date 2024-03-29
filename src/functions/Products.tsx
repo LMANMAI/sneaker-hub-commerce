@@ -8,91 +8,93 @@ import {
 import { db } from "../app/firebaseConfig";
 import { ISneaker } from "../interfaces";
 
-export const setFavItems = async (
-  userID: any,
-  sneaker: ISneaker,
-  idRef: string
-) => {
-  // const docRef = doc(db, "users", userID.idUser);
-  // const collRef = collection(docRef, "favorites");
-  // try {
-  //   console.log(idRef);
-  //   const faav = await addDoc(collRef, sneaker);
-  //   return faav;
-  // } catch (error) {
-  //   console.log(error);
-  //   return "No se pudo agregar el producto";
-  // }
+export const setFavItems = async (userID: string, sneaker: string) => {
+  const docRef = doc(db, "users", userID);
+  const collRef = collection(docRef, "favorites");
+  try {
+    const faav = await addDoc(collRef, { sneaker });
+    return faav;
+  } catch (error) {
+    console.log(error);
+    return "No se pudo agregar el producto";
+  }
 };
 
 export const checkFavs = async (userID: any, sneaker: ISneaker) => {
-  // const docRef = doc(db, "users", userID?.idUser);
-  // const collRef = collection(docRef, "favorites");
-  // try {
-  //   const allDodc = await getDocs(collRef);
-  //   const favs: any[] = [];
-  //   let idRef = "";
-  //   allDodc.forEach((doc) => {
-  //     favs.push({ ...doc.data(), idRef: doc.id });
-  //   });
-  //   const items_exits = favs.find((item) => item._id === sneaker._id);
-  //   if (items_exits) {
-  //     return "existe";
-  //   } else {
-  //     setFavItems(userID, sneaker, idRef);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  console.log(userID);
+  const docRef = doc(db, "users", userID?.uid);
+  const collRef = collection(docRef, "favorites");
+  try {
+    const allDocs = await getDocs(collRef);
+    const favs: any[] = [];
+    allDocs.forEach((doc) => {
+      favs.push({ ...doc.data(), idRef: doc.id });
+    });
+
+    const itemExists = favs.find((item) => item.sneaker === sneaker._id);
+    if (itemExists) {
+      return "existe";
+    } else {
+      const addedItemRef = await setFavItems(userID.uid, sneaker._id);
+      return addedItemRef ? "agregado" : "No se pudo agregar el producto";
+    }
+  } catch (error) {
+    console.log(error);
+    return "No se pudo verificar los favoritos";
+  }
 };
 
 export const removeFav = async (userID: any, sneaker: ISneaker) => {
-  // const docRef = doc(db, "users", userID.idUser);
-  // const collRef = collection(docRef, "favorites");
-  // const favArray: any[] = [];
-  // try {
-  //   const allDodc = await getDocs(collRef);
-  //   allDodc.forEach((doc) => {
-  //     favArray.push({ ...doc.data(), idRef: doc.id });
-  //   });
-  //   const docExist = favArray.find((item) => item._id === sneaker._id);
-  //   if (docExist) {
-  //     await deleteDoc(
-  //       doc(db, "users", userID.idUser, "favorites", docExist.idRef)
-  //     );
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  const docRef = doc(db, "users", userID.uid);
+  const collRef = collection(docRef, "favorites");
+  const favArray: any[] = [];
+  try {
+    const allDodc = await getDocs(collRef);
+    allDodc.forEach((doc) => {
+      favArray.push({ ...doc.data(), idRef: doc.id });
+    });
+    const docExist = favArray.find((item) => item.sneaker === sneaker._id);
+    if (docExist) {
+      await deleteDoc(
+        doc(db, "users", userID.uid, "favorites", docExist.idRef)
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return "No se pudo eliminar de los favoritos";
+  }
 };
 
 export const getProductsFav = async (user: any) => {
-  // const docRef = doc(db, "users", user?.idUser);
-  // const collRef = collection(docRef, "favorites");
-  // try {
-  //   const array: any[] = [];
-  //   const allFavs = await getDocs(collRef);
-  //   allFavs.forEach((doc) => {
-  //     array.push({ ...doc.data(), idRef: doc.id });
-  //   });
-  //   return array;
-  // } catch (error) {
-  //   console.log(error);
-  // }
-  // console.log(user);
+  const docRef = doc(db, "users", user?.uid);
+  const collRef = collection(docRef, "favorites");
+  try {
+    const array: any[] = [];
+    const allFavs = await getDocs(collRef);
+    allFavs.forEach((doc) => {
+      array.push({ ...doc.data(), idRef: doc.id });
+    });
+    return { data: array, status: 200 };
+  } catch (error) {
+    console.log(error);
+    return { data: [], status: 500 };
+  }
 };
 
 export const clearFavs = async (user: any) => {
-  // try {
-  //   const array = await getProductsFav(user);
-  //   if (array) {
-  //     for (let index = 0; index < array.length; index++) {
-  //       await deleteDoc(
-  //         doc(db, "users", user.idUser, "favorites", array[index].idRef)
-  //       );
-  //     }
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    const { uid } = user;
+    const favsCollectionRef = collection(db, "users", uid, "favorites");
+    const favsSnapshot = await getDocs(favsCollectionRef);
+    const deletePromises = favsSnapshot.docs.map((doc) => {
+      return deleteDoc(doc.ref);
+    });
+
+    await Promise.all(deletePromises);
+
+    console.log("Todos los favoritos han sido eliminados correctamente.");
+    return "eliminados";
+  } catch (error) {
+    console.error("Error al intentar eliminar los favoritos:", error);
+  }
 };

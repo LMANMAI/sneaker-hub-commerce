@@ -35,6 +35,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   const dispatch = useDispatch();
   const toast = useToast();
   const history = useNavigate();
+
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
   const currentUser = useSelector(selectUser);
@@ -45,7 +46,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   };
 
   const handleAddBasket = (sneaker: ISneaker) => {
-    dispatch(setBasket(sneaker));
+    dispatch(setBasket({ ...sneaker, quantity: 1 }));
   };
 
   const handleCheckout = () => {
@@ -85,7 +86,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                 direction="row"
                 alignItems="center"
                 key={index}
-                justifyContent="center"
+                justifyContent="space-around"
               >
                 <Image
                   w="40px"
@@ -119,7 +120,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                   direction="row"
                   w="20%"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="space-between"
                 >
                   <Stack direction={"row"}>
                     <button
@@ -133,7 +134,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                     >
                       -
                     </button>
-                    <Text> {sneaker.quantity}</Text>
+                    <Text>{sneaker.quantity}</Text>
                     <button
                       style={{
                         padding: "2px 5px",

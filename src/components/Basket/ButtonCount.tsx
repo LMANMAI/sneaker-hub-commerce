@@ -5,21 +5,25 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   selectSneakerActive,
   setBasket,
-  removeOnefromBasket,
   selectBasket,
+  selectBasketQuantity,
+  removeSneakerBasket,
 } from "../../features/sneakersSlice";
 import { ISneaker } from "../../interfaces";
 import { CustomStack } from "./styles";
 import FavButton from "../FavouriteButton";
 
 const ButtonCount = (props: { products?: any }) => {
+  const dispatch = useDispatch();
+  //selects
   const sneakerActive = useSelector(selectSneakerActive);
   const basket = useSelector(selectBasket);
+  const basketQuantity = useSelector(selectBasketQuantity);
 
+  //states
   const [contador, setContador] = useState<number>(0);
   const [conttem, setContTemp] = useState<number>(0);
   const [isadd, setIsAdd] = useState<boolean>(true);
-  const dispatch = useDispatch();
 
   const newBasketItemCount = useMemo(() => {
     return basket.filter((item) => item._id === sneakerActive?._id);
@@ -27,28 +31,18 @@ const ButtonCount = (props: { products?: any }) => {
 
   const handleAddToBasket = (sneaker: ISneaker) => {
     if (conttem > 0) {
-      for (let index = 0; index < conttem; index++) {
-        dispatch(setBasket(sneaker));
-        setContador(contador + conttem);
-      }
+      dispatch(setBasket({ ...sneaker, quantity: conttem }));
+      setContTemp(0);
     } else {
-      dispatch(setBasket(sneaker));
-      setContTemp(conttem + conttem);
-      setContador(contador + conttem);
+      dispatch(setBasket({ ...sneaker, quantity: 1 }));
+      setContador(contador + 1);
     }
-    setContTemp(0);
   };
 
   const handleRemoveToBasket = (sneaker: ISneaker) => {
-    if (contador < 0) return;
-    if (conttem > 0) {
-      for (let index = 0; index < conttem; index++) {
-        dispatch(removeOnefromBasket(sneaker));
-      }
-      setContTemp(0);
-    } else {
-      dispatch(removeOnefromBasket(sneaker));
-    }
+    dispatch(
+      removeSneakerBasket({ ...sneaker, quantity: basketQuantity - contador })
+    );
   };
 
   useEffect(() => {
@@ -59,6 +53,7 @@ const ButtonCount = (props: { products?: any }) => {
       setContTemp(0);
     }
   }, [newBasketItemCount, basket]);
+
   return (
     <Stack direction={"row"} alignItems="center" w="fit-content">
       <CustomStack
@@ -72,18 +67,12 @@ const ButtonCount = (props: { products?: any }) => {
           size="sm"
           variant="primary"
           fontSize="2xl"
-          className={
-            contador <= 0 && props.products.length === 0 ? `disabled` : ""
-          }
-          disabled={contador <= 0 && props.products.length == 0 ? true : false}
+          className={contador === 0 ? `disabled` : ""}
+          disabled={contador === 0 ? true : false}
           onClick={() => {
             setContTemp(conttem + 1);
             setContador(contador - 1);
-            if (contador < 0) {
-              setIsAdd(false);
-            } else {
-              setIsAdd(false);
-            }
+            setIsAdd(false);
           }}
         >
           -
@@ -98,7 +87,10 @@ const ButtonCount = (props: { products?: any }) => {
           justifyContent="center"
           border="none"
           backgroundColor="transparent"
-          width="50px"
+          width="fit-content"
+          maxWidth={"90px"}
+          p={0}
+          _active={{ outline: "none", border: "none" }}
         />
         <Button
           size="sm"
@@ -122,15 +114,16 @@ const ButtonCount = (props: { products?: any }) => {
         leftIcon={<CartIcon color="#FFF" />}
         size="sm"
         fontSize="xs"
+        transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
         onClick={() => {
-          if (isadd && sneakerActive) {
+          if (sneakerActive && isadd) {
             handleAddToBasket(sneakerActive);
-          } else if (sneakerActive) {
+          } else if (sneakerActive && !isadd) {
             handleRemoveToBasket(sneakerActive);
           }
         }}
       >
-        {isadd ? "Agregar al carrito" : "Eliminar del carrito"}
+        {sneakerActive && isadd ? "Agregar al carrito" : "Eliminar del carrito"}
       </Button>
       <FavButton />
     </Stack>

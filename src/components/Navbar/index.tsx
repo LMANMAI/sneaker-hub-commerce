@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Stack,
   Image,
@@ -24,19 +24,13 @@ import { Basket, ProfileMenu } from "..";
 const Header = () => {
   const navigate = useNavigate();
   const basket = useSelector(selectBasket);
-  const basketQ = useSelector(selectBasketQuantity);
+  const basketQuantity = useSelector(selectBasketQuantity);
   const searchParams = useSelector(selectSearch);
   const dispatch = useDispatch();
   ///states
-  const [menuposition, setMenuPosition] = useState<boolean>(false);
   const [basketshows, setBasketShows] = useState<boolean>(false);
   const [profilemenu, setProfileMenuState] = useState<boolean>(false);
   const { colorMode } = useColorMode();
-
-  const handleSwichtFilter = (value: boolean) => {
-    setMenuPosition(value);
-    setBasketShows(value);
-  };
 
   return (
     <Stack
@@ -135,7 +129,7 @@ const Header = () => {
                   top="10px"
                   fontSize="10px"
                 >
-                  {basketQ}
+                  {basketQuantity}
                 </Text>
               )}
             </Stack>

@@ -26,41 +26,35 @@ export const sneakerSlice = createSlice({
       state.sneakerActive = action.payload;
     },
     setBasket: (state, action: PayloadAction<ISneaker>) => {
-      let newItem = state.sneakers.find(
-        (sneaker) => sneaker._id === action.payload._id
-      );
-      let sneakerCart = state.basket.find((item) => item._id === newItem?._id);
+      const { payload } = action;
+      const newItem = state.basket.find((item) => item._id === payload._id);
 
-      if (newItem !== undefined) {
-        if (sneakerCart) {
-          newItem.quantity += 1;
-          state.basket.map((item) =>
-            item._id === newItem?._id
-              ? (item.quantity = item.quantity + 1)
-              : item
-          );
-        } else {
-          newItem.quantity = 1;
-          state.basket = [...state.basket, newItem];
-        }
+      if (newItem) {
+        newItem.quantity += payload.quantity || 1;
+      } else {
+        state.basket.push({ ...payload, quantity: payload.quantity || 1 });
       }
-      state.total = state.total + action.payload.price;
-      state.basketQuantity = state.basketQuantity + 1;
+
+      state.total += payload.price * (payload.quantity || 1);
+      state.basketQuantity += payload.quantity || 1;
     },
     removeSneakerBasket: (state, action: PayloadAction<ISneaker>) => {
-      const index = state.basket.findIndex(
-        (basketItem) => basketItem._id === action.payload._id
-      );
-      let tempbasket = [...state.basket];
-      if (index >= 0) {
-        tempbasket.splice(index, 1);
-        state.basket = tempbasket;
-        state.total =
-          state.total - action.payload.price * action.payload.quantity;
-        state.basketQuantity = state.basketQuantity - action.payload.quantity;
+      const { payload } = action;
+      const index = state.basket.findIndex((item) => item._id === payload._id);
+
+      if (index !== -1) {
+        const removedItem = state.basket[index];
+        const removedQuantity = payload.quantity || 1;
+        if (removedItem.quantity > removedQuantity) {
+          removedItem.quantity -= removedQuantity;
+        } else {
+          state.basket.splice(index, 1);
+        }
+        state.total -= removedItem.price * removedQuantity;
+        state.basketQuantity -= removedQuantity;
       } else {
         console.warn(
-          `No sé pudo remover el producto: ${action.payload._id} no  esta en el carrito`
+          `No se pudo remover el producto: ${payload._id} no está en el carrito`
         );
       }
     },
