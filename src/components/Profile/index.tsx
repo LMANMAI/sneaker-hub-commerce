@@ -75,7 +75,6 @@ const ProfileMenu = (props: { fn: Function }) => {
                 justifyContent="center"
               >
                 <Avatar width={8} height={8} src={user.profileIMG} />
-                <p>{user.firstName}</p>
               </Stack>
             )}
             <ChevronDownIcon />

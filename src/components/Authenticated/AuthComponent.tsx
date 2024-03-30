@@ -1,15 +1,10 @@
-import { Button, Stack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Stack } from "@chakra-ui/react";
+import { useState } from "react";
 import { Login, Register } from ".";
-import { useDispatch } from "react-redux";
-import { setMenuHeight } from "../../features/userSlice";
 
 const AuthComponent = () => {
   const [login, setLogin] = useState<boolean>(false);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setMenuHeight(login));
-  }, [login]);
+
   return (
     <div style={{ overflow: "hidden" }}>
       <Stack

@@ -5,125 +5,138 @@ import {
   Input,
   Button,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { setError, selectError } from "../../features/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { authClient } from "../../functions/Sesion";
-import { CheckView } from ".";
+import { setUser } from "../../features/userSlice";
 interface IPropsFn {
   fn: Function;
 }
 const Register: React.FC<IPropsFn> = ({ fn }) => {
+  const toast = useToast();
   const dispatch = useDispatch();
-  const errorM = useSelector(selectError);
-
-  const [check, setCheck] = useState<boolean>(false);
   const [user, setUserRegister] = useState({
-    firstName: "",
-    emailr: "",
-    passwordr: "",
+    displayName: "",
+    emailforRegister: "",
+    passwordforRegister: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setUserRegister({
       ...user,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // authClient(user).then((res) => {
-    //   if (res === "Correcto") {
-    //     setCheck(true);
-    //     setTimeout(() => {
-    //       dispatch(setError(""));
-    //       setCheck(false);
-    //     }, 1500);
-    //   } else if (res === "in_use") {
-    //     setCheck(false);
-    //     dispatch(setError("email ya registrado"));
-    //   } else if (res === "password") {
-    //     setCheck(false);
-    //     dispatch(setError("password incorrecto"));
-    //   }
-    // });
-    setUserRegister({
-      firstName: "",
-      emailr: "",
-      passwordr: "",
-    });
+    try {
+      const res = await authClient(user);
+
+      if (res.msg === "Correcto") {
+        toast({
+          title: "Se registro al usuario correctamente.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        setUserRegister({
+          displayName: "",
+          emailforRegister: "",
+          passwordforRegister: "",
+        });
+        dispatch(setUser(res.userRegistered));
+        console.log(res.userRegistered);
+      } else if (res.msg === "in_use") {
+        toast({
+          title: "El correo electrónico ya está registrado.",
+          description: res.error,
+          status: "warning",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      } else if (res.msg === "password") {
+        toast({
+          title: "Contraseña incorrecta.",
+          description: res.error,
+          status: "warning",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      } else if (res.msg === "error") {
+        toast({
+          title: "Error al autenticar el cliente.",
+          description: res.error,
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      }
+    } catch (error: any) {
+      console.log("Error al autenticar el cliente: ", error.message);
+    }
   };
   return (
     <Stack h="100%" p={4}>
-      {errorM && (
-        <Text
-          textAlign="center"
-          fontSize="13px"
-          backgroundColor="#e4e4e4"
-          borderRadius="14px"
-          textTransform="initial"
-          p={2}
-        >
-          {errorM}
+      <Text as="h3" textAlign="center" fontWeight="bold">
+        Registrate
+      </Text>
+      <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
+        <FormLabel htmlFor="displayName">Nombre</FormLabel>
+        <Input
+          onChange={(e) => handleChange(e)}
+          name="displayName"
+          id="firstName"
+          type="text"
+          value={user.displayName}
+        />
+
+        <FormLabel htmlFor="email">Correo electronico</FormLabel>
+        <Input
+          onChange={(e) => handleChange(e)}
+          name="emailforRegister"
+          id="emailforRegister"
+          type="email"
+          value={user.emailforRegister}
+        />
+
+        <FormLabel htmlFor="password">Contraseña</FormLabel>
+        <Input
+          onChange={(e) => handleChange(e)}
+          name="passwordforRegister"
+          type="password"
+          id="passwordforRegister"
+          value={user.passwordforRegister}
+        />
+        <Text fontSize="13px" textAlign="center" marginTop={2}>
+          ¿Ya tenes una cuenta?
+          <Button
+            variant="unstyled"
+            size="fit-content"
+            onClick={() => fn(false)}
+          >
+            Ingresar
+          </Button>
         </Text>
-      )}
-
-      {check ? (
-        <CheckView />
-      ) : (
-        <>
-          <Text as="h3" textAlign="center" fontWeight="bold">
-            Registrate
-          </Text>
-          <FormControl as="form" autoComplete="off" onSubmit={handleSubmit}>
-            {/* <FormLabel htmlFor="firstName">Nombre</FormLabel>
-            <Input
-              onChange={(e) => handleChange(e)}
-              name="firstName"
-              id="firstName"
-              type="text"
-            /> */}
-
-            <FormLabel htmlFor="emailr">Correo electronico</FormLabel>
-            <Input
-              onChange={(e) => handleChange(e)}
-              name="emailr"
-              id="emailr"
-              type="email"
-            />
-
-            <FormLabel htmlFor="passwordr">Contraseña</FormLabel>
-            <Input
-              onChange={(e) => handleChange(e)}
-              name="passwordr"
-              type="password"
-              id="passwordr"
-            />
-            <Text fontSize="13px" textAlign="center">
-              ¿Ya tenes una cuenta?{" "}
-              <Button
-                variant="unstyled"
-                size="fit-content"
-                onClick={() => fn(false)}
-              >
-                Ingresar
-              </Button>
-            </Text>
-            <Button
-              variant="primary"
-              type="submit"
-              mt={2}
-              w="100%"
-              border="none"
-              outline="none"
-              onClick={(e) => handleSubmit(e)}
-            >
-              Registrar
-            </Button>
-          </FormControl>
-        </>
-      )}
+        <Button
+          variant="primary"
+          type="submit"
+          mt={2}
+          w="100%"
+          border="none"
+          outline="none"
+          onClick={(e) => handleSubmit(e)}
+        >
+          Registrar
+        </Button>
+      </FormControl>
     </Stack>
   );
 };

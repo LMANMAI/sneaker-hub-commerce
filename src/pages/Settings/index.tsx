@@ -17,12 +17,12 @@ import {
   Divider,
   Radio,
   RadioGroup,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateProfile,
-  updateProfileWhithPhoto,
   setUserShippingAddress,
   getAddresses,
 } from "../../functions/Profile";
@@ -33,7 +33,17 @@ interface IPropsStack {
   children: React.ReactNode;
   border?: boolean;
 }
-
+interface Address {
+  id: string;
+  direc: {
+    calle: string;
+    alt: string;
+  };
+  locald: string;
+  prov: string;
+  mun: string;
+  mainAddress?: boolean;
+}
 function StackContainer({ children, border }: IPropsStack) {
   return (
     <Stack
@@ -49,32 +59,28 @@ function StackContainer({ children, border }: IPropsStack) {
 }
 
 const Settings = () => {
+  const toast = useToast();
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   //states
   const [usersettigns, setUSerSettings] = useState<any>({
     email: currentUser.email,
-    firstName: currentUser.firstName,
-    confirmacion: currentUser.confirmacion,
-    idToken: currentUser.idToken,
-    idUser: currentUser.idUser,
-    method: currentUser.method,
-    profileIMG: currentUser.profileIMG,
-    rol: currentUser.rol,
+    displayName: currentUser.firstName || "",
+    accessToken: currentUser.idToken || "",
+    uid: currentUser.idUser,
+    profileIMG: currentUser.profileIMG || "",
   });
-  const [adress, setAdress] = useState({
+  const [adress, setAdress] = useState<Address>({
     prov: "",
     mun: "",
     locald: "",
-    direc: {},
+    direc: { calle: "", alt: "" },
   });
+  const [load, setLoad] = useState<boolean>(false);
   const [disabledstate, setDisabled] = useState<boolean>(false);
-  const [foto, setFoto] = useState<any>(undefined);
-  const [fotopreview, setPreview] = useState<any>(currentUser.profileIMG);
   const [addressarray, setArrayAddresses] = useState<any[]>([]);
   const [value, setValue] = useState<any>();
   //modal
-  const { firstName } = usersettigns;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,56 +91,60 @@ const Settings = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    (async () => {
-      const newprofile = await updateProfile(usersettigns);
-      dispatch(setUser(newprofile));
-    })();
-  };
-
-  const eliminarImage = () => {
-    setFoto(undefined);
-    setPreview(undefined);
-  };
-  const saveImage = (e: any) => {
-    e.preventDefault();
-    const userId = currentUser.idUser;
-    if (foto === undefined) {
-      setFoto(undefined);
-      setPreview(fotopreview);
-      updateProfileWhithPhoto(fotopreview, userId);
+    setLoad(true);
+    const newprofile = await updateProfile(usersettigns);
+    if (newprofile.status === 200) {
+      dispatch(setUser(newprofile.data));
+      setLoad(false);
+      toast({
+        title: "Perfil actualizado correctamente.",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-right",
+      });
     } else {
-      updateProfileWhithPhoto(foto, userId);
-      setFoto(undefined);
-      setPreview(fotopreview);
+      setLoad(false);
+      toast({
+        title: "Ocurrio un error actulizando el perfil.",
+        description: newprofile.msg,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-right",
+      });
     }
   };
-  const changeImage = (e: any) => {
-    let selectImage;
-    if (e.target.files && e.target.files.length === 1) {
-      selectImage = e.target.files[0];
-      setFoto(selectImage);
+  const handleAddress = async () => {
+    if (adress) {
+      const request = await setUserShippingAddress(adress, currentUser.uid);
+
+      if (request.status === 200) {
+        setArrayAddresses(request.data);
+        setAdress({
+          prov: "",
+          mun: "",
+          locald: "",
+          direc: {},
+        });
+        onClose();
+      } else {
+        setArrayAddresses([]);
+      }
+    }
+  };
+  const getUserAddresses = async () => {
+    const request = await getAddresses(currentUser.uid);
+    if (request) {
+      setArrayAddresses(request);
     }
   };
 
   useEffect(() => {
-    if (!foto) {
-      return;
-    }
-    const fotcargada = new FileReader();
-    fotcargada.onload = () => {
-      setPreview(fotcargada.result);
-    };
-    fotcargada.readAsDataURL(foto);
-  }, [foto]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await getAddresses(currentUser.idUser);
-  //     if (typeof res !== "string") setArrayAddresses(res);
-  //   })();
-  // }, [addressarray]);
+    getUserAddresses();
+  }, []);
 
   return (
     <Stack h="100%" p={2} marginTop={"65px"}>
@@ -168,11 +178,12 @@ const Settings = () => {
               overflow="hidden"
               position="absolute"
             >
-              <Image src={fotopreview} />
+              <Image src={currentUser.profileIMG} />
             </Stack>
           </Stack>
         </Stack>
-        <FormControl onSubmit={(e) => handleSubmit(e)}>
+
+        <Stack>
           <Divider orientation="horizontal" marginY={4} />
           <Stack direction={"column"}>
             {/* Datos del usuario */}
@@ -186,7 +197,7 @@ const Settings = () => {
                   <Text textAlign="end">Nombre:</Text>
                   <Input
                     disabled={!disabledstate ? true : false}
-                    defaultValue={firstName}
+                    defaultValue={usersettigns.displayName}
                     onChange={handleChange}
                     placeholder="Primer Nombre"
                     size="sm"
@@ -214,41 +225,6 @@ const Settings = () => {
                   />
                 </Stack>
               </StackContainer>
-              <StackContainer>
-                <Stack direction={{ base: "column", sm: "row" }}>
-                  <Text width={{ base: "100%", md: "35%" }}>
-                    Foto de perfil
-                  </Text>
-
-                  <Input
-                    disabled={!disabledstate ? true : false}
-                    type="file"
-                    accept=".jpg"
-                    alignSelf="center"
-                    border="none"
-                    paddingLeft={"0px"}
-                    onChange={(e) => changeImage(e)}
-                  />
-                  {foto !== undefined && (
-                    <Stack direction="row">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={(e) => saveImage(e)}
-                      >
-                        Cambiar imagen
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => eliminarImage()}
-                      >
-                        Cancelar
-                      </Button>
-                    </Stack>
-                  )}
-                </Stack>
-              </StackContainer>
 
               <StackContainer>
                 <Modal
@@ -270,16 +246,7 @@ const Settings = () => {
                         variant="primary"
                         mr={3}
                         onClick={() => {
-                          if (adress) {
-                            setUserShippingAddress(adress, currentUser.idUser);
-                          }
-                          setAdress({
-                            prov: "",
-                            mun: "",
-                            locald: "",
-                            direc: {},
-                          });
-                          onClose();
+                          handleAddress();
                         }}
                       >
                         Guardar direccion
@@ -296,7 +263,11 @@ const Settings = () => {
 
               {addressarray.length != 0 ? (
                 <Stack alignItems="center" p={4}>
-                  <RadioGroup value={value} onChange={setValue}>
+                  <RadioGroup
+                    value={value}
+                    onChange={setValue}
+                    defaultValue="0"
+                  >
                     {addressarray.map((item) => (
                       <Radio
                         name="direccion"
@@ -335,11 +306,12 @@ const Settings = () => {
             marginTop={"50px"}
           >
             <Stack direction={{ base: "column", md: "row" }} width={"100%"}>
-              <Button variant="primary" onClick={onOpen}>
+              <Button variant="primary" onClick={onOpen} isLoading={load}>
                 Agregar dirección
               </Button>
               <Button
                 variant="secondary"
+                isLoading={load}
                 onClick={() => clearFavs(currentUser)}
               >
                 Limpíar favoritos
@@ -350,14 +322,18 @@ const Settings = () => {
               variant="primary"
               width={{ base: "100%", md: "fit-content" }}
               type={disabledstate ? "submit" : "button"}
-              onClick={() => {
+              isLoading={load}
+              onClick={(e) => {
                 setDisabled(!disabledstate);
+                if (disabledstate) {
+                  handleSubmit(e);
+                }
               }}
             >
               {disabledstate ? "Guardar" : "Actualizar"}
             </Button>
           </Stack>
-        </FormControl>
+        </Stack>
       </Box>
     </Stack>
   );

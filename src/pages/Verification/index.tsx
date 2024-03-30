@@ -6,7 +6,6 @@ import {
   BsFillXCircleFill,
 } from "react-icons/bs";
 import { Link, useLocation } from "react-router-dom";
-import { verifyEmail } from "../../functions/Sesion";
 const Verification = () => {
   const [checkEmail, setCheckEmail] = useState<string>("waiting");
   const [clientEmail, setClientEmail] = useState<any>("");
@@ -20,16 +19,6 @@ const Verification = () => {
 
   useEffect(() => {
     if (verificationCode !== null && verificationMode === "verifyEmail") {
-      verifyEmail(verificationCode).then((res) => {
-        if (res === "error") {
-          setCheckEmail("error");
-        } else if (res === "expire") {
-          setCheckEmail("expire");
-        } else {
-          setCheckEmail("verificado");
-          setClientEmail(res);
-        }
-      });
     }
   }, [verificationMode, verificationCode]);
   return (

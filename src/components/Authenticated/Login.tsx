@@ -21,14 +21,12 @@ interface IProps {
 }
 const Login: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
-  const errorM = useSelector(selectError);
   const current_user = useSelector(selectUser);
 
   const [user, setUserM] = useState({
     email: "",
     password: "",
   });
-  const [userverificated, setUserVerificated] = useState<any>();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserM({
@@ -44,7 +42,6 @@ const Login: React.FC<IProps> = (props) => {
       try {
         const response = await signAuthUser(user);
         if (typeof response !== "string") {
-          setUserVerificated(response);
           dispatch(setUser(response));
           setUserM({
             email: "",
@@ -52,28 +49,15 @@ const Login: React.FC<IProps> = (props) => {
           });
           dispatch(setError(""));
         } else {
-          dispatch(setError(response)); // Set error message from response
         }
       } catch (error) {
         console.error("Error signing in:", error);
-        dispatch(setError("Ocurrió un error")); // Generic error message
+        dispatch(setError("Ocurrió un error"));
       }
     }
   };
   return (
     <Stack h="100%" p={4}>
-      {errorM && (
-        <Text
-          textAlign="center"
-          fontSize="13px"
-          backgroundColor="#e4e4e4"
-          borderRadius="14px"
-          textTransform="initial"
-          p={2}
-        >
-          {errorM}
-        </Text>
-      )}
       <Text as="h3" textAlign="center" fontWeight="bold">
         Ingresar
       </Text>
@@ -93,7 +77,7 @@ const Login: React.FC<IProps> = (props) => {
           type="password"
           id="password"
         />
-
+        <Stack height={"80px"} />
         <Text fontSize="13px" textAlign="center" alignItems="center">
           ¿No tenes una cuenta?{" "}
           <Button
@@ -101,9 +85,10 @@ const Login: React.FC<IProps> = (props) => {
             size="fit-content"
             onClick={() => props.fn(true)}
           >
-            Registrar
+            Registrate
           </Button>
         </Text>
+
         <Button
           variant="primary"
           mt={2}

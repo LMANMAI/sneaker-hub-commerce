@@ -1,89 +1,68 @@
 import {
-  applyActionCode,
-  checkActionCode,
   createUserWithEmailAndPassword,
-  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db, auth } from "../app/firebaseConfig";
 
-interface IClient {
-  emailr: string;
-  firstName: string;
-  method?: string;
-  confirmacion?: boolean;
-  rol?: string;
-}
+export const getUserAuth = async (user: any) => {
+  const docClient = await getDoc(doc(db, "users", user));
 
-const collecion = "users";
+  return {
+    idCliente: user,
+    ...docClient.data(),
+  };
+};
 
 export const registerClient = async (
-  formData: IClient,
+  user: any,
   clientID: string,
   clientToken: any
 ) => {
+  if (!user.emailforRegister && !user.passwordforRegister) return;
   try {
-    await setDoc(doc(db, collecion, clientID), {
-      email: formData.emailr,
-      firstName: formData.firstName,
-      method: "correo",
-      confirmacion: false,
-      rol: "cliente",
+    await setDoc(doc(db, "users", clientID), {
+      email: user.emailforRegister,
+      firstName: user.displayName,
       idToken: clientToken,
       idUser: clientID,
       profileIMG:
         "https://ih0.redbubble.net/image.618427277.3222/flat,1000x1000,075,f.u2.jpg",
     });
+    const userRegistered = await getUserAuth(clientID);
+    return userRegistered;
   } catch (error) {
     console.log("Error registrando el usuario: ", error);
   }
 };
 
-export const authClient = async (formData: any) => {
-  // return await createUserWithEmailAndPassword(
-  //   auth,
-  //   formData.emailr,
-  //   formData.passwordr
-  // )
-  //   .then((userCredential) => {
-  //     const clientID = userCredential.user.uid;
-  //     let clientToken: string;
-  //     userCredential.user?.getIdTokenResult(true).then((idToken) => {
-  //       clientToken = idToken.token;
-  //     });
-  //     return sendEmailVerification(userCredential.user).then(() => {
-  //       registerClient(formData, clientID, clientToken);
-  //       return "Correcto";
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     if (error.code === "auth/email-already-in-use") {
-  //       return "in_use";
-  //     } else if (error.code === "auth/weak-password") {
-  //       return "password";
-  //     } else {
-  //       console.log(error.message);
-  //     }
-  //   });
-};
+export const authClient = async (user: any) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      user.emailforRegister,
+      user.passwordforRegister
+    );
 
-export const verifyEmail = (actionCode: any) => {
-  // var clientEmail = null;
-  // return checkActionCode(auth, actionCode)
-  //   .then((info) => {
-  //     clientEmail = info["data"]["email"];
-  //     applyActionCode(auth, actionCode);
-  //     return clientEmail;
-  //   })
-  //   .catch((error) => {
-  //     if (error.code === "auth/invalid-action-code") {
-  //       return "expire";
-  //     } else {
-  //       return "error";
-  //     }
-  //   });
+    const clientID = userCredential.user.uid;
+    const idToken = await userCredential.user.getIdTokenResult(true);
+    const clientToken = idToken.token;
+    const request = await registerClient(user, clientID, clientToken);
+    return { msg: "Correcto", userRegistered: request };
+  } catch (error: any) {
+    if (error.code === "auth/email-already-in-use") {
+      return { msg: "in_use", error: "" };
+    } else if (error.code === "auth/weak-password") {
+      return { msg: "password", error: "" };
+    } else {
+      console.log(
+        "Error al autenticar el cliente, mensaje de error desde el serv: ",
+        error.message
+      );
+      return { msg: "error", error: error.message };
+    }
+  }
 };
 
 export const signAuthUser = async (formData: any) => {
@@ -107,20 +86,11 @@ export const signAuthUser = async (formData: any) => {
     }
 
     localStorage.setItem("idCliente", user.idUsuario);
-    return user;
+    const request = await getUserAuth(user.idUsuario);
+    return request;
   } catch (error) {
     console.error(error);
   }
-};
-
-export const getUserAuth = async (userverified: any) => {
-  const id_user = userverified.idUsuario;
-  const docClient = await getDoc(doc(db, collecion, id_user));
-
-  return {
-    idCliente: id_user,
-    ...docClient.data(),
-  };
 };
 
 export const setUserSignOut = async () => {

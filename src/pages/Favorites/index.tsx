@@ -52,7 +52,29 @@ const Favorites = () => {
       });
     }
   };
+  const handleRemoveOneItem = async (item: ISneaker) => {
+    const request = await removeFav(currentUser, item);
+    if (request && request.status === 200) {
+      const promises = request.data.map(({ sneaker }) => {
+        return instance.get(`/${sneaker}`);
+      });
+      try {
+        const responses = await Promise.all(promises);
+        const results = responses.map((response) => response.data.product);
 
+        setItexmsFav(results);
+      } catch (error) {
+        console.error("Error al realizar las consultas:", error);
+      }
+      toast({
+        title: `${item.name} se elimino de los favoritos.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+  };
   useEffect(() => {
     getFavouriteProducts();
   }, []);
@@ -120,7 +142,9 @@ const Favorites = () => {
                       h="fit-content"
                       w="80px"
                       marginRight="20px!important"
-                      onClick={() => removeFav(currentUser, item)}
+                      onClick={() => {
+                        handleRemoveOneItem(item);
+                      }}
                     >
                       Borrar
                     </Button>

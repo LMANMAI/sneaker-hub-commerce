@@ -58,10 +58,16 @@ export const removeFav = async (userID: any, sneaker: ISneaker) => {
       await deleteDoc(
         doc(db, "users", userID.uid, "favorites", docExist.idRef)
       );
+      const favitems = await getProductsFav(userID);
+      return favitems;
     }
   } catch (error) {
     console.log(error);
-    return "No se pudo eliminar de los favoritos";
+    return {
+      msg: "No se pudo eliminar de los favoritos",
+      status: 500,
+      data: [],
+    };
   }
 };
 

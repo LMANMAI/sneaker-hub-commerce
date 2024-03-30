@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "./features/userSlice";
 import { auth } from "./app/firebaseConfig";
 import { useLocation } from "react-router-dom";
+import { getUserAuth } from "./functions/Sesion";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,8 +19,9 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser: any) => {
       if (firebaseUser) {
         const token = await firebaseUser.getIdToken();
+        const userData = await getUserAuth(firebaseUser.uid);
         localStorage.setItem("authToken", token);
-        dispatch(setUser(firebaseUser));
+        dispatch(setUser(userData));
       } else {
         localStorage.removeItem("authToken");
         dispatch(setUser(null));
