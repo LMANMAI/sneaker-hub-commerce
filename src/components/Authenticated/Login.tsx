@@ -7,12 +7,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import {
-  setUser,
-  setError,
-  selectError,
-  selectUser,
-} from "../../features/userSlice";
+import { setUser, setError, selectUser } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { signAuthUser } from "../../functions/Sesion";
 
@@ -22,7 +17,7 @@ interface IProps {
 const Login: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const current_user = useSelector(selectUser);
-
+  const [load, setLoad] = useState<boolean>(false);
   const [user, setUserM] = useState({
     email: "",
     password: "",
@@ -37,20 +32,23 @@ const Login: React.FC<IProps> = (props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoad(true);
     if (!current_user) {
       try {
         const response = await signAuthUser(user);
         if (typeof response !== "string") {
           dispatch(setUser(response));
+          setLoad(false);
           setUserM({
             email: "",
             password: "",
           });
           dispatch(setError(""));
         } else {
+          setLoad(false);
         }
       } catch (error) {
+        setLoad(false);
         console.error("Error signing in:", error);
         dispatch(setError("Ocurrió un error"));
       }
@@ -96,6 +94,7 @@ const Login: React.FC<IProps> = (props) => {
           w="100%"
           border="none"
           outline="none"
+          isLoading={load}
         >
           Entrar
         </Button>

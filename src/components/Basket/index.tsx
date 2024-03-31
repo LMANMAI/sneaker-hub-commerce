@@ -67,6 +67,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
     }
   };
 
+  console.log(basket, "basket");
   return (
     <Drawer
       isOpen={basketshows}
@@ -80,7 +81,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
         <DrawerHeader>Carrito</DrawerHeader>
 
         <DrawerBody>
-          {basket.length > 0 ? (
+          {basket && basket.length > 0 ? (
             basket.map((sneaker, index) => (
               <Stack
                 direction="row"
@@ -99,20 +100,24 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                   <Text fontSize="12px">{sneaker.name}</Text>
                   <Stack direction="row">
                     <Text fontSize="12px">
-                      {sneaker.price.toLocaleString("es-AR", {
-                        style: "currency",
-                        currency: "ARS",
-                      })}
+                      {sneaker &&
+                        sneaker.price &&
+                        sneaker.price.toLocaleString("es-AR", {
+                          style: "currency",
+                          currency: "ARS",
+                        })}
                     </Text>
                     <Text fontSize="12px">x {sneaker.quantity}</Text>
                     <Text fontSize="12px" fontWeight="bold">
-                      {(sneaker.price * sneaker.quantity).toLocaleString(
-                        "es-AR",
-                        {
-                          style: "currency",
-                          currency: "ARS",
-                        }
-                      )}
+                      {sneaker.price &&
+                        sneaker.quantity &&
+                        (sneaker.price * sneaker.quantity).toLocaleString(
+                          "es-AR",
+                          {
+                            style: "currency",
+                            currency: "ARS",
+                          }
+                        )}
                     </Text>
                   </Stack>
                 </Stack>
@@ -167,25 +172,27 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
         </DrawerBody>
 
         <DrawerFooter display={"flex"} flexDirection={"column"}>
-          {totalbasket != 0 ? (
-            <>
-              <Text>
-                Total:
-                {totalbasket.toLocaleString("es-AR", {
-                  style: "currency",
-                  currency: "ARS",
-                })}
-              </Text>
-              <Button
-                variant="primary"
-                width="250px"
-                alignSelf="center"
-                onClick={handleCheckout}
-              >
-                Finalizar compra
-              </Button>
-            </>
-          ) : null}
+          {totalbasket !== undefined &&
+            totalbasket !== null &&
+            totalbasket !== 0 && (
+              <>
+                <Text>
+                  Total:
+                  {totalbasket.toLocaleString("es-AR", {
+                    style: "currency",
+                    currency: "ARS",
+                  })}
+                </Text>
+                <Button
+                  variant="primary"
+                  width="250px"
+                  alignSelf="center"
+                  onClick={handleCheckout}
+                >
+                  Finalizar compra
+                </Button>
+              </>
+            )}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

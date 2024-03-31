@@ -101,12 +101,6 @@ const BodyContent: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (products.length !== 0) {
-      console.log(products, "products");
-    }
-  }, [products]);
-
   return (
     <DetailContainer>
       <div

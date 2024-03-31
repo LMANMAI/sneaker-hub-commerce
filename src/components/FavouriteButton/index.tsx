@@ -22,9 +22,7 @@ const FavButton = ({ variant = "primary" }: { variant?: string }) => {
   };
   const verificated = async (user: any, sneaker: ISneaker) => {
     const res = await checkFavs(user, sneaker);
-    console.log(res);
     if (res === "existe") {
-      console.log("existe");
       setToggle(true);
     }
   };

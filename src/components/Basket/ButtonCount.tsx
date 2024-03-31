@@ -23,15 +23,18 @@ const ButtonCount = (props: { products?: any }) => {
   //states
   const [contador, setContador] = useState<number>(0);
   const [conttem, setContTemp] = useState<number>(0);
-  const [isadd, setIsAdd] = useState<boolean>(true);
 
   const newBasketItemCount = useMemo(() => {
     return basket.filter((item) => item._id === sneakerActive?._id);
   }, [basket]);
 
   const handleAddToBasket = (sneaker: ISneaker) => {
+    setContTemp(conttem + 1);
+    setContador(contador + 1);
+
     if (conttem > 0) {
       dispatch(setBasket({ ...sneaker, quantity: conttem }));
+
       setContTemp(0);
     } else {
       dispatch(setBasket({ ...sneaker, quantity: 1 }));
@@ -40,9 +43,10 @@ const ButtonCount = (props: { products?: any }) => {
   };
 
   const handleRemoveToBasket = (sneaker: ISneaker) => {
-    dispatch(
-      removeSneakerBasket({ ...sneaker, quantity: basketQuantity - contador })
-    );
+    setContTemp(conttem + 1);
+    setContador(contador - 1);
+
+    dispatch(removeSneakerBasket(sneaker));
   };
 
   useEffect(() => {
@@ -70,9 +74,7 @@ const ButtonCount = (props: { products?: any }) => {
           className={contador === 0 ? `disabled` : ""}
           disabled={contador === 0 ? true : false}
           onClick={() => {
-            setContTemp(conttem + 1);
-            setContador(contador - 1);
-            setIsAdd(false);
+            handleRemoveToBasket(sneakerActive as ISneaker);
           }}
         >
           -
@@ -99,16 +101,14 @@ const ButtonCount = (props: { products?: any }) => {
           className={props.products.length === 0 ? `disabled` : ""}
           disabled={props.products.length === 0}
           onClick={() => {
-            setIsAdd(true);
-            setContTemp(conttem + 1);
-            setContador(contador + 1);
+            handleAddToBasket(sneakerActive as ISneaker);
           }}
         >
           +
         </Button>
       </CustomStack>
 
-      <Button
+      {/* <Button
         variant="primary"
         color="white"
         leftIcon={<CartIcon color="#FFF" />}
@@ -124,7 +124,7 @@ const ButtonCount = (props: { products?: any }) => {
         }}
       >
         {sneakerActive && isadd ? "Agregar al carrito" : "Eliminar del carrito"}
-      </Button>
+      </Button> */}
       <FavButton />
     </Stack>
   );

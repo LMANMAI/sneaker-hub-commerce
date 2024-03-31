@@ -16,20 +16,17 @@ const BrandDetail = () => {
   const lastSegment = segments[segments.length - 1];
 
   const checkBrandBG = (brandType: string) => {
-    console.log(brandType);
     const brand = brands.find(
       (item: any) =>
         item.name.toLocaleUpperCase() ===
         brandType.replace(/%20/g, " ").toLocaleUpperCase()
     );
-    console.log(brand);
     if (brand) {
       return brand.bg;
     }
   };
 
   const getCollectionProducts = async () => {
-    console.log(lastSegment);
     setLoad(true);
     const { data } = await instance(
       `/search?name=&genre=&brand=${lastSegment.toLocaleUpperCase()}`

@@ -21,7 +21,6 @@ export const setFavItems = async (userID: string, sneaker: string) => {
 };
 
 export const checkFavs = async (userID: any, sneaker: ISneaker) => {
-  console.log(userID);
   const docRef = doc(db, "users", userID?.uid);
   const collRef = collection(docRef, "favorites");
   try {
@@ -98,7 +97,6 @@ export const clearFavs = async (user: any) => {
 
     await Promise.all(deletePromises);
 
-    console.log("Todos los favoritos han sido eliminados correctamente.");
     return "eliminados";
   } catch (error) {
     console.error("Error al intentar eliminar los favoritos:", error);

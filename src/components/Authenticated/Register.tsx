@@ -17,6 +17,7 @@ interface IPropsFn {
 const Register: React.FC<IPropsFn> = ({ fn }) => {
   const toast = useToast();
   const dispatch = useDispatch();
+  const [load, setLoad] = useState<boolean>(false);
   const [user, setUserRegister] = useState({
     displayName: "",
     emailforRegister: "",
@@ -33,9 +34,9 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoad(true);
     try {
       const res = await authClient(user);
-
       if (res.msg === "Correcto") {
         toast({
           title: "Se registro al usuario correctamente.",
@@ -50,7 +51,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           passwordforRegister: "",
         });
         dispatch(setUser(res.userRegistered));
-        console.log(res.userRegistered);
+        setLoad(false);
       } else if (res.msg === "in_use") {
         toast({
           title: "El correo electrónico ya está registrado.",
@@ -79,7 +80,9 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           position: "bottom-right",
         });
       }
+      setLoad(false);
     } catch (error: any) {
+      setLoad(false);
       console.log("Error al autenticar el cliente: ", error.message);
     }
   };
@@ -133,6 +136,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           border="none"
           outline="none"
           onClick={(e) => handleSubmit(e)}
+          isLoading={load}
         >
           Registrar
         </Button>

@@ -14,6 +14,7 @@ import {
   Icon,
   Radio,
   RadioGroup,
+  useToast,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -32,25 +33,73 @@ import { ISneaker } from "../../interfaces";
 import { getAddresses } from "../../functions/Profile";
 import { CustomButtonContainer } from "./styles";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+
 import axios from "axios";
 
 const CheckOut = () => {
-  initMercadoPago("YOUR_PUBLIC_KEY", { locale: "es-AR" });
+  const navigate = useNavigate();
+  const toast = useToast();
+  initMercadoPago(import.meta.env.VITE_PUBLIC_KEY_MP as string, {
+    locale: "es-AR",
+  });
   const [addressarray, setArrayAddresses] = useState<any[]>([]);
   const [value, setValue] = useState<any>();
   const [preferenceId, setPreferenceId] = useState<string>("");
+  const [laodingPreference, setLoadingPreference] = useState<boolean>(false);
 
   const basket = useSelector(selectBasket);
   const totalBasket = useSelector(selectTotal);
   const current_user = useSelector(selectUser);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!current_user) {
-      navigate("/");
+    const currentUrl = window.location.href;
+    const queryParams: Record<string, string> = {};
+
+    if (currentUrl.includes("?")) {
+      const queryString = currentUrl.split("?")[1];
+      const queryParamsArray = queryString.split("&");
+      queryParamsArray.forEach((param: any) => {
+        const [key, value] = param.split("=");
+        queryParams[key] = decodeURIComponent(value);
+      });
     }
-  }, [current_user]);
+    console.log(queryParams);
+    // Redirigir al usuario a la página adecuada
+    if (queryParams.status === "approved") {
+      // Pago aprobado: Mostrar mensaje de confirmación
+      toast({
+        title: "Se realizo la compra correctamente.",
+        description: `Vas a poder visualizar la compra en Mis compras con el id: ${queryParams.merchant_order_id}.`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+      //navigate(/)
+    } else if (queryParams.status === "pending") {
+      // Pago pendiente: Mostrar mensaje de espera
+      toast({
+        title: "Se esta procesando la compra.",
+        status: "warning",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+      //navigate(/)
+    } else if (queryParams.status === "failure") {
+      toast({
+        title: "Ocurrio un error en la compra.",
+        description: "Volve a intentarlo en unos momentos.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+      // Pago fallido: Mostrar mensaje de error
+      //navigate(/)
+    }
+  }, []);
 
   const handleRemoveBasket = (sneaker: ISneaker) => {
     if (sneaker.quantity < 1) return;
@@ -69,16 +118,15 @@ const CheckOut = () => {
   const createPreference = async () => {
     try {
       const response = await axios.post(
-        "https://localhost:3000/create_preference",
+        "http://localhost:3000/checkout/create_preference",
         {
           title: "Prueba",
           quantity: basket.length,
-          price: totalBasket.toLocaleString("es-AR", {
-            style: "currency",
-            currency: "ARS",
-          }),
+          price: totalBasket,
+          productID: "id_prueba",
         }
       );
+
       const { id } = response.data;
       return id;
     } catch (error) {
@@ -87,9 +135,11 @@ const CheckOut = () => {
   };
 
   const handlePurchase = async () => {
+    setLoadingPreference(true);
     const id = await createPreference();
     if (id) {
       setPreferenceId(id);
+      setLoadingPreference(false);
     }
   };
 
@@ -286,24 +336,33 @@ const CheckOut = () => {
                     })}
                 </Text>
               </Stack>
-
               <CustomButtonContainer>
-                <Button
-                  alignItems={"center"}
-                  gap={"10px"}
-                  variant="primary"
-                  disabled={!value}
-                  className={!value ? "disabled" : ""}
-                  onClick={() => handlePurchase()}
-                >
-                  Finalizar compra
-                  <Icon as={CheckCircleIcon} />
-                </Button>
-                {preferenceId && (
-                  <Wallet
-                    initialization={{ preferenceId: preferenceId }}
-                    customization={{ texts: { valueProp: "smart_option" } }}
-                  />
+                {preferenceId ? (
+                  <Stack>
+                    <Wallet
+                      initialization={{ preferenceId: preferenceId }}
+                      customization={{
+                        texts: { valueProp: "practicality" },
+                      }}
+                    />
+                  </Stack>
+                ) : (
+                  <Button
+                    alignItems={"center"}
+                    gap={"10px"}
+                    variant="primary"
+                    disabled={!value || !current_user || basket.length === 0}
+                    className={
+                      basket.length === 0 || !value || !current_user
+                        ? "disabled"
+                        : ""
+                    }
+                    onClick={() => handlePurchase()}
+                    isLoading={laodingPreference}
+                  >
+                    Finalizar compra
+                    <Icon as={CheckCircleIcon} />
+                  </Button>
                 )}
               </CustomButtonContainer>
             </Stack>
