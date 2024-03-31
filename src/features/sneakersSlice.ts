@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
-import { ISneakerState, ISneaker } from "../interfaces";
+import { ISneakerState, ISneaker, ISneakerBasket } from "../interfaces";
+
 const initialState: ISneakerState = {
   sneakers: [],
   sneakerActive: null,
@@ -13,6 +14,7 @@ const initialState: ISneakerState = {
   counter: 0,
   counterLimit: 0,
   sneakersTotal: [],
+  exceedsLimit: false,
 };
 
 export const sneakerSlice = createSlice({
@@ -25,22 +27,62 @@ export const sneakerSlice = createSlice({
     setSneakerActive: (state, action: PayloadAction<ISneaker | null>) => {
       state.sneakerActive = action.payload;
     },
-    setBasket: (state, action: PayloadAction<ISneaker>) => {
+    setBasket: (state, action: PayloadAction<ISneakerBasket>) => {
       const { payload } = action;
-      const newItem = state.basket.find((item) => item._id === payload._id);
 
-      if (newItem) {
-        newItem.quantity += payload.quantity || 1;
+      const existingItemIndex = state.basket.findIndex(
+        (item) => item._id === payload._id && item.size === payload.size
+      );
+
+      const productLimit = payload.limit;
+
+      if (existingItemIndex !== -1) {
+        if (state.basket[existingItemIndex].quantity < productLimit) {
+          state.basket[existingItemIndex].quantity += 1;
+          state.total += payload.price;
+          state.basketQuantity += 1;
+          state.exceedsLimit = false;
+        } else {
+          state.exceedsLimit = true;
+          console.log("No se puede agregar más del límite de cantidad");
+        }
       } else {
-        state.basket.push({ ...payload, quantity: payload.quantity || 1 });
+        if (payload.quantity < productLimit) {
+          state.basket.push(payload);
+          state.total += payload.price;
+          state.basketQuantity += 1;
+          state.exceedsLimit = false;
+        } else {
+          state.exceedsLimit = true;
+          console.log("No se puede agregar más del límite de cantidad");
+        }
       }
-
-      state.total += payload.price * (payload.quantity || 1);
-      state.basketQuantity += payload.quantity || 1;
     },
-    removeSneakerBasket: (state, action: PayloadAction<ISneaker>) => {
+    removeOnefromBasket: (state, action: PayloadAction<ISneakerBasket>) => {
       const { payload } = action;
-      const index = state.basket.findIndex((item) => item._id === payload._id);
+
+      const existingItemIndex = state.basket.findIndex(
+        (item) => item._id === payload._id && item.size === payload.size
+      );
+
+      if (existingItemIndex !== -1) {
+        const existingItem = state.basket[existingItemIndex];
+
+        if (existingItem.quantity > 1) {
+          existingItem.quantity -= 1;
+        } else {
+          state.basket.splice(existingItemIndex, 1);
+        }
+        state.total -= existingItem.price;
+        state.basketQuantity -= 1;
+      }
+    },
+
+    removeSneakerBasket: (state, action: PayloadAction<ISneakerBasket>) => {
+      const { payload } = action;
+      const index = state.basket.findIndex(
+        (item) => item._id === payload._id && item.size === payload.size
+      );
 
       if (index !== -1) {
         const removedItem = state.basket[index];
@@ -54,28 +96,8 @@ export const sneakerSlice = createSlice({
         state.basketQuantity -= removedQuantity;
       } else {
         console.warn(
-          `No se pudo remover el producto: ${payload._id} no está en el carrito`
+          `No se pudo remover el producto: ${payload._id} de tamaño ${payload.size} no está en el carrito`
         );
-      }
-    },
-    removeOnefromBasket: (state, action: PayloadAction<ISneaker>) => {
-      let sneakerToDelete = state.basket.find(
-        (item) => item._id === action.payload._id
-      );
-      if (sneakerToDelete !== undefined) {
-        if (sneakerToDelete.quantity > 1) {
-          state.basket.map((item) =>
-            item._id === action.payload._id ? (item.quantity -= 1) : item
-          );
-        } else {
-          let newBasket = state.basket.filter(
-            (item) => item._id !== action.payload._id
-          );
-
-          state.basket = newBasket;
-        }
-        state.total = state.total - action.payload.price;
-        state.basketQuantity = state.basketQuantity - 1;
       }
     },
 
@@ -143,5 +165,7 @@ export const selectTotalSneakers = (state: RootState) =>
   state.sneaker.sneakersTotal;
 export const selectCountLimit = (state: RootState) =>
   state.sneaker.counterLimit;
+export const selectExceedsLimit = (state: RootState) =>
+  state.sneaker.exceedsLimit;
 
 export default sneakerSlice.reducer;

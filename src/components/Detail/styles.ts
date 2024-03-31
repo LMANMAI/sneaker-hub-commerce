@@ -45,6 +45,12 @@ export const DetailContainer = styled.div`
           color: rgb(102, 102, 102);
           cursor: not-allowed;
         }
+        &.selected {
+          outline: 1px solid;
+          border-color: #9a3c09;
+          color: #9a3c09;
+          font-weight: bold;
+        }
       }
     }
   }

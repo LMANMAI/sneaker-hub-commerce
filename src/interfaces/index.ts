@@ -7,12 +7,29 @@ export interface ISneaker {
   brand: string;
   createdAt: Date;
   genre: string;
-  sizes: number[];
+  sizes: Size[];
   imgs: string[];
   status: string;
   quantity: number;
   idColecction: string;
 }
+interface Size {
+  size: string;
+  qty: string;
+}
+
+export interface ISneakerBasket {
+  _id: string;
+  name: string;
+  price: number;
+  brand: string;
+  genre: string;
+  size: string;
+  quantity: number;
+  limit: number;
+  posterPathImage: string;
+}
+
 export interface IProps {
   height?: number | string;
 }
@@ -26,7 +43,7 @@ export interface IProps {
 }
 export interface ISneakerState {
   sneakers: ISneaker[];
-  basket: ISneaker[];
+  basket: ISneakerBasket[];
   sneakerActive: ISneaker | null;
   total: number;
   basketQuantity: number;
@@ -36,6 +53,7 @@ export interface ISneakerState {
   counter: number;
   counterLimit: number;
   sneakersTotal: ISneaker[];
+  exceedsLimit: boolean;
 }
 
 export interface IUser {

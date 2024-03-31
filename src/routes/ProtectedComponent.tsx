@@ -8,6 +8,7 @@ interface IProps {
 const ProtectedComponent: React.FC<IProps> = ({ children }) => {
   const user = useSelector(selectUser);
   const authenticated = useSelector(selectAutenticated);
+
   if (!user && authenticated === false) return <Navigate to="/" />;
   return <>{children}</>;
 };

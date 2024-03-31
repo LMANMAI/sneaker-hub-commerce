@@ -19,11 +19,12 @@ import {
   selectTotal,
   setBasket,
   removeOnefromBasket,
+  selectExceedsLimit,
   removeSneakerBasket,
 } from "../../features/sneakersSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RemoveIcon } from "../../icons";
-import { ISneaker } from "../../interfaces";
+import { ISneaker, ISneakerBasket } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { selectUser } from "../../features/userSlice";
 interface IProps {
@@ -39,14 +40,24 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   const basket = useSelector(selectBasket);
   const totalbasket = useSelector(selectTotal);
   const currentUser = useSelector(selectUser);
+  const exceedsLimit = useSelector(selectExceedsLimit);
 
-  const handleRemoveBasket = (sneaker: ISneaker) => {
-    if (sneaker.quantity < 1) return;
+  const handleRemoveBasket = (sneaker: ISneakerBasket) => {
     dispatch(removeOnefromBasket(sneaker));
   };
 
-  const handleAddBasket = (sneaker: ISneaker) => {
-    dispatch(setBasket({ ...sneaker, quantity: 1 }));
+  const handleAddBasket = (sneaker: ISneakerBasket) => {
+    if (exceedsLimit) {
+      toast({
+        title: "La cantidad ingresada excede el límite.",
+        description: `El limite de unidades para este producto es de ${sneaker.limit}.`,
+        status: "warning",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+    dispatch(setBasket(sneaker));
   };
 
   const handleCheckout = () => {
@@ -67,7 +78,6 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
     }
   };
 
-  console.log(basket, "basket");
   return (
     <Drawer
       isOpen={basketshows}
@@ -97,7 +107,14 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                   }`}
                 />
                 <Stack>
-                  <Text fontSize="12px">{sneaker.name}</Text>
+                  <Stack gap={0}>
+                    <Text p={0} m={0} fontSize="12px">
+                      {sneaker.name}
+                    </Text>
+                    <Text p={0} m={0} fontSize="12px">
+                      talle: {sneaker.size}
+                    </Text>
+                  </Stack>
                   <Stack direction="row">
                     <Text fontSize="12px">
                       {sneaker &&
@@ -154,12 +171,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                   </Stack>
                   <Stack
                     cursor="pointer"
-                    onClick={() => (
-                      dispatch(removeSneakerBasket(sneaker)),
-                      setTimeout(() => {
-                        setBasketShows(false);
-                      }, 1000)
-                    )}
+                    onClick={() => dispatch(removeSneakerBasket(sneaker))}
                   >
                     <Icon as={RemoveIcon} />
                   </Stack>

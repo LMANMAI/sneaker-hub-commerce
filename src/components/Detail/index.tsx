@@ -25,7 +25,7 @@ const BodyContent: React.FC = () => {
   const toast = useToast();
   const history = useNavigate();
   const [tipoTalle, setTipoTalle] = useState("US");
-  const [products, setProducts] = useState<any>([]);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
   const sneakerActive = useSelector(selectSneakerActive);
   const { colorMode } = useColorMode();
@@ -68,7 +68,6 @@ const BodyContent: React.FC = () => {
       const isActive = sneakerActive.sizes.some(
         (s: any) => s.size === talle.US
       );
-
       const isActiveEU = sneakerActive.sizes.some(
         (s: any) => s.size === talle.EU
       );
@@ -76,12 +75,43 @@ const BodyContent: React.FC = () => {
         (s: any) => s.size === talle.CM
       );
 
+      const isSelected =
+        selectedProduct &&
+        selectedProduct._id === sneakerActive._id &&
+        selectedProduct.size === talle[tipo];
+
+      const handleClick = () => {
+        const selectedSizeLimit = sneakerActive.sizes
+          .filter((limitItem) => limitItem.size === talle["US"])
+          .map((filteredItem) => {
+            return filteredItem.qty;
+          });
+
+        const newProduct = {
+          _id: sneakerActive._id,
+          name: sneakerActive.name,
+          price: Number(sneakerActive.price),
+          brand: sneakerActive.brand,
+          genre: sneakerActive.genre,
+          size: talle[tipo],
+          limit: Number(selectedSizeLimit[0]),
+          quantity: 1,
+          posterPathImage: sneakerActive.posterPathImage,
+        };
+
+        if (isSelected) {
+          setSelectedProduct(null);
+        } else {
+          setSelectedProduct(newProduct);
+        }
+      };
       return (
         <li key={index}>
           <button
+            className={isSelected ? "selected" : ""}
             disabled={!isActive || isActiveEU || isActiveCM}
             onClick={() => {
-              setProducts(sneakerActive);
+              handleClick();
             }}
           >
             {`${tipo} ${talle[tipo]} `}
@@ -180,7 +210,7 @@ const BodyContent: React.FC = () => {
             <ul className="size_grid">{converSize(tipoTalle)}</ul>
           </Stack>
           <Stack>
-            <ButtonCount products={products} />
+            <ButtonCount product={selectedProduct} />
           </Stack>
         </Stack>
       </Stack>
