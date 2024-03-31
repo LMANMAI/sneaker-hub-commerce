@@ -34,7 +34,6 @@ interface IPropsStack {
   border?: boolean;
 }
 interface Address {
-  id: string;
   direc: {
     calle: string;
     alt: string;
@@ -44,6 +43,7 @@ interface Address {
   mun: string;
   mainAddress?: boolean;
 }
+
 function StackContainer({ children, border }: IPropsStack) {
   return (
     <Stack
@@ -74,7 +74,10 @@ const Settings = () => {
     prov: "",
     mun: "",
     locald: "",
-    direc: { calle: "", alt: "" },
+    direc: {
+      calle: "",
+      alt: "",
+    },
   });
   const [load, setLoad] = useState<boolean>(false);
   const [disabledstate, setDisabled] = useState<boolean>(false);
@@ -127,7 +130,10 @@ const Settings = () => {
           prov: "",
           mun: "",
           locald: "",
-          direc: {},
+          direc: {
+            calle: "",
+            alt: "",
+          },
         });
         onClose();
       } else {
@@ -266,31 +272,34 @@ const Settings = () => {
                   <RadioGroup
                     value={value}
                     onChange={setValue}
-                    defaultValue="0"
+                    defaultValue={
+                      addressarray
+                        .filter((item) => item.mainAddress === true)
+                        .map((item) => item.id)[0]
+                    }
                   >
-                    {addressarray.map((item) => (
-                      <Radio
-                        name="direccion"
-                        value={`${item.direc.calle} ${item.direc.alt}`}
-                      >
-                        <Stack
-                          p={4}
-                          direction="row"
-                          alignItems="center"
-                          w="80%"
-                        >
-                          <Stack>
-                            <Text>
-                              {`${item.direc.calle} ${item.direc.alt}`} -{" "}
-                              {item.locald}
-                            </Text>
+                    {addressarray.map((item) => {
+                      return (
+                        <Radio name="direccion" value={`${item.id}`}>
+                          <Stack
+                            p={4}
+                            direction="row"
+                            alignItems="center"
+                            w="80%"
+                          >
                             <Stack>
-                              <Text>{`${item.prov} ${item.mun}`}</Text>
+                              <Text>
+                                {`${item.direc.calle} ${item.direc.alt}`} -{" "}
+                                {item.locald}
+                              </Text>
+                              <Stack>
+                                <Text>{`${item.prov} ${item.mun}`}</Text>
+                              </Stack>
                             </Stack>
                           </Stack>
-                        </Stack>
-                      </Radio>
-                    ))}
+                        </Radio>
+                      );
+                    })}
                   </RadioGroup>
                 </Stack>
               ) : (

@@ -29,6 +29,7 @@ const BodyContent: React.FC = () => {
 
   const sneakerActive = useSelector(selectSneakerActive);
   const { colorMode } = useColorMode();
+
   const getSneakerActive = async () => {
     const url = window.location.href;
     const segments = url.split("/");
@@ -61,7 +62,7 @@ const BodyContent: React.FC = () => {
   };
 
   const converSize = (tipo: string) => {
-    if (!sneakerActive || sneakerActive.sizes.length === 0) return [];
+    if (!sneakerActive) return [];
 
     return sizes.map((talle: any, index) => {
       const isActive = sneakerActive.sizes.some(

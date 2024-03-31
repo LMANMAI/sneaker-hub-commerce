@@ -7,6 +7,21 @@ import {
 } from "firebase/firestore";
 import { db } from "../app/firebaseConfig";
 import { getUserAuth } from "./Sesion";
+
+interface Address {
+  id: string;
+  prov: string;
+  mun: string;
+  locald: string;
+  direc: {
+    piso: string;
+    calle: string;
+    dpto: string;
+    alt: string;
+  };
+  mainAddress?: boolean;
+}
+
 //Datos del perfil
 export const updateProfile = async (formdata: any) => {
   try {
@@ -44,18 +59,22 @@ export const getAddresses = async (idUser: string) => {
     const addressesCollectionRef = collection(userDocRef, "addresses");
     const querySnapshot = await getDocs(addressesCollectionRef);
 
-    const firstAddress = querySnapshot.docs[0]
-      ? {
-          id: querySnapshot.docs[0].id,
-          ...querySnapshot.docs[0].data(),
-          mainAddress: true,
-        }
-      : null;
-    const addresses = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return [firstAddress, ...addresses];
+    let mainAddressFound = false;
+    const addresses: Address[] = querySnapshot.docs.map((doc) => {
+      const addressData = {
+        id: doc.id,
+        ...doc.data(),
+      } as Address;
+
+      if (!mainAddressFound && addressData.mainAddress) {
+        mainAddressFound = true;
+        return { ...addressData, mainAddress: true };
+      }
+
+      return addressData;
+    });
+
+    return addresses;
   } catch (error) {
     console.error("Error al obtener las direcciones:", error);
     throw new Error("Error al obtener las direcciones");
