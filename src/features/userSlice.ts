@@ -17,10 +17,12 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
       state.autenticated = true;
+      sessionStorage.setItem("user", JSON.stringify(state));
     },
     setLogOut: (state) => {
       state.user = null;
       state.autenticated = false;
+      sessionStorage.removeItem("user");
     },
     setMenuHeight: (state, action: PayloadAction<boolean>) => {
       state.menu_height = action.payload;

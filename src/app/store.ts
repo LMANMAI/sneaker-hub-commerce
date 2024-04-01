@@ -10,6 +10,14 @@ const loadCartState = () => {
   return JSON.parse(serializedState);
 };
 
+const loadUserState = () => {
+  const hasAUser = sessionStorage.getItem("user");
+  if (hasAUser === null) {
+    return undefined;
+  }
+  return JSON.parse(hasAUser);
+};
+
 export const store = configureStore({
   reducer: {
     sneaker: sneakerReducer,
@@ -17,6 +25,7 @@ export const store = configureStore({
   },
   preloadedState: {
     sneaker: loadCartState(),
+    user: loadUserState(),
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
