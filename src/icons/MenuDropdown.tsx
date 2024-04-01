@@ -1,5 +1,3 @@
-import React from "react";
-
 const MenuDropdown = () => {
   return (
     <svg viewBox="0 0 320 512">

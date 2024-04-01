@@ -1,4 +1,4 @@
-import { extendTheme, theme } from "@chakra-ui/react";
+import { extendTheme } from "@chakra-ui/react";
 import { ButtonStyles as Button } from "./assets/ButtonStyles";
 export default extendTheme({
   colors: {

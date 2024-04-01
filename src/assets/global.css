@@ -180,11 +180,12 @@ a {
 }
 
 .reflect {
-  width: 100%;
+  width: 95%;
   height: 100%;
   position: absolute;
   background-repeat: no-repeat;
   background-color: white;
+
   z-index: 99;
 }
 

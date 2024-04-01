@@ -1,12 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import {
   Collections,
-  Reports,
   NotFound,
   CheckOut,
   Settings,
   Favorites,
-  Verification,
+  BrandDetail,
 } from "../pages";
 import { ProtectedComponent } from "../components";
 import { BodyContent } from "../components";
@@ -15,9 +14,7 @@ const RoutesComponent = () => {
     <Routes>
       <Route path="/" element={<Collections />} />
       <Route path="/:id" element={<BodyContent />} />
-      <Route path="/reports" element={<Reports />} />
-
-      <Route path="checkverification/*" element={<Verification />} />
+      <Route path="/brand/:brand" element={<BrandDetail />} />
       <Route
         path="/settings"
         element={
@@ -29,10 +26,9 @@ const RoutesComponent = () => {
       <Route
         path="/checkout"
         element={
-          // <ProtectedComponent>
-          //   <CheckOut />
-          // </ProtectedComponent>
-          <CheckOut />
+          <ProtectedComponent>
+            <CheckOut />
+          </ProtectedComponent>
         }
       />
       <Route

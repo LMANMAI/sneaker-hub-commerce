@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
-import { IUserState, IUser } from "../interfaces";
+import { IUserState } from "../interfaces";
 
 const initialState: IUserState = {
   user: null,
@@ -16,6 +16,7 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
+      state.autenticated = true;
     },
     setLogOut: (state) => {
       state.user = null;
