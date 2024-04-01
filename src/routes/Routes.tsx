@@ -5,7 +5,6 @@ import {
   CheckOut,
   Settings,
   Favorites,
-  Verification,
   BrandDetail,
 } from "../pages";
 import { ProtectedComponent } from "../components";
@@ -16,7 +15,6 @@ const RoutesComponent = () => {
       <Route path="/" element={<Collections />} />
       <Route path="/:id" element={<BodyContent />} />
       <Route path="/brand/:brand" element={<BrandDetail />} />
-      <Route path="checkverification/*" element={<Verification />} />
       <Route
         path="/settings"
         element={
@@ -28,10 +26,9 @@ const RoutesComponent = () => {
       <Route
         path="/checkout"
         element={
-          // <ProtectedComponent>
-          //   <CheckOut />
-          // </ProtectedComponent>
-          <CheckOut />
+          <ProtectedComponent>
+            <CheckOut />
+          </ProtectedComponent>
         }
       />
       <Route
