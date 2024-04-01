@@ -36,7 +36,7 @@ const BodyContent: React.FC = () => {
     const lastSegment = segments[segments.length - 1];
 
     try {
-      const { data } = await instance.get(`/${lastSegment}`);
+      const { data } = await instance.get(`/product/${lastSegment}`);
       dispatch(setSneakerActive(data.product));
     } catch (error) {
       toast({

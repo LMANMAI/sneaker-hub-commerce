@@ -36,7 +36,6 @@ import { setPurchases } from "../../functions/Products";
 import { CustomButtonContainer } from "./styles";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import instance from "../../config";
-import axios from "axios";
 
 const CheckOut = () => {
   const navigate = useNavigate();
@@ -79,8 +78,8 @@ const CheckOut = () => {
           productID: item._id,
         };
       });
-      const response = await axios.post(
-        "http://localhost:3000/checkout/create_preference",
+      const response = await instance.post(
+        "/checkout/create_preference",
         productsData
       );
 
@@ -112,7 +111,7 @@ const CheckOut = () => {
       });
     }
     if (queryParams.status === "approved") {
-      const response = await axios.post("http://localhost:3000/checkout", {
+      const response = await instance.post("/checkout", {
         basket,
       });
       if (response.status === 200) {

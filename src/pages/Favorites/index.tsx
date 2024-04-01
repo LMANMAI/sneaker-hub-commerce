@@ -26,7 +26,7 @@ const Favorites = () => {
     const result = await getProductsFav(currentUser);
     if (result.status === 200) {
       const promises = result.data.map(({ sneaker }) => {
-        return instance.get(`/${sneaker}`);
+        return instance.get(`/product/${sneaker}`);
       });
       try {
         const responses = await Promise.all(promises);
@@ -56,7 +56,7 @@ const Favorites = () => {
     const request = await removeFav(currentUser, item);
     if (request && request.status === 200) {
       const promises = request.data.map(({ sneaker }) => {
-        return instance.get(`/${sneaker}`);
+        return instance.get(`/product/${sneaker}`);
       });
       try {
         const responses = await Promise.all(promises);

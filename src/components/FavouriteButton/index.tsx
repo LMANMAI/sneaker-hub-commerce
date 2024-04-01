@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
 import { checkFavs, removeFav } from "../../functions/Products";
 import { useEffect, useState } from "react";

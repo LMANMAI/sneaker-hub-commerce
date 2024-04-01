@@ -4,8 +4,6 @@ import {
   Stack,
   Avatar,
   Icon,
-  ListItem,
-  UnorderedList,
   useColorMode,
   Text,
   Button,
@@ -13,13 +11,8 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
 } from "@chakra-ui/react";
 import { AuthComponent } from "..";
-import styled from "@emotion/styled";
 import {
   MdOutlineArrowForwardIos,
   MdSettings,
@@ -30,7 +23,6 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import { selectUser, setUser } from "../../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { ProtectedComponent } from "..";
 import { setUserSignOut } from "../../functions/Sesion";
 
 interface IProps {
@@ -51,7 +43,7 @@ function ItemMenu(props: IProps) {
     </Stack>
   );
 }
-const ProfileMenu = (props: { fn: Function }) => {
+const ProfileMenu = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const { colorMode } = useColorMode();
@@ -83,7 +75,7 @@ const ProfileMenu = (props: { fn: Function }) => {
       ></MenuButton>
       {user ? (
         <MenuList>
-          <MenuItem onClick={() => props.fn(false)}>
+          <MenuItem>
             <Link to="/favorites" style={{ width: "100%" }}>
               <Stack direction={"row"} alignItems={"center"}>
                 <Icon
@@ -98,7 +90,7 @@ const ProfileMenu = (props: { fn: Function }) => {
             </Link>
           </MenuItem>
 
-          <MenuItem onClick={() => props.fn(false)}>
+          <MenuItem>
             <Link to="/settings" style={{ width: "100%" }}>
               <ItemMenu
                 iconleft={MdSettings}

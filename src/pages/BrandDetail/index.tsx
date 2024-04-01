@@ -1,4 +1,4 @@
-import { Container, Grid, Skeleton, Stack } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import { brands } from "../../components/BrandsMenu/statics";
 import { BrandDetailContainer } from "./styles";
 import { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ const BrandDetail = () => {
   const getCollectionProducts = async () => {
     setLoad(true);
     const { data } = await instance(
-      `/search?name=&genre=&brand=${lastSegment.toLocaleUpperCase()}`
+      `/product/search?name=&genre=&brand=${lastSegment.toLocaleUpperCase()}`
     );
 
     if (data.status === 200) {

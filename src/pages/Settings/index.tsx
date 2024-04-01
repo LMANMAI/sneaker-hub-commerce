@@ -4,7 +4,6 @@ import {
   Text,
   Button,
   Input,
-  FormControl,
   Image,
   useDisclosure,
   Modal,

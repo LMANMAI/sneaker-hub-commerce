@@ -29,7 +29,6 @@ const Header = () => {
   const dispatch = useDispatch();
   ///states
   const [basketshows, setBasketShows] = useState<boolean>(false);
-  const [profilemenu, setProfileMenuState] = useState<boolean>(false);
   const { colorMode } = useColorMode();
 
   return (
@@ -110,7 +109,6 @@ const Header = () => {
             cursor="pointer"
             onClick={() => {
               setBasketShows(true);
-              setProfileMenuState(false);
             }}
           >
             <Icon as={Cart} width={`calc(60px * 0.8)`} height={6} />
@@ -135,7 +133,7 @@ const Header = () => {
             </Stack>
           </Stack>
         </Stack>
-        <ProfileMenu fn={setProfileMenuState} />
+        <ProfileMenu />
       </Stack>
 
       <Basket basketshows={basketshows} setBasketShows={setBasketShows} />

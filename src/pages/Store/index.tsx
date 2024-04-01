@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Stack, Button, Text } from "@chakra-ui/react";
 import { ISneaker } from "../../interfaces";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Slider from "../../components/Slider";
 import { ProductList, BrandsComponent, Spinkit } from "../../components";
 import instance from "../../config";
@@ -9,7 +9,6 @@ import { CustomButtonContainer } from "./styles";
 import { selectSearch } from "../../features/sneakersSlice";
 
 const Collections = () => {
-  const dispatch = useDispatch();
   //selectors
   const searchParams = useSelector(selectSearch);
 
@@ -26,7 +25,7 @@ const Collections = () => {
 
   const handleLastProducts = async () => {
     setLoadLatestProducts(true);
-    const { data } = await instance.get(`last`);
+    const { data } = await instance.get(`/product/last`);
     if (data.status === 200) {
       setLoadLatestProducts(false);
       setLastAdd(data.data);
@@ -47,7 +46,7 @@ const Collections = () => {
   const handleSearch = async () => {
     setLoading(true);
     const { data } = await instance.get(
-      `/search?name=${searchParams.toLocaleUpperCase()}&genre=&brand=`
+      `/product/search?name=${searchParams.toLocaleUpperCase()}&genre=&brand=`
     );
     if (data.status === 200) {
       setLoading(false);
@@ -58,7 +57,7 @@ const Collections = () => {
     }
   };
   const getProducts = async (page: number) => {
-    const { data } = await instance.get(`?page=${page}&pageSize=${10}`);
+    const { data } = await instance.get(`/product?page=${page}&pageSize=${10}`);
     setProducts((prevProducts) => {
       const uniqueNewProducts = data.data.filter(
         (newProduct: ISneaker) =>

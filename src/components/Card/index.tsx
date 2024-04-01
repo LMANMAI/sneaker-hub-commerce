@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { CardBody } from "@chakra-ui/card";
-import { Image, Stack, Text, position } from "@chakra-ui/react";
+import { Image, Stack, Text } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { setSneakerActive } from "../../features/sneakersSlice";
 import { ImgProductContainer, CustomCard, CustomHeading } from "./styles";
