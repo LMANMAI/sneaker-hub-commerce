@@ -23,17 +23,19 @@ import {
   setBasket,
   removeOnefromBasket,
   removeSneakerBasket,
+  clearBasket,
 } from "../../features/sneakersSlice";
 import { RemoveIcon } from "../../icons";
 import { useNavigate } from "react-router-dom";
 import { selectUser } from "../../features/userSlice";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
-import { ISneaker } from "../../interfaces";
+import { ISneakerBasket } from "../../interfaces";
 import { getAddresses } from "../../functions/Profile";
+import { setPurchases } from "../../functions/Products";
 import { CustomButtonContainer } from "./styles";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-
+import instance from "../../config";
 import axios from "axios";
 
 const CheckOut = () => {
@@ -44,7 +46,7 @@ const CheckOut = () => {
   });
   const [addressarray, setArrayAddresses] = useState<any[]>([]);
   const [value, setValue] = useState<any>();
-  const [preferenceId, setPreferenceId] = useState<string>("");
+  const [preferenceId, setPreferenceId] = useState<string | null>("");
   const [laodingPreference, setLoadingPreference] = useState<boolean>(false);
 
   const basket = useSelector(selectBasket);
@@ -52,7 +54,52 @@ const CheckOut = () => {
   const current_user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const handleRemoveBasket = (sneaker: ISneakerBasket) => {
+    if (sneaker.quantity < 1) return;
+    dispatch(removeOnefromBasket(sneaker));
+  };
+
+  const handleAddBasket = (sneaker: ISneakerBasket) => {
+    dispatch(setBasket(sneaker));
+  };
+  const getUserAddresses = async () => {
+    const request = await getAddresses(current_user.uid);
+    if (request) {
+      setArrayAddresses(request);
+    }
+  };
+
+  const createPreference = async () => {
+    try {
+      const productsData = basket.map((item: ISneakerBasket) => {
+        return {
+          title: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          productID: item._id,
+        };
+      });
+      const response = await axios.post(
+        "http://localhost:3000/checkout/create_preference",
+        productsData
+      );
+
+      const { id } = response.data;
+      return id;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handlePurchase = async () => {
+    setLoadingPreference(true);
+    const id = await createPreference();
+    if (id) {
+      setPreferenceId(id);
+      setLoadingPreference(false);
+    }
+  };
+
+  const handleCompletePurchase = async () => {
     const currentUrl = window.location.href;
     const queryParams: Record<string, string> = {};
 
@@ -64,10 +111,21 @@ const CheckOut = () => {
         queryParams[key] = decodeURIComponent(value);
       });
     }
-    console.log(queryParams);
-    // Redirigir al usuario a la página adecuada
     if (queryParams.status === "approved") {
-      // Pago aprobado: Mostrar mensaje de confirmación
+      const response = await axios.post("http://localhost:3000/checkout", {
+        basket,
+      });
+      if (response.status === 200) {
+        const request = await setPurchases(current_user.uid, basket);
+        if (request.status === 200) {
+          dispatch(clearBasket());
+          sessionStorage.clear();
+          localStorage.clear();
+          navigate("/");
+        }
+      }
+      setPreferenceId(null);
+
       toast({
         title: "Se realizo la compra correctamente.",
         description: `Vas a poder visualizar la compra en Mis compras con el id: ${queryParams.merchant_order_id}.`,
@@ -76,9 +134,8 @@ const CheckOut = () => {
         isClosable: true,
         position: "bottom-right",
       });
-      //navigate(/)
     } else if (queryParams.status === "pending") {
-      // Pago pendiente: Mostrar mensaje de espera
+      setPreferenceId(null);
       toast({
         title: "Se esta procesando la compra.",
         status: "warning",
@@ -86,8 +143,11 @@ const CheckOut = () => {
         isClosable: true,
         position: "bottom-right",
       });
-      //navigate(/)
-    } else if (queryParams.status === "failure") {
+    } else if (
+      queryParams.status === "failure" ||
+      queryParams.status === "null"
+    ) {
+      setPreferenceId(null);
       toast({
         title: "Ocurrio un error en la compra.",
         description: "Volve a intentarlo en unos momentos.",
@@ -96,52 +156,11 @@ const CheckOut = () => {
         isClosable: true,
         position: "bottom-right",
       });
-      // Pago fallido: Mostrar mensaje de error
-      //navigate(/)
     }
+  };
+  useEffect(() => {
+    handleCompletePurchase();
   }, []);
-
-  const handleRemoveBasket = (sneaker: ISneaker) => {
-    if (sneaker.quantity < 1) return;
-    dispatch(removeOnefromBasket(sneaker));
-  };
-
-  const handleAddBasket = (sneaker: ISneaker) => {
-    dispatch(setBasket(sneaker));
-  };
-  const getUserAddresses = async () => {
-    const request = await getAddresses(current_user.uid);
-    if (request) {
-      setArrayAddresses(request);
-    }
-  };
-  const createPreference = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/checkout/create_preference",
-        {
-          title: "Prueba",
-          quantity: basket.length,
-          price: totalBasket,
-          productID: "id_prueba",
-        }
-      );
-
-      const { id } = response.data;
-      return id;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handlePurchase = async () => {
-    setLoadingPreference(true);
-    const id = await createPreference();
-    if (id) {
-      setPreferenceId(id);
-      setLoadingPreference(false);
-    }
-  };
 
   useEffect(() => {
     getUserAddresses();

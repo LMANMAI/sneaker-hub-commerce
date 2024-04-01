@@ -79,7 +79,6 @@ const BodyContent: React.FC = () => {
         selectedProduct &&
         selectedProduct._id === sneakerActive._id &&
         selectedProduct.size === talle[tipo];
-
       const handleClick = () => {
         const selectedSizeLimit = sneakerActive.sizes
           .filter((limitItem) => limitItem.size === talle["US"])
@@ -124,6 +123,7 @@ const BodyContent: React.FC = () => {
   const handleType = (tipo: string) => {
     setTipoTalle(tipo);
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!sneakerActive) {

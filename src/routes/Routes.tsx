@@ -10,20 +10,7 @@ import {
 } from "../pages";
 import { ProtectedComponent } from "../components";
 import { BodyContent } from "../components";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setBasket } from "../features/sneakersSlice";
 const RoutesComponent = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const basketData = sessionStorage.getItem("basket");
-    console.log(basketData);
-    if (basketData) {
-      const parsedBasket = JSON.parse(basketData);
-      parsedBasket.map((item: any) => dispatch(setBasket(item)));
-    }
-  }, []);
   return (
     <Routes>
       <Route path="/" element={<Collections />} />

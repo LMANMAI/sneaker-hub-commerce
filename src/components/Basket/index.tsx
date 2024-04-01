@@ -24,7 +24,7 @@ import {
 } from "../../features/sneakersSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RemoveIcon } from "../../icons";
-import { ISneaker, ISneakerBasket } from "../../interfaces";
+import { ISneakerBasket } from "../../interfaces";
 import { useNavigate } from "react-router-dom";
 import { selectUser } from "../../features/userSlice";
 interface IProps {
@@ -60,10 +60,9 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
     dispatch(setBasket(sneaker));
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (currentUser !== null) {
-      history("/checkout");
-      setBasketShows(false);
+      history(`/checkout`);
     } else {
       setBasketShows(false);
       toast({

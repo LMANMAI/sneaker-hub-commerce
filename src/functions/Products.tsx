@@ -102,3 +102,31 @@ export const clearFavs = async (user: any) => {
     console.error("Error al intentar eliminar los favoritos:", error);
   }
 };
+
+export const setPurchases = async (userID: string, sneaker: any) => {
+  const docRef = doc(db, "users", userID);
+  const collRef = collection(docRef, "purchases");
+  try {
+    const purchase = await addDoc(collRef, { sneaker });
+    return { purchase: purchase, status: 200, msg: "" };
+  } catch (error) {
+    console.log(error);
+    return { msg: "No se pudo agregar el producto", status: 500, purchase: [] };
+  }
+};
+
+export const getMyPurchases = async (user: any) => {
+  const docRef = doc(db, "users", user?.uid);
+  const collRef = collection(docRef, "purchases");
+  try {
+    const array: any[] = [];
+    const allFavs = await getDocs(collRef);
+    allFavs.forEach((doc) => {
+      array.push({ ...doc.data(), idRef: doc.id });
+    });
+    return { data: array, status: 200 };
+  } catch (error) {
+    console.log(error);
+    return { data: [], status: 500 };
+  }
+};

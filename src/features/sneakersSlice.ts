@@ -57,6 +57,8 @@ export const sneakerSlice = createSlice({
           console.log("No se puede agregar más del límite de cantidad");
         }
       }
+      sessionStorage.setItem("basketState", JSON.stringify(state));
+      localStorage.setItem("basketState", JSON.stringify(state));
     },
     removeOnefromBasket: (state, action: PayloadAction<ISneakerBasket>) => {
       const { payload } = action;
@@ -76,6 +78,8 @@ export const sneakerSlice = createSlice({
         state.total -= existingItem.price;
         state.basketQuantity -= 1;
       }
+      sessionStorage.setItem("basketState", JSON.stringify(state));
+      localStorage.setItem("basketState", JSON.stringify(state));
     },
 
     removeSneakerBasket: (state, action: PayloadAction<ISneakerBasket>) => {
@@ -94,6 +98,8 @@ export const sneakerSlice = createSlice({
         }
         state.total -= removedItem.price * removedQuantity;
         state.basketQuantity -= removedQuantity;
+        sessionStorage.setItem("basketState", JSON.stringify(state));
+        localStorage.setItem("basketState", JSON.stringify(state));
       } else {
         console.warn(
           `No se pudo remover el producto: ${payload._id} de tamaño ${payload.size} no está en el carrito`
@@ -130,8 +136,17 @@ export const sneakerSlice = createSlice({
     setCounterLimit: (state, action: PayloadAction<number>) => {
       state.counterLimit = action.payload;
     },
-    setTotalSneaker: (state, action: PayloadAction<ISneaker[]>) => {
-      state.sneakersTotal = action.payload;
+    setTotalSneaker: (state, action: PayloadAction<number>) => {
+      state.total = action.payload;
+    },
+    setBasketQuantity: (state, action: PayloadAction<number>) => {
+      state.basketQuantity = action.payload;
+    },
+    setExceedsLimit: (state, action: PayloadAction<boolean>) => {
+      state.exceedsLimit = action.payload;
+    },
+    clearBasket: (state) => {
+      state.basket = [];
     },
   },
 });
@@ -148,6 +163,9 @@ export const {
   setCounterState,
   setCounterLimit,
   setTotalSneaker,
+  setBasketQuantity,
+  setExceedsLimit,
+  clearBasket,
 } = sneakerSlice.actions;
 
 export const selectSneakers = (state: RootState) => state.sneaker.sneakers;
