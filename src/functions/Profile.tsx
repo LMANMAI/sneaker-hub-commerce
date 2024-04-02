@@ -8,7 +8,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../app/firebaseConfig";
 import { getUserAuth } from "./Sesion";
-import { ISneaker } from "../interfaces";
 
 interface Address {
   id: string;
