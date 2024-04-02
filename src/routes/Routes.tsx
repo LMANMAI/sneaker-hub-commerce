@@ -43,7 +43,7 @@ const RoutesComponent = () => {
         }
       />
       <Route path="*" element={<NotFound />} />
-      <Route path="/postcheckout" element={<PostCheckout />} />
+      <Route path="/postcheckout/:query" element={<PostCheckout />} />
     </Routes>
   );
 };
