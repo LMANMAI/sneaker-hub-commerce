@@ -58,7 +58,7 @@ const CheckOut = () => {
   };
   const getUserAddresses = async () => {
     console.log(current_user);
-    const request = await getAddresses(current_user.idUser);
+    const request = await getAddresses(current_user.idCliente);
     if (request) {
       setArrayAddresses(request);
     }

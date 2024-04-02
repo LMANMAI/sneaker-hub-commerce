@@ -126,7 +126,10 @@ const Settings = () => {
   const handleAddress = async () => {
     setLoad(true);
     if (adress) {
-      const request = await setUserShippingAddress(adress, currentUser.uid);
+      const request = await setUserShippingAddress(
+        adress,
+        currentUser.idCliente
+      );
 
       if (request.status === 200) {
         setLoad(false);
@@ -149,7 +152,7 @@ const Settings = () => {
     }
   };
   const getUserAddresses = async () => {
-    const request = await getAddresses(currentUser.uid);
+    const request = await getAddresses(currentUser.idCliente);
     if (request) {
       setArrayAddresses(request);
     }
@@ -180,7 +183,7 @@ const Settings = () => {
     }
   };
   const handleDeleteAddress = async (addressId: any) => {
-    const request = await removeAddress(currentUser.uid, addressId);
+    const request = await removeAddress(currentUser.idCliente, addressId);
     if (request.status === 200) {
       setArrayAddresses(request.addresses);
       toast({

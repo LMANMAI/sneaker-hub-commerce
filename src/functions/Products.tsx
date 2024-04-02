@@ -21,7 +21,7 @@ export const setFavItems = async (userID: string, sneaker: string) => {
 };
 
 export const checkFavs = async (userID: any, sneaker: ISneaker) => {
-  const docRef = doc(db, "users", userID?.uid);
+  const docRef = doc(db, "users", userID?.idCliente);
   const collRef = collection(docRef, "favorites");
   try {
     const allDocs = await getDocs(collRef);
@@ -44,7 +44,7 @@ export const checkFavs = async (userID: any, sneaker: ISneaker) => {
 };
 
 export const removeFav = async (userID: any, sneaker: ISneaker) => {
-  const docRef = doc(db, "users", userID.uid);
+  const docRef = doc(db, "users", userID.idCliente);
   const collRef = collection(docRef, "favorites");
   const favArray: any[] = [];
   try {
@@ -71,7 +71,7 @@ export const removeFav = async (userID: any, sneaker: ISneaker) => {
 };
 
 export const getProductsFav = async (user: any) => {
-  const docRef = doc(db, "users", user?.idUser);
+  const docRef = doc(db, "users", user?.idCliente);
   const collRef = collection(docRef, "favorites");
   try {
     const array: any[] = [];
@@ -88,8 +88,8 @@ export const getProductsFav = async (user: any) => {
 
 export const clearFavs = async (user: any) => {
   try {
-    const { idUser } = user;
-    const favsCollectionRef = collection(db, "users", idUser, "favorites");
+    const { idCliente } = user;
+    const favsCollectionRef = collection(db, "users", idCliente, "favorites");
     const favsSnapshot = await getDocs(favsCollectionRef);
     const deletePromises = favsSnapshot.docs.map((doc) => {
       return deleteDoc(doc.ref);
@@ -116,7 +116,7 @@ export const setPurchases = async (userID: string, sneaker: any) => {
 };
 
 export const getMyPurchases = async (user: any) => {
-  const docRef = doc(db, "users", user?.idUser);
+  const docRef = doc(db, "users", user?.idCliente);
   const collRef = collection(docRef, "purchases");
   try {
     const array: any[] = [];
