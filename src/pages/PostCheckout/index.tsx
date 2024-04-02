@@ -31,7 +31,7 @@ const PostCheckout = () => {
         basket,
       });
       if (response.status === 200) {
-        const request = await setPurchases(current_user.uid, basket);
+        const request = await setPurchases(current_user.idUser, { basket });
         if (request.status === 200) {
           dispatch(clearBasket());
           sessionStorage.removeItem("basketState");

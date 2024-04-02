@@ -23,6 +23,7 @@ const Favorites = () => {
 
   const getFavouriteProducts = async () => {
     setLoad(true);
+
     const result = await getProductsFav(currentUser);
     if (result.status === 200) {
       const promises = result.data.map(({ sneaker }) => {

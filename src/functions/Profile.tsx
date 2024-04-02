@@ -26,7 +26,7 @@ interface Address {
 //Datos del perfil
 export const updateProfile = async (formdata: any) => {
   try {
-    const profileref = doc(db, "users", formdata.uid);
+    const profileref = doc(db, "users", formdata.idUser);
     await updateDoc(profileref, {
       email: formdata.email,
       firstName: formdata.firstName,

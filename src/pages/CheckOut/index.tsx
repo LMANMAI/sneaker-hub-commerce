@@ -57,12 +57,13 @@ const CheckOut = () => {
     dispatch(setBasket(sneaker));
   };
   const getUserAddresses = async () => {
-    const request = await getAddresses(current_user.uid);
+    console.log(current_user);
+    const request = await getAddresses(current_user.idUser);
     if (request) {
       setArrayAddresses(request);
     }
   };
-
+  current_user.uid;
   const createPreference = async () => {
     try {
       const productsData = basket.map((item: ISneakerBasket) => {

@@ -14,9 +14,13 @@ const MyPurchases = () => {
   const getFavouriteProducts = async () => {
     setLoad(true);
     const result = await getMyPurchases(currentUser);
+    console.log(result);
     if (result.status === 200) {
       setLoad(false);
       setPreviousPurchases(result.data);
+    } else {
+      setLoad(false);
+      setPreviousPurchases([]);
     }
   };
   useEffect(() => {

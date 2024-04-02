@@ -71,7 +71,7 @@ export const removeFav = async (userID: any, sneaker: ISneaker) => {
 };
 
 export const getProductsFav = async (user: any) => {
-  const docRef = doc(db, "users", user?.uid);
+  const docRef = doc(db, "users", user?.idUser);
   const collRef = collection(docRef, "favorites");
   try {
     const array: any[] = [];
@@ -88,8 +88,8 @@ export const getProductsFav = async (user: any) => {
 
 export const clearFavs = async (user: any) => {
   try {
-    const { uid } = user;
-    const favsCollectionRef = collection(db, "users", uid, "favorites");
+    const { idUser } = user;
+    const favsCollectionRef = collection(db, "users", idUser, "favorites");
     const favsSnapshot = await getDocs(favsCollectionRef);
     const deletePromises = favsSnapshot.docs.map((doc) => {
       return deleteDoc(doc.ref);
@@ -116,12 +116,12 @@ export const setPurchases = async (userID: string, sneaker: any) => {
 };
 
 export const getMyPurchases = async (user: any) => {
-  const docRef = doc(db, "users", user?.uid);
+  const docRef = doc(db, "users", user?.idUser);
   const collRef = collection(docRef, "purchases");
   try {
     const array: any[] = [];
-    const allFavs = await getDocs(collRef);
-    allFavs.forEach((doc) => {
+    const allP = await getDocs(collRef);
+    allP.forEach((doc) => {
       array.push({ ...doc.data(), idRef: doc.id });
     });
     return { data: array, status: 200 };
