@@ -6,25 +6,22 @@ import {
   Skeleton,
   useToast,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { selectUser } from "../../features/userSlice";
 import { clearFavs, getProductsFav, removeFav } from "../../functions/Products";
 import instance from "../../../src/config";
 import { ISneaker } from "../../../src/interfaces";
 
-const Favorites = () => {
+const Favorites = ({ userID }: { userID: string }) => {
   const toast = useToast();
 
-  const currentUser = useSelector(selectUser);
   const [itexmsFav, setItexmsFav] = useState<ISneaker[]>([]);
   const [load, setLoad] = useState<boolean>(false);
 
   const getFavouriteProducts = async () => {
     setLoad(true);
 
-    const result = await getProductsFav(currentUser);
+    const result = await getProductsFav(userID);
     if (result.status === 200) {
       const promises = result.data.map(({ sneaker }) => {
         return instance.get(`/product/${sneaker}`);
@@ -40,7 +37,7 @@ const Favorites = () => {
     }
   };
   const handleClearFavs = async () => {
-    const request = await clearFavs(currentUser);
+    const request = await clearFavs(userID);
     if (request === "eliminados") {
       toast({
         title: "Todos los elementos fueron eliminados.",
@@ -53,7 +50,7 @@ const Favorites = () => {
     }
   };
   const handleRemoveOneItem = async (item: ISneaker) => {
-    const request = await removeFav(currentUser, item);
+    const request = await removeFav(userID, item);
     if (request && request.status === 200) {
       const promises = request.data.map(({ sneaker }) => {
         return instance.get(`/product/${sneaker}`);

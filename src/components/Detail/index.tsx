@@ -20,10 +20,11 @@ import { sizes } from "./statics";
 import instance from "../../../src/config";
 import { useNavigate } from "react-router-dom";
 
-const BodyContent: React.FC = () => {
+const BodyContent = () => {
   const dispatch = useDispatch();
   const toast = useToast();
   const history = useNavigate();
+
   const [tipoTalle, setTipoTalle] = useState("US");
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 

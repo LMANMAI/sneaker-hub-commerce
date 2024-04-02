@@ -20,7 +20,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   updateProfile,
   setUserShippingAddress,
@@ -28,7 +28,7 @@ import {
 } from "../../functions/Profile";
 import { removeAddress } from "../../functions/Profile";
 import { clearFavs } from "../../functions/Products";
-import { selectUser, setUser } from "../../features/userSlice";
+import { setUser } from "../../features/userSlice";
 import { SelectBody } from "../../components";
 import { CustomButton } from "./styles";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -60,17 +60,16 @@ function StackContainer({ children, border }: IPropsStack) {
   );
 }
 
-const Settings = () => {
+const Settings = ({ user }: { user: any }) => {
   const toast = useToast();
   const dispatch = useDispatch();
-  const currentUser = useSelector(selectUser);
   //states
   const [usersettigns, setUSerSettings] = useState<any>({
-    email: currentUser.email,
-    displayName: currentUser.firstName || "",
-    accessToken: currentUser.idToken || "",
-    uid: currentUser.idUser,
-    profileIMG: currentUser.profileIMG || "",
+    email: user.email,
+    displayName: user.firstName || "",
+    accessToken: user.idToken || "",
+    uid: user.idUser,
+    profileIMG: user.profileIMG || "",
   });
   const [adress, setAdress] = useState<Address>({
     prov: "",
@@ -126,10 +125,7 @@ const Settings = () => {
   const handleAddress = async () => {
     setLoad(true);
     if (adress) {
-      const request = await setUserShippingAddress(
-        adress,
-        currentUser.idCliente
-      );
+      const request = await setUserShippingAddress(adress, user.idUser);
 
       if (request.status === 200) {
         setLoad(false);
@@ -152,14 +148,14 @@ const Settings = () => {
     }
   };
   const getUserAddresses = async () => {
-    const request = await getAddresses(currentUser.idCliente);
+    const request = await getAddresses(user.idUser);
     if (request) {
       setArrayAddresses(request);
     }
   };
   const handleClearFavs = async () => {
     setLoad(true);
-    const request = await clearFavs(currentUser);
+    const request = await clearFavs(user.idUser);
     if (request === "eliminados") {
       setLoad(false);
       toast({
@@ -183,7 +179,7 @@ const Settings = () => {
     }
   };
   const handleDeleteAddress = async (addressId: any) => {
-    const request = await removeAddress(currentUser.idCliente, addressId);
+    const request = await removeAddress(user.idUser, addressId);
     if (request.status === 200) {
       setArrayAddresses(request.addresses);
       toast({
@@ -241,7 +237,7 @@ const Settings = () => {
               overflow="hidden"
               position="absolute"
             >
-              <Image src={currentUser.profileIMG} />
+              <Image src={user.profileIMG} />
             </Stack>
           </Stack>
         </Stack>
