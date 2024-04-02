@@ -24,7 +24,6 @@ import {
   removeSneakerBasket,
 } from "../../features/sneakersSlice";
 import { RemoveIcon } from "../../icons";
-import { selectUser } from "../../features/userSlice";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import { ISneakerBasket } from "../../interfaces";
@@ -34,7 +33,7 @@ import { CustomButtonContainer } from "./styles";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import instance from "../../config";
 
-const CheckOut = () => {
+const CheckOut = ({ userID }: { userID: string }) => {
   initMercadoPago(import.meta.env.VITE_PUBLIC_KEY_MP as string, {
     locale: "es-AR",
   });
@@ -45,7 +44,7 @@ const CheckOut = () => {
 
   const basket = useSelector(selectBasket);
   const totalBasket = useSelector(selectTotal);
-  const current_user = useSelector(selectUser);
+
   const dispatch = useDispatch();
 
   const handleRemoveBasket = (sneaker: ISneakerBasket) => {
@@ -57,13 +56,11 @@ const CheckOut = () => {
     dispatch(setBasket(sneaker));
   };
   const getUserAddresses = async () => {
-    console.log(current_user);
-    const request = await getAddresses(current_user.idCliente);
+    const request = await getAddresses(userID);
     if (request) {
       setArrayAddresses(request);
     }
   };
-  current_user.uid;
   const createPreference = async () => {
     try {
       const productsData = basket.map((item: ISneakerBasket) => {
@@ -302,11 +299,9 @@ const CheckOut = () => {
                     alignItems={"center"}
                     gap={"10px"}
                     variant="primary"
-                    disabled={!value || !current_user || basket.length === 0}
+                    disabled={!value || !userID || basket.length === 0}
                     className={
-                      basket.length === 0 || !value || !current_user
-                        ? "disabled"
-                        : ""
+                      basket.length === 0 || !value || !userID ? "disabled" : ""
                     }
                     onClick={() => handlePurchase()}
                     isLoading={laodingPreference}

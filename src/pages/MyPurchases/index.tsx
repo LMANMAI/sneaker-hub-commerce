@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { Skeleton, Stack, Text, Image } from "@chakra-ui/react";
-import { selectUser } from "../../features/userSlice";
 import { getMyPurchases } from "../../functions/Products";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const MyPurchases = () => {
-  const currentUser = useSelector(selectUser);
-
+const MyPurchases = ({ userID }: { userID: string }) => {
   const [load, setLoad] = useState<boolean>(false);
   const [purchases, setPreviousPurchases] = useState<any[]>([]);
 
   const getFavouriteProducts = async () => {
     setLoad(true);
-    const result = await getMyPurchases(currentUser);
+    const result = await getMyPurchases(userID);
     if (result.status === 200) {
       setLoad(false);
       setPreviousPurchases(result.data);

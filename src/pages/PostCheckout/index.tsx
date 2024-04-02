@@ -4,16 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPurchases } from "../../functions/Products";
 import { selectBasket, clearBasket } from "../../features/sneakersSlice";
-import { selectUser } from "../../features/userSlice";
 import instance from "../../config";
 
-const PostCheckout = () => {
+const PostCheckout = ({ userID }: { userID: string }) => {
   const navigate = useNavigate();
   const toast = useToast();
   const dispatch = useDispatch();
 
   const basket = useSelector(selectBasket);
-  const current_user = useSelector(selectUser);
 
   const currentUrl = window.location.href;
   const queryParams: Record<string, string> = {};
@@ -33,7 +31,7 @@ const PostCheckout = () => {
         basket,
       });
       if (response.status === 200) {
-        const request = await setPurchases(current_user.idCliente, { basket });
+        const request = await setPurchases(userID, { basket });
         if (request.status === 200) {
           dispatch(clearBasket());
           sessionStorage.removeItem("basketState");

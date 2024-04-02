@@ -21,6 +21,7 @@ function App() {
         const token = await firebaseUser.getIdToken();
         const userData = await getUserAuth(firebaseUser.uid);
         localStorage.setItem("authToken", token);
+        localStorage.setItem("idCliente", firebaseUser.uid);
         dispatch(setUser(userData));
       } else {
         localStorage.removeItem("authToken");
