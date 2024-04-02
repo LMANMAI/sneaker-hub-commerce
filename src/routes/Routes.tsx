@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import {
   Collections,
-  NotFound,
   CheckOut,
   Settings,
   Favorites,
@@ -52,7 +51,6 @@ const RoutesComponent = () => {
           <MyPurchases userID={userID || userState?.user?.idUser || ""} />
         }
       />
-      <Route path="*" element={<NotFound />} />
       <Route
         path="/postcheckout/:query"
         element={
