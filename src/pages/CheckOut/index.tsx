@@ -14,7 +14,6 @@ import {
   Icon,
   Radio,
   RadioGroup,
-  useToast,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -23,23 +22,19 @@ import {
   setBasket,
   removeOnefromBasket,
   removeSneakerBasket,
-  clearBasket,
 } from "../../features/sneakersSlice";
 import { RemoveIcon } from "../../icons";
-import { useNavigate } from "react-router-dom";
 import { selectUser } from "../../features/userSlice";
 import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import { ISneakerBasket } from "../../interfaces";
 import { getAddresses } from "../../functions/Profile";
-import { setPurchases } from "../../functions/Products";
+
 import { CustomButtonContainer } from "./styles";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import instance from "../../config";
 
 const CheckOut = () => {
-  const navigate = useNavigate();
-  const toast = useToast();
   initMercadoPago(import.meta.env.VITE_PUBLIC_KEY_MP as string, {
     locale: "es-AR",
   });
@@ -97,69 +92,6 @@ const CheckOut = () => {
       setLoadingPreference(false);
     }
   };
-
-  const handleCompletePurchase = async () => {
-    const currentUrl = window.location.href;
-    const queryParams: Record<string, string> = {};
-
-    if (currentUrl.includes("?")) {
-      const queryString = currentUrl.split("?")[1];
-      const queryParamsArray = queryString.split("&");
-      queryParamsArray.forEach((param: any) => {
-        const [key, value] = param.split("=");
-        queryParams[key] = decodeURIComponent(value);
-      });
-    }
-    if (queryParams.status === "approved") {
-      const response = await instance.post("/checkout", {
-        basket,
-      });
-      if (response.status === 200) {
-        const request = await setPurchases(current_user.uid, basket);
-        if (request.status === 200) {
-          dispatch(clearBasket());
-          sessionStorage.clear();
-          localStorage.clear();
-          navigate("/");
-        }
-      }
-      setPreferenceId(null);
-
-      toast({
-        title: "Se realizo la compra correctamente.",
-        description: `Vas a poder visualizar la compra en Mis compras con el id: ${queryParams.merchant_order_id}.`,
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    } else if (queryParams.status === "pending") {
-      setPreferenceId(null);
-      toast({
-        title: "Se esta procesando la compra.",
-        status: "warning",
-        duration: 9000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    } else if (
-      queryParams.status === "failure" ||
-      queryParams.status === "null"
-    ) {
-      setPreferenceId(null);
-      toast({
-        title: "Ocurrio un error en la compra.",
-        description: "Volve a intentarlo en unos momentos.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
-  };
-  useEffect(() => {
-    handleCompletePurchase();
-  }, []);
 
   useEffect(() => {
     getUserAddresses();

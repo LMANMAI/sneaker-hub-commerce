@@ -1,12 +1,14 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../app/firebaseConfig";
 import { getUserAuth } from "./Sesion";
+import { ISneaker } from "../interfaces";
 
 interface Address {
   id: string;
@@ -78,5 +80,21 @@ export const getAddresses = async (idUser: string) => {
   } catch (error) {
     console.error("Error al obtener las direcciones:", error);
     throw new Error("Error al obtener las direcciones");
+  }
+};
+
+export const removeAddress = async (userID: any, addressId: string) => {
+  try {
+    const userDocRef = doc(db, "users", userID);
+    const addressDocRef = doc(userDocRef, "addresses", addressId);
+    await deleteDoc(addressDocRef);
+    const addresses = await getAddresses(userID);
+    return { addresses, status: 200, msg: "" };
+  } catch (error) {
+    return {
+      addresses: [],
+      status: 500,
+      msg: "Error al eliminar la dirección",
+    };
   }
 };

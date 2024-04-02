@@ -96,10 +96,10 @@ export const clearFavs = async (user: any) => {
     });
 
     await Promise.all(deletePromises);
-
     return "eliminados";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error al intentar eliminar los favoritos:", error);
+    return `Error al intentar eliminar los favoritos: ${error.mesagge}`;
   }
 };
 

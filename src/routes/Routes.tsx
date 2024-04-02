@@ -6,6 +6,8 @@ import {
   Settings,
   Favorites,
   BrandDetail,
+  PostCheckout,
+  MyPurchases,
 } from "../pages";
 import { ProtectedComponent } from "../components";
 import { BodyContent } from "../components";
@@ -16,30 +18,32 @@ const RoutesComponent = () => {
       <Route path="/:id" element={<BodyContent />} />
       <Route path="/brand/:brand" element={<BrandDetail />} />
       <Route
-        path="/settings"
+        path="/configuraciones"
         element={
           <ProtectedComponent>
             <Settings />
           </ProtectedComponent>
         }
       />
+      <Route path="/checkout" element={<CheckOut />} />
       <Route
-        path="/checkout"
-        element={
-          <ProtectedComponent>
-            <CheckOut />
-          </ProtectedComponent>
-        }
-      />
-      <Route
-        path="/favorites"
+        path="/favoritos"
         element={
           <ProtectedComponent>
             <Favorites />
           </ProtectedComponent>
         }
       />
+      <Route
+        path="/miscompras"
+        element={
+          <ProtectedComponent>
+            <MyPurchases />
+          </ProtectedComponent>
+        }
+      />
       <Route path="*" element={<NotFound />} />
+      <Route path="/postcheckout" element={<PostCheckout />} />
     </Routes>
   );
 };

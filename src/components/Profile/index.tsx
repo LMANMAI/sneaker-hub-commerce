@@ -18,6 +18,7 @@ import {
   MdSettings,
   MdFavoriteBorder,
   MdOutlineExitToApp,
+  MdShoppingBag,
 } from "react-icons/md";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
@@ -76,7 +77,7 @@ const ProfileMenu = () => {
       {user ? (
         <MenuList>
           <MenuItem>
-            <Link to="/favorites" style={{ width: "100%" }}>
+            <Link to="/favoritos" style={{ width: "100%" }}>
               <Stack direction={"row"} alignItems={"center"}>
                 <Icon
                   className="icon_button"
@@ -89,9 +90,22 @@ const ProfileMenu = () => {
               </Stack>
             </Link>
           </MenuItem>
-
           <MenuItem>
-            <Link to="/settings" style={{ width: "100%" }}>
+            <Link to="/miscompras" style={{ width: "100%" }}>
+              <Stack direction={"row"} alignItems={"center"}>
+                <Icon
+                  className="icon_button"
+                  as={MdShoppingBag}
+                  color={colorMode === "light" ? "primary" : "secondary"}
+                />
+                <Text color={colorMode === "light" ? "gray.800" : "white"}>
+                  Mis compras
+                </Text>
+              </Stack>
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to="/configuraciones" style={{ width: "100%" }}>
               <ItemMenu
                 iconleft={MdSettings}
                 iconRight={MdOutlineArrowForwardIos}

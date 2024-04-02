@@ -5,9 +5,12 @@ export const SliderContainer = styled.div`
   margin: 10px auto;
   margin-bottom: 28px;
   padding: 0px 20px;
+  .slick-list {
+    heigth: fit-contain;
+  }
   img {
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
     &:hover {
       cursor: pointer;
     }
@@ -21,16 +24,8 @@ export const Carrousel = styled(Slider)`
     background: #000;
     color: white;
   }
-  .slick-next {
-    right: -20px !important;
-    &:hover {
-      background: #000;
-    }
-  }
+  .slick-next,
   .slick-prev {
-    left: -20px !important;
-    &:hover {
-      background: #000;
-    }
+    color: black;
   }
 `;

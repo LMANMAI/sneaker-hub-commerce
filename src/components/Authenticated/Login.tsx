@@ -5,11 +5,15 @@ import {
   Input,
   Button,
   Text,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { setUser, setError, selectUser } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { signAuthUser } from "../../functions/Sesion";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 interface IProps {
   fn: Function;
@@ -22,6 +26,12 @@ const Login: React.FC<IProps> = (props) => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserM({
@@ -67,14 +77,27 @@ const Login: React.FC<IProps> = (props) => {
           id="email"
           type="email"
         />
-
         <FormLabel htmlFor="password">Contraseña</FormLabel>
-        <Input
-          onChange={(e) => handleChange(e)}
-          name="password"
-          type="password"
-          id="password"
-        />
+        <InputGroup>
+          <Input
+            onChange={(e) => handleChange(e)}
+            name="password"
+            type={showPassword ? "text" : "password"}
+            id="password"
+          />
+          <InputRightElement width="2.5rem">
+            <IconButton
+              h="1.75rem"
+              size="sm"
+              background={"transparent!important"}
+              onClick={handleTogglePassword}
+              icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+              aria-label={
+                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
+            />
+          </InputRightElement>
+        </InputGroup>
         <Stack height={"80px"} />
         <Text fontSize="13px" textAlign="center" alignItems="center">
           ¿No tenes una cuenta?{" "}
@@ -86,7 +109,6 @@ const Login: React.FC<IProps> = (props) => {
             Registrate
           </Button>
         </Text>
-
         <Button
           variant="primary"
           mt={2}

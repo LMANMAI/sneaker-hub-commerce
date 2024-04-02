@@ -38,7 +38,6 @@ const Favorites = () => {
       }
     }
   };
-
   const handleClearFavs = async () => {
     const request = await clearFavs(currentUser);
     if (request === "eliminados") {
@@ -133,7 +132,12 @@ const Favorites = () => {
                       </Stack>
                       <Stack p={2}>
                         <Text fontSize="12px">{item.name}</Text>
-                        <Text>${item.price.toFixed(2)}</Text>
+                        <Text>
+                          {item.price.toLocaleString("es-AR", {
+                            style: "currency",
+                            currency: "ARS",
+                          })}
+                        </Text>
                       </Stack>
                     </Link>
                     <Button

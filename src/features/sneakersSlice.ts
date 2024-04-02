@@ -147,6 +147,8 @@ export const sneakerSlice = createSlice({
     },
     clearBasket: (state) => {
       state.basket = [];
+      sessionStorage.removeItem("basketState");
+      localStorage.removeItem("basketState");
     },
   },
 });

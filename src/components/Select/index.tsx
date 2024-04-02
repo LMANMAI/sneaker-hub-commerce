@@ -1,7 +1,10 @@
 import { Input, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { SelectList } from "..";
-const SelectBody = (props: { setObjetc: Function }) => {
+const SelectBody = (props: {
+  setObjetc: Function;
+  setIsAddressComplete: Function;
+}) => {
   const [prov, setProv] = useState("");
   const [municipio, setMunicipio] = useState("");
   const [localidad, setLocalidad] = useState("");
@@ -11,12 +14,6 @@ const SelectBody = (props: { setObjetc: Function }) => {
     piso: "",
     dpto: "",
   });
-  // const [adress, setAdress] = useState({
-  //   prov: "",
-  //   mun: "",
-  //   locald: "",
-  //   direc: {},
-  // });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -33,7 +30,18 @@ const SelectBody = (props: { setObjetc: Function }) => {
       locald: localidad,
       direc: direcc,
     });
+    const isComplete =
+      prov !== "" &&
+      municipio !== "" &&
+      localidad !== "" &&
+      direcc.calle !== "" &&
+      direcc.alt !== "";
+
+    if (isComplete) {
+      props.setIsAddressComplete(true);
+    }
   }, [prov, municipio, localidad, direcc]);
+
   return (
     <Stack spacing={3}>
       <SelectList

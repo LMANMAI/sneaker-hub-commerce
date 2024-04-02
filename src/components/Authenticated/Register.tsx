@@ -6,11 +6,15 @@ import {
   Button,
   Text,
   useToast,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authClient } from "../../functions/Sesion";
 import { setUser } from "../../features/userSlice";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 interface IPropsFn {
   fn: Function;
 }
@@ -23,7 +27,11 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
     emailforRegister: "",
     passwordforRegister: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserRegister({
@@ -110,14 +118,28 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           value={user.emailforRegister}
         />
 
-        <FormLabel htmlFor="password">Contraseña</FormLabel>
-        <Input
-          onChange={(e) => handleChange(e)}
-          name="passwordforRegister"
-          type="password"
-          id="passwordforRegister"
-          value={user.passwordforRegister}
-        />
+        <FormLabel htmlFor="passwordforRegister">Contraseña</FormLabel>
+        <InputGroup>
+          <Input
+            onChange={(e) => handleChange(e)}
+            name="passwordforRegister"
+            type={showPassword ? "text" : "password"}
+            id="passwordforRegister"
+            value={user.passwordforRegister}
+          />
+          <InputRightElement width="2.5rem">
+            <IconButton
+              h="1.75rem"
+              size="sm"
+              background={"transparent!important"}
+              onClick={handleTogglePassword}
+              icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+              aria-label={
+                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
+            />
+          </InputRightElement>
+        </InputGroup>
         <Text fontSize="13px" textAlign="center" marginTop={2}>
           ¿Ya tenes una cuenta?
           <Button

@@ -1,6 +1,7 @@
 import { Carrousel, SliderContainer } from "./styles";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 export default function SimpleSlider() {
   var settings = {
@@ -10,7 +11,10 @@ export default function SimpleSlider() {
     slidesToShow: 1,
     slidesToScroll: 1,
     adaptiveHeight: true,
+    nextArrow: <BiChevronRight />,
+    prevArrow: <BiChevronLeft />,
   };
+
   return (
     <SliderContainer>
       <Carrousel {...settings}>
@@ -30,10 +34,10 @@ export default function SimpleSlider() {
           {
             src: "https://grid0.vtexassets.com/assets/vtex.file-manager-graphql/images/be79b8a5-3dab-406c-a4c3-720892113880___91229e58abe26cc3592e67729d22fa33.jpg",
           },
-        ].map((item: any) => {
+        ].map((item: any, index: number) => {
           return (
             <div style={{ width: 300 }}>
-              <img src={item.src} />
+              <img src={item.src} alt={`Slide ${index}`} />
             </div>
           );
         })}

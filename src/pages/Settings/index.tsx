@@ -17,6 +17,7 @@ import {
   Radio,
   RadioGroup,
   useToast,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,9 +26,12 @@ import {
   setUserShippingAddress,
   getAddresses,
 } from "../../functions/Profile";
+import { removeAddress } from "../../functions/Profile";
 import { clearFavs } from "../../functions/Products";
 import { selectUser, setUser } from "../../features/userSlice";
 import { SelectBody } from "../../components";
+import { CustomButton } from "./styles";
+import { DeleteIcon } from "@chakra-ui/icons";
 interface IPropsStack {
   children: React.ReactNode;
   border?: boolean;
@@ -49,7 +53,6 @@ function StackContainer({ children, border }: IPropsStack) {
       borderY={border ? "1px solid #f0f0f0" : "none"}
       padding="5px"
       alignItems="center"
-      //justifyContent="center"
       direction="row"
     >
       {children}
@@ -82,6 +85,7 @@ const Settings = () => {
   const [disabledstate, setDisabled] = useState<boolean>(false);
   const [addressarray, setArrayAddresses] = useState<any[]>([]);
   const [value, setValue] = useState<any>();
+  const [isAddressComplete, setIsAddressComplete] = useState<boolean>(false);
   //modal
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -120,10 +124,12 @@ const Settings = () => {
     }
   };
   const handleAddress = async () => {
+    setLoad(true);
     if (adress) {
       const request = await setUserShippingAddress(adress, currentUser.uid);
 
       if (request.status === 200) {
+        setLoad(false);
         setArrayAddresses(request.data);
         setAdress({
           prov: "",
@@ -135,7 +141,9 @@ const Settings = () => {
           },
         });
         onClose();
+        setIsAddressComplete(false);
       } else {
+        setLoad(false);
         setArrayAddresses([]);
       }
     }
@@ -146,7 +154,54 @@ const Settings = () => {
       setArrayAddresses(request);
     }
   };
-
+  const handleClearFavs = async () => {
+    setLoad(true);
+    const request = await clearFavs(currentUser);
+    if (request === "eliminados") {
+      setLoad(false);
+      toast({
+        title: "Favoritos eliminados.",
+        description: "Todos los favoritos fueron removidos de la lista.",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    } else {
+      setLoad(false);
+      toast({
+        title: "Ocurrio un error.",
+        description: request,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+  };
+  const handleDeleteAddress = async (addressId: any) => {
+    const request = await removeAddress(currentUser.uid, addressId);
+    if (request.status === 200) {
+      setArrayAddresses(request.addresses);
+      toast({
+        title: "Dirección eliminada con exito.",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    } else if (request.status === 500) {
+      setArrayAddresses([]);
+      toast({
+        title: "Ocurrio un error.",
+        description: request.msg,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+  };
   useEffect(() => {
     getUserAddresses();
   }, []);
@@ -243,19 +298,24 @@ const Settings = () => {
                     <ModalHeader>Agregar direccion</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      <SelectBody setObjetc={setAdress} />
+                      <SelectBody
+                        setObjetc={setAdress}
+                        setIsAddressComplete={setIsAddressComplete}
+                      />
                     </ModalBody>
 
                     <ModalFooter>
-                      <Button
+                      <CustomButton
                         variant="primary"
                         mr={3}
                         onClick={() => {
                           handleAddress();
                         }}
+                        isLoading={load}
+                        className={!isAddressComplete ? "disabled" : ""}
                       >
                         Guardar direccion
-                      </Button>
+                      </CustomButton>
                     </ModalFooter>
                   </ModalContent>
                 </Modal>
@@ -267,7 +327,7 @@ const Settings = () => {
               <Text as="h3">Mis direcciones</Text>
 
               {addressarray.length != 0 ? (
-                <Stack alignItems="center" p={4}>
+                <Stack p={4}>
                   <RadioGroup
                     value={value}
                     onChange={setValue}
@@ -284,7 +344,8 @@ const Settings = () => {
                             p={4}
                             direction="row"
                             alignItems="center"
-                            w="80%"
+                            justifyContent={"space-around"}
+                            _hover={{ "> button": { visibility: "visible" } }}
                           >
                             <Stack>
                               <Text>
@@ -295,6 +356,13 @@ const Settings = () => {
                                 <Text>{`${item.prov} ${item.mun}`}</Text>
                               </Stack>
                             </Stack>
+                            <IconButton
+                              aria-label="Eliminar dirección"
+                              icon={<DeleteIcon />}
+                              onClick={() => handleDeleteAddress(item.id)}
+                              size="sm"
+                              visibility="hidden"
+                            />
                           </Stack>
                         </Radio>
                       );
@@ -320,7 +388,7 @@ const Settings = () => {
               <Button
                 variant="secondary"
                 isLoading={load}
-                onClick={() => clearFavs(currentUser)}
+                onClick={() => handleClearFavs()}
               >
                 Limpíar favoritos
               </Button>
