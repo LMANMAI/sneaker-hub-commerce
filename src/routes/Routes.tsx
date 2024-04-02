@@ -17,14 +17,18 @@ import { useSelector } from "react-redux";
 const RoutesComponent = () => {
   const user = useSelector(selectUser);
 
+  const userID = user ? user.idUser : "";
+
   const loadUserState = () => {
     const hasAUser = sessionStorage.getItem("user");
     if (hasAUser === null) {
-      return undefined;
+      return {};
     }
     return JSON.parse(hasAUser);
   };
   const userState = loadUserState();
+
+  console.log(user, "user");
   return (
     <Routes>
       <Route path="/" element={<Collections />} />
@@ -32,24 +36,28 @@ const RoutesComponent = () => {
       <Route path="/brand/:brand" element={<BrandDetail />} />
       <Route
         path="/configuraciones"
-        element={<Settings user={user || userState.user} />}
+        element={<Settings user={user || userState?.user || ""} />}
       />
       <Route
         path="/checkout"
-        element={<CheckOut userID={user.idUser || userState.user.idUser} />}
+        element={<CheckOut userID={userID || userState?.user?.idUser || ""} />}
       />
       <Route
         path="/favoritos"
-        element={<Favorites userID={user.idUser || userState.user.idUser} />}
+        element={<Favorites userID={userID || userState?.user?.idUser || ""} />}
       />
       <Route
         path="/miscompras"
-        element={<MyPurchases userID={user.idUser || userState.user.idUser} />}
+        element={
+          <MyPurchases userID={userID || userState?.user?.idUser || ""} />
+        }
       />
       <Route path="*" element={<NotFound />} />
       <Route
         path="/postcheckout/:query"
-        element={<PostCheckout userID={user.idUser || userState.user.idUser} />}
+        element={
+          <PostCheckout userID={userID || userState?.user?.idUser || ""} />
+        }
       />
     </Routes>
   );
