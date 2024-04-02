@@ -21,7 +21,7 @@ import {
   MdShoppingBag,
 } from "react-icons/md";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-
+import { useNavigate } from "react-router-dom";
 import { selectUser, setUser } from "../../features/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserSignOut } from "../../functions/Sesion";
@@ -48,9 +48,12 @@ const ProfileMenu = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const { colorMode } = useColorMode();
+  const navigate = useNavigate();
+
   const handdleOut = () => {
     setUserSignOut();
     dispatch(setUser(null));
+    navigate("/");
   };
   return (
     <Menu>
