@@ -5,14 +5,6 @@ import {
   Button,
   Input,
   Image,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Divider,
   Radio,
   RadioGroup,
@@ -21,30 +13,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  updateProfile,
-  setUserShippingAddress,
-  getAddresses,
-} from "../../functions/Profile";
+import { updateProfile, getAddresses } from "../../functions/Profile";
 import { removeAddress } from "../../functions/Profile";
 import { clearFavs } from "../../functions/Products";
 import { setUser } from "../../features/userSlice";
-import { SelectBody } from "../../components";
-import { CustomButton } from "./styles";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { AdressButton } from "../../components";
 interface IPropsStack {
   children: React.ReactNode;
   border?: boolean;
-}
-interface Address {
-  direc: {
-    calle: string;
-    alt: string;
-  };
-  locald: string;
-  prov: string;
-  mun: string;
-  mainAddress?: boolean;
 }
 
 function StackContainer({ children, border }: IPropsStack) {
@@ -71,22 +48,12 @@ const Settings = ({ user }: { user: any }) => {
     uid: user.idUser,
     profileIMG: user.profileIMG || "",
   });
-  const [adress, setAdress] = useState<Address>({
-    prov: "",
-    mun: "",
-    locald: "",
-    direc: {
-      calle: "",
-      alt: "",
-    },
-  });
+
   const [load, setLoad] = useState<boolean>(false);
   const [disabledstate, setDisabled] = useState<boolean>(false);
   const [addressarray, setArrayAddresses] = useState<any[]>([]);
   const [value, setValue] = useState<any>();
-  const [isAddressComplete, setIsAddressComplete] = useState<boolean>(false);
   //modal
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -95,7 +62,6 @@ const Settings = ({ user }: { user: any }) => {
       [name]: value,
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoad(true);
@@ -122,33 +88,10 @@ const Settings = ({ user }: { user: any }) => {
       });
     }
   };
-  const handleAddress = async () => {
-    setLoad(true);
-    if (adress) {
-      const request = await setUserShippingAddress(adress, user.idUser);
 
-      if (request.status === 200) {
-        setLoad(false);
-        setArrayAddresses(request.data);
-        setAdress({
-          prov: "",
-          mun: "",
-          locald: "",
-          direc: {
-            calle: "",
-            alt: "",
-          },
-        });
-        onClose();
-        setIsAddressComplete(false);
-      } else {
-        setLoad(false);
-        setArrayAddresses([]);
-      }
-    }
-  };
   const getUserAddresses = async () => {
     const request = await getAddresses(user.idUser);
+    console.log(request);
     if (request) {
       setArrayAddresses(request);
     }
@@ -284,41 +227,6 @@ const Settings = ({ user }: { user: any }) => {
                   />
                 </Stack>
               </StackContainer>
-
-              <StackContainer>
-                <Modal
-                  closeOnOverlayClick={false}
-                  blockScrollOnMount={true}
-                  isOpen={isOpen}
-                  onClose={onClose}
-                >
-                  <ModalOverlay />
-                  <ModalContent>
-                    <ModalHeader>Agregar direccion</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <SelectBody
-                        setObjetc={setAdress}
-                        setIsAddressComplete={setIsAddressComplete}
-                      />
-                    </ModalBody>
-
-                    <ModalFooter>
-                      <CustomButton
-                        variant="primary"
-                        mr={3}
-                        onClick={() => {
-                          handleAddress();
-                        }}
-                        isLoading={load}
-                        className={!isAddressComplete ? "disabled" : ""}
-                      >
-                        Guardar direccion
-                      </CustomButton>
-                    </ModalFooter>
-                  </ModalContent>
-                </Modal>
-              </StackContainer>
             </Stack>
             <Divider orientation="horizontal" marginY={4} />
             {/* Direcciones del usuario */}
@@ -381,9 +289,15 @@ const Settings = ({ user }: { user: any }) => {
             marginTop={"50px"}
           >
             <Stack direction={{ base: "column", md: "row" }} width={"100%"}>
-              <Button variant="primary" onClick={onOpen} isLoading={load}>
+              {/* <Button variant="primary" onClick={onOpen} isLoading={load}>
                 Agregar dirección
-              </Button>
+              </Button> */}
+              <AdressButton
+                user={user}
+                load={load}
+                setLoad={setLoad}
+                setArrayAddresses={setArrayAddresses}
+              />
               <Button
                 variant="secondary"
                 isLoading={load}

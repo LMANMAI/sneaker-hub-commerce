@@ -28,12 +28,12 @@ import { useEffect, useState } from "react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import { ISneakerBasket } from "../../interfaces";
 import { getAddresses } from "../../functions/Profile";
-
+import { AdressButton } from "../../components";
 import { CustomButtonContainer } from "./styles";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import instance from "../../config";
 
-const CheckOut = ({ userID }: { userID: string }) => {
+const CheckOut = ({ user }: { user: any }) => {
   initMercadoPago(import.meta.env.VITE_PUBLIC_KEY_MP as string, {
     locale: "es-AR",
   });
@@ -41,6 +41,7 @@ const CheckOut = ({ userID }: { userID: string }) => {
   const [value, setValue] = useState<any>();
   const [preferenceId, setPreferenceId] = useState<string | null>("");
   const [laodingPreference, setLoadingPreference] = useState<boolean>(false);
+  const [load, setLoad] = useState<boolean>(false);
 
   const basket = useSelector(selectBasket);
   const totalBasket = useSelector(selectTotal);
@@ -56,7 +57,7 @@ const CheckOut = ({ userID }: { userID: string }) => {
     dispatch(setBasket(sneaker));
   };
   const getUserAddresses = async () => {
-    const request = await getAddresses(userID);
+    const request = await getAddresses(user.idUser);
     if (request) {
       setArrayAddresses(request);
     }
@@ -207,7 +208,10 @@ const CheckOut = ({ userID }: { userID: string }) => {
                 <Stack alignItems="center" p={4}>
                   <RadioGroup
                     value={value}
-                    onChange={setValue}
+                    onChange={(e) => {
+                      console.log(e);
+                      setValue(e);
+                    }}
                     defaultValue={
                       addressarray
                         .filter((item) => item.mainAddress === true)
@@ -235,7 +239,15 @@ const CheckOut = ({ userID }: { userID: string }) => {
                   </RadioGroup>
                 </Stack>
               ) : (
-                <Text>Por el momento no se ingreso ninguna direccion</Text>
+                <>
+                  <Text>Por el momento no se ingreso ninguna direccion</Text>
+                  <AdressButton
+                    user={user}
+                    load={load}
+                    setLoad={setLoad}
+                    setArrayAddresses={setArrayAddresses}
+                  />
+                </>
               )}
             </Stack>
           </Stack>
@@ -299,9 +311,13 @@ const CheckOut = ({ userID }: { userID: string }) => {
                     alignItems={"center"}
                     gap={"10px"}
                     variant="primary"
-                    disabled={!value || !userID || basket.length === 0}
+                    disabled={
+                      value === "" || !user.idUser || basket.length === 0
+                    }
                     className={
-                      basket.length === 0 || !value || !userID ? "disabled" : ""
+                      basket.length === 0 || value === "" || !user.idUser
+                        ? "disabled"
+                        : ""
                     }
                     onClick={() => handlePurchase()}
                     isLoading={laodingPreference}

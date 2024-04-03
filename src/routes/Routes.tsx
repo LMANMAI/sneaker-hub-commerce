@@ -27,7 +27,6 @@ const RoutesComponent = () => {
   };
   const userState = loadUserState();
 
-  console.log(user, "user");
   return (
     <Routes>
       <Route path="/" element={<Collections />} />
@@ -39,7 +38,7 @@ const RoutesComponent = () => {
       />
       <Route
         path="/checkout"
-        element={<CheckOut userID={userID || userState?.user?.idUser || ""} />}
+        element={<CheckOut user={user || userState?.user || ""} />}
       />
       <Route
         path="/favoritos"

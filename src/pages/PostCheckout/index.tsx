@@ -30,15 +30,15 @@ const PostCheckout = ({ userID }: { userID: string }) => {
       const response = await instance.post("/checkout", {
         basket,
       });
-      if (response.status === 200) {
-        const request = await setPurchases(userID, basket);
-        if (request.status === 200) {
-          dispatch(clearBasket());
-          sessionStorage.removeItem("basketState");
-          localStorage.removeItem("basketState");
+      const request = await setPurchases(userID, basket);
+      if (response.status === 200 && request.status === 200) {
+        dispatch(clearBasket());
+        sessionStorage.removeItem("basketState");
+        localStorage.removeItem("basketState");
 
+        setTimeout(() => {
           navigate("/");
-        }
+        }, 1300);
       }
       toast({
         title: "Se realizo la compra correctamente.",

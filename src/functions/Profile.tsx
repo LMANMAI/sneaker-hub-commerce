@@ -55,6 +55,7 @@ export const setUserShippingAddress = async (adress: any, idUser: any) => {
 };
 
 export const getAddresses = async (idUser: string) => {
+  console.log(idUser);
   try {
     const userDocRef = doc(db, "users", idUser);
     const addressesCollectionRef = collection(userDocRef, "addresses");
