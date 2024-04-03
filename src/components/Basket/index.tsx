@@ -63,8 +63,8 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
   const handleCheckout = async () => {
     if (currentUser !== null) {
       history(`/checkout`);
-    } else {
       setBasketShows(false);
+    } else {
       toast({
         title: "Inicia sesion.",
         description:
