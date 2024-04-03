@@ -105,7 +105,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
                     sneaker.posterPathImage
                   }`}
                 />
-                <Stack>
+                <Stack minWidth="190px">
                   <Stack gap={0}>
                     <Text p={0} m={0} fontSize="12px">
                       {sneaker.name}

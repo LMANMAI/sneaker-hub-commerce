@@ -45,7 +45,7 @@ const Settings = ({ user }: { user: any }) => {
     email: user.email,
     displayName: user.firstName || "",
     accessToken: user.idToken || "",
-    uid: user.idUser,
+    idUser: user.idUser,
     profileIMG: user.profileIMG || "",
   });
 
@@ -91,7 +91,6 @@ const Settings = ({ user }: { user: any }) => {
 
   const getUserAddresses = async () => {
     const request = await getAddresses(user.idUser);
-    console.log(request);
     if (request) {
       setArrayAddresses(request);
     }
@@ -219,7 +218,7 @@ const Settings = ({ user }: { user: any }) => {
                   <Text textAlign="end">Contraseña:</Text>
                   <Input
                     disabled
-                    placeholder="You will be able to change the password soon"
+                    placeholder="Se podra cambiar la contraseña proximamente."
                     size="sm"
                     maxWidth="450px"
                     type="text"
@@ -249,6 +248,8 @@ const Settings = ({ user }: { user: any }) => {
                         <Radio name="direccion" value={`${item.id}`}>
                           <Stack
                             p={4}
+                            maxWidth={"600px"}
+                            minWidth={"400px"}
                             direction="row"
                             alignItems="center"
                             justifyContent={"space-around"}
@@ -289,9 +290,6 @@ const Settings = ({ user }: { user: any }) => {
             marginTop={"50px"}
           >
             <Stack direction={{ base: "column", md: "row" }} width={"100%"}>
-              {/* <Button variant="primary" onClick={onOpen} isLoading={load}>
-                Agregar dirección
-              </Button> */}
               <AdressButton
                 user={user}
                 load={load}

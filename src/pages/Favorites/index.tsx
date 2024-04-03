@@ -20,7 +20,6 @@ const Favorites = ({ userID }: { userID: string }) => {
 
   const getFavouriteProducts = async () => {
     setLoad(true);
-
     const result = await getProductsFav(userID);
     if (result.status === 200) {
       const promises = result.data.map(({ sneaker }) => {
@@ -50,6 +49,7 @@ const Favorites = ({ userID }: { userID: string }) => {
     }
   };
   const handleRemoveOneItem = async (item: ISneaker) => {
+    setLoad(true);
     const request = await removeFav(userID, item);
     if (request && request.status === 200) {
       const promises = request.data.map(({ sneaker }) => {
@@ -58,18 +58,28 @@ const Favorites = ({ userID }: { userID: string }) => {
       try {
         const responses = await Promise.all(promises);
         const results = responses.map((response) => response.data.product);
-
+        setLoad(false);
         setItexmsFav(results);
+        toast({
+          title: `${item.name} se elimino de los favoritos.`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       } catch (error) {
+        setLoad(false);
         console.error("Error al realizar las consultas:", error);
+
+        toast({
+          title: `${item.name} no se elimino de los favoritos.`,
+          description: "Ocurrio un error al eliminar este item.clg",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       }
-      toast({
-        title: `${item.name} se elimino de los favoritos.`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
-      });
     }
   };
   useEffect(() => {

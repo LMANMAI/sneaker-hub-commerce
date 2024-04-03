@@ -12,7 +12,7 @@ export const BrandDetailContainer = styled.div`
     }
     p {
       position: relative;
-      top: -50px;
+      top: -60px;
       left: 30px;
       color: white;
       font-weigth: bold;

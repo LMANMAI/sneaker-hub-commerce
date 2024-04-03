@@ -14,6 +14,7 @@ import {
   Icon,
   Radio,
   RadioGroup,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -57,9 +58,11 @@ const CheckOut = ({ user }: { user: any }) => {
     dispatch(setBasket(sneaker));
   };
   const getUserAddresses = async () => {
+    setLoad(true);
     const request = await getAddresses(user.idUser);
     if (request) {
       setArrayAddresses(request);
+      setLoad(false);
     }
   };
   const createPreference = async () => {
@@ -203,9 +206,11 @@ const CheckOut = ({ user }: { user: any }) => {
               </Table>
             </Stack>
             <Stack marginTop={10}>
-              <Text>Enviar a esta dirección</Text>
-              {addressarray.length != 0 ? (
-                <Stack alignItems="center" p={4}>
+              {load ? (
+                <Skeleton height="120px" />
+              ) : addressarray.length != 0 ? (
+                <Stack p={4}>
+                  <Text>Enviar a esta dirección</Text>
                   <RadioGroup
                     value={value}
                     onChange={(e) => {
@@ -217,11 +222,18 @@ const CheckOut = ({ user }: { user: any }) => {
                         .filter((item) => item.mainAddress === true)
                         .map((item) => item.id)[0]
                     }
+                    display={"flex"}
+                    flexDirection={"row"}
                   >
                     {addressarray.map((item) => {
                       return (
                         <Radio name="direccion" value={`${item.id}`}>
-                          <Stack p={4} direction="row" alignItems="center">
+                          <Stack
+                            p={4}
+                            direction="row"
+                            maxWidth={"600px"}
+                            minWidth={"400px"}
+                          >
                             <Stack>
                               <Stack>
                                 <Text>{`${item.prov} ${item.mun}`}</Text>
@@ -240,7 +252,10 @@ const CheckOut = ({ user }: { user: any }) => {
                 </Stack>
               ) : (
                 <>
-                  <Text>Por el momento no se ingreso ninguna direccion</Text>
+                  <Text>
+                    Por el momento no se ingreso ninguna direccion, agrega una
+                    para poder finalizar la compra.
+                  </Text>
                   <AdressButton
                     user={user}
                     load={load}
@@ -311,11 +326,9 @@ const CheckOut = ({ user }: { user: any }) => {
                     alignItems={"center"}
                     gap={"10px"}
                     variant="primary"
-                    disabled={
-                      value === "" || !user.idUser || basket.length === 0
-                    }
+                    disabled={!value || !user.idUser || basket.length === 0}
                     className={
-                      basket.length === 0 || value === "" || !user.idUser
+                      basket.length === 0 || !value || !user.idUser
                         ? "disabled"
                         : ""
                     }

@@ -100,7 +100,9 @@ const Collections = () => {
           </Stack>
 
           {/*Ultimos Productos*/}
-          <Text>Ultimos lanzamientos</Text>
+          <Text fontSize={"25px"} fontWeight={"bold"}>
+            Ultimos lanzamientos
+          </Text>
           <ProductList
             products={lastedProducts}
             loadingMore={loadLatestProducts}
@@ -127,6 +129,7 @@ const Collections = () => {
                 loadingMore || currentpage === totalPages ? "disabled" : ""
               }
               disabled={loadingMore || currentpage === totalPages}
+              display={currentpage === totalPages ? "none" : "inline-flex"}
             >
               Ver más
             </Button>

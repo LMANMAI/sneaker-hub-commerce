@@ -21,7 +21,7 @@ export const setFavItems = async (userID: string, sneaker: string) => {
 };
 
 export const checkFavs = async (userID: any, sneaker: ISneaker) => {
-  const docRef = doc(db, "users", userID?.idCliente);
+  const docRef = doc(db, "users", userID);
   const collRef = collection(docRef, "favorites");
   try {
     const allDocs = await getDocs(collRef);
@@ -34,7 +34,7 @@ export const checkFavs = async (userID: any, sneaker: ISneaker) => {
     if (itemExists) {
       return "existe";
     } else {
-      const addedItemRef = await setFavItems(userID.uid, sneaker._id);
+      const addedItemRef = await setFavItems(userID, sneaker._id);
       return addedItemRef ? "agregado" : "No se pudo agregar el producto";
     }
   } catch (error) {

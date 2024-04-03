@@ -18,7 +18,7 @@ const ProductList = ({
         md: "repeat(auto-fit, minmax(210px, 1fr))",
       }}
       gap={4}
-      margin={"20px 0px"}
+      margin={"50px 0px"}
     >
       {products &&
         products?.map((sneaker: ISneaker) => (

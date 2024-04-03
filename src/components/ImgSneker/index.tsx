@@ -125,6 +125,7 @@ const Carrousel: React.FC<ICarrouselProps> = ({ images, posterPath }) => {
           width={{ base: "50px", md: "85px" }}
           height={{ base: "50px", md: "85px" }}
           onClick={() => setSelectedImage(posterPath)}
+          objectFit={"cover"}
         />
         {images?.map((image) => {
           return (

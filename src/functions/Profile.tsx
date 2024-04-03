@@ -31,10 +31,10 @@ export const updateProfile = async (formdata: any) => {
       email: formdata.email,
       firstName: formdata.firstName,
       accessToken: formdata.accessToken,
-      uid: formdata.uid,
+      idUser: formdata.idUser,
       profileIMG: formdata.profileIMG,
     });
-    const request = await getUserAuth(formdata.uid);
+    const request = await getUserAuth(formdata.idUser);
     return { data: request, status: 200, msg: "" };
   } catch (error: any) {
     return { data: [], status: 500, msg: error.message };
@@ -55,7 +55,6 @@ export const setUserShippingAddress = async (adress: any, idUser: any) => {
 };
 
 export const getAddresses = async (idUser: string) => {
-  console.log(idUser);
   try {
     const userDocRef = doc(db, "users", idUser);
     const addressesCollectionRef = collection(userDocRef, "addresses");

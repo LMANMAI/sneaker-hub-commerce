@@ -20,7 +20,6 @@ const BrandsComponent = () => {
           md: "repeat(auto-fit, minmax(22%, 1fr))",
         }}
         gap={"10px"}
-        marginTop={"20px"}
       >
         {pathname === "/" && (
           <>

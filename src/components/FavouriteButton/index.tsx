@@ -21,7 +21,7 @@ const FavButton = ({ variant = "primary" }: { variant?: string }) => {
     removeFav(currentUser, sneaker);
   };
   const verificated = async (user: any, sneaker: ISneaker) => {
-    const res = await checkFavs(user, sneaker);
+    const res = await checkFavs(user.idUser, sneaker);
     if (res === "existe") {
       setToggle(true);
     }
