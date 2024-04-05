@@ -100,12 +100,17 @@ const Collections = () => {
           </Stack>
 
           {/*Ultimos Productos*/}
-          <Text fontSize={"25px"} fontWeight={"bold"}>
+          <Text
+            fontSize={{ base: "25px", md: "35px" }}
+            fontWeight={"bold"}
+            fontFamily={'"Kanit", sans-serif'}
+          >
             Ultimos lanzamientos
           </Text>
           <ProductList
             products={lastedProducts}
             loadingMore={loadLatestProducts}
+            margin={"20px 0px 50px"}
           />
 
           <BrandsComponent />

@@ -6,10 +6,12 @@ const ProductList = ({
   products,
   loadingMore,
   skeletonCount = 5,
+  margin = "50px 0px",
 }: {
   products: ISneaker[];
   loadingMore: boolean;
   skeletonCount?: number;
+  margin?: string;
 }) => {
   return (
     <Grid
@@ -18,7 +20,7 @@ const ProductList = ({
         md: "repeat(auto-fit, minmax(210px, 1fr))",
       }}
       gap={4}
-      margin={"50px 0px"}
+      margin={margin}
     >
       {products &&
         products?.map((sneaker: ISneaker) => (

@@ -7,6 +7,7 @@ import {
   Box,
   useColorMode,
   useToast,
+  Badge,
 } from "@chakra-ui/react";
 import { Carrousel, ButtonCount } from "..";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,7 +19,7 @@ import { DetailContainer } from "./styles";
 import { brands } from "../BrandsMenu/statics";
 import { sizes } from "./statics";
 import instance from "../../../src/config";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const BodyContent = () => {
   const dispatch = useDispatch();
@@ -162,17 +163,50 @@ const BodyContent = () => {
           <Stack className="reflect" display="none"></Stack>
 
           <Stack>
-            <Text
-              textTransform="uppercase"
-              fontWeight="bold"
-              letterSpacing={2}
-              variant="primary"
-              fontSize="sm"
-              color={colorMode === "light" ? "primary" : " secondary"}
-            >
-              {sneakerActive?.brand.toLocaleUpperCase()}
-            </Text>
+            <NavLink to={`/brand/${sneakerActive?.brand}`}>
+              <Text
+                textTransform="uppercase"
+                fontWeight="bold"
+                letterSpacing={2}
+                variant="primary"
+                fontSize="sm"
+                color={colorMode === "light" ? "primary" : " secondary"}
+              >
+                {sneakerActive?.brand.toLocaleUpperCase()}
+              </Text>
+            </NavLink>
+
             <Heading>{sneakerActive?.name}</Heading>
+            {sneakerActive?.hasModifications && (
+              <Stack direction={"row"} alignItems={"center"}>
+                <Text
+                  fontSize="sm"
+                  fontWeight={700}
+                  color="gray.400"
+                  textDecoration="line-through"
+                >
+                  {sneakerActive?.hasModifications.previosPrice.toLocaleString(
+                    "es-AR",
+                    {
+                      style: "currency",
+                      currency: "ARS",
+                    }
+                  )}
+                </Text>
+                <Badge
+                  backgroundColor={
+                    colorMode === "light" ? "primary" : " secondary"
+                  }
+                  color="white"
+                  fontSize="md"
+                  borderRadius="md"
+                  paddingX={2}
+                >
+                  %{sneakerActive?.hasModifications.discountPercentage}
+                </Badge>
+              </Stack>
+            )}
+
             <Text fontWeight={700} fontSize="2xl">
               {sneakerActive?.price.toLocaleString("es-AR", {
                 style: "currency",

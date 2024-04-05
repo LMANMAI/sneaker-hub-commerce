@@ -12,6 +12,11 @@ export interface ISneaker {
   status: string;
   quantity: number;
   idColecction: string;
+  hasModifications: {
+    promotionActive: boolean;
+    previosPrice: number;
+    discountPercentage: number;
+  };
 }
 interface Size {
   size: string;
