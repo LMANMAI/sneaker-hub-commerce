@@ -20,6 +20,9 @@ const ButtonCount = ({ product }: { product: ISneakerBasket }) => {
         size: sneaker.size,
         quantity: 1,
         limit: sneaker.limit,
+        hasPromotion: sneaker.hasPromotion,
+        promotionDiscount: sneaker.promotionDiscount,
+        prevPrice: sneaker.prevPrice,
       })
     );
   };

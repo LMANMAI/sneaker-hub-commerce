@@ -99,6 +99,16 @@ const CheckOut = ({ user }: { user: any }) => {
     getUserAddresses();
   }, []);
 
+  const checkPromotion = (basket: any) => {
+    let prevPriceWithPromotion: any;
+    basket.some((item: any) => {
+      if (item.hasPromotion) {
+        prevPriceWithPromotion = item.prevPrice * item.quantity;
+      }
+    });
+    return prevPriceWithPromotion;
+  };
+
   return (
     <Box marginTop={"60px"}>
       <Text as="h2" margin={"20px 0px"} fontWeight={"bold"}>
@@ -214,7 +224,6 @@ const CheckOut = ({ user }: { user: any }) => {
                   <RadioGroup
                     value={value}
                     onChange={(e) => {
-                      console.log(e);
                       setValue(e);
                     }}
                     defaultValue={
@@ -292,15 +301,27 @@ const CheckOut = ({ user }: { user: any }) => {
                 <Text>Subtotal</Text>
                 <Text>
                   {totalBasket !== 0 &&
-                    totalBasket.toLocaleString("es-AR", {
-                      style: "currency",
-                      currency: "ARS",
-                    })}
+                    (checkPromotion(basket) + totalBasket).toLocaleString(
+                      "es-AR",
+                      {
+                        style: "currency",
+                        currency: "ARS",
+                      }
+                    )}
                 </Text>
               </Stack>
 
               <Divider />
-
+              <Stack direction={"row"} justifyContent={"space-between"}>
+                <Text>Descuentos</Text>
+                <Text>
+                  {checkPromotion(basket).toLocaleString("es-AR", {
+                    style: "currency",
+                    currency: "ARS",
+                  })}
+                </Text>
+              </Stack>
+              <Divider />
               <Stack direction={"row"} justifyContent={"space-between"}>
                 <Text>Total</Text>
                 <Text>

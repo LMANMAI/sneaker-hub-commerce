@@ -66,6 +66,8 @@ const BodyContent = () => {
   const converSize = (tipo: string) => {
     if (!sneakerActive) return [];
 
+    console.log(sneakerActive);
+
     return sizes.map((talle: any, index) => {
       const isActive = sneakerActive.sizes.some(
         (s: any) => s.size === talle.US
@@ -98,6 +100,13 @@ const BodyContent = () => {
           limit: Number(selectedSizeLimit[0]),
           quantity: 1,
           posterPathImage: sneakerActive.posterPathImage,
+          hasPromotion:
+            sneakerActive?.hasModifications?.promotionActive || false,
+          promotionDiscount:
+            sneakerActive?.hasModifications?.discountPercentage || 0,
+          prevPrice:
+            sneakerActive?.hasModifications?.previosPrice ||
+            sneakerActive.price,
         };
 
         if (isSelected) {

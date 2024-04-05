@@ -33,6 +33,9 @@ export interface ISneakerBasket {
   quantity: number;
   limit: number;
   posterPathImage: string;
+  hasPromotion: boolean;
+  prevPrice: number;
+  promotionDiscount: number;
 }
 
 export interface IProps {
