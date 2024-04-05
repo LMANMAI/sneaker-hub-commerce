@@ -66,8 +66,6 @@ const BodyContent = () => {
   const converSize = (tipo: string) => {
     if (!sneakerActive) return [];
 
-    console.log(sneakerActive);
-
     return sizes.map((talle: any, index) => {
       const isActive = sneakerActive.sizes.some(
         (s: any) => s.size === talle.US
