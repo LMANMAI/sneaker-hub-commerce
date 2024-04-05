@@ -104,6 +104,8 @@ const CheckOut = ({ user }: { user: any }) => {
     basket.some((item: any) => {
       if (item.hasPromotion) {
         prevPriceWithPromotion = item.prevPrice * item.quantity;
+      } else {
+        prevPriceWithPromotion = 0;
       }
     });
     return prevPriceWithPromotion;
@@ -315,10 +317,12 @@ const CheckOut = ({ user }: { user: any }) => {
               <Stack direction={"row"} justifyContent={"space-between"}>
                 <Text>Descuentos</Text>
                 <Text>
-                  {checkPromotion(basket).toLocaleString("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                  })}
+                  {checkPromotion(basket) !== 0
+                    ? checkPromotion(basket).toLocaleString("es-AR", {
+                        style: "currency",
+                        currency: "ARS",
+                      })
+                    : "-"}
                 </Text>
               </Stack>
               <Divider />
