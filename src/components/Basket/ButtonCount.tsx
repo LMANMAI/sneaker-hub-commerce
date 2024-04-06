@@ -1,4 +1,4 @@
-import { Stack, Button } from "@chakra-ui/react";
+import { Stack, Button, useToast } from "@chakra-ui/react";
 import CartIcon from "../../icons/Cart";
 import { useDispatch } from "react-redux";
 import { setBasket } from "../../features/sneakersSlice";
@@ -8,6 +8,7 @@ import FavButton from "../FavouriteButton";
 
 const ButtonCount = ({ product }: { product: ISneakerBasket }) => {
   const dispatch = useDispatch();
+  const toast = useToast();
   const handleAddToBasket = (sneaker: ISneakerBasket) => {
     dispatch(
       setBasket({
@@ -25,6 +26,13 @@ const ButtonCount = ({ product }: { product: ISneakerBasket }) => {
         prevPrice: sneaker.prevPrice,
       })
     );
+    toast({
+      title: `Se agrego ${sneaker.name} al carrito.`,
+      status: "info",
+      duration: 1500,
+      isClosable: true,
+      position: "top",
+    });
   };
 
   return (

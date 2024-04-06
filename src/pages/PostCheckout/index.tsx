@@ -44,7 +44,7 @@ const PostCheckout = ({ userID }: { userID: string }) => {
         title: "Se realizo la compra correctamente.",
         description: `Vas a poder visualizar la compra en Mis compras con el id: ${queryParams.merchant_order_id}.`,
         status: "success",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });
@@ -52,7 +52,7 @@ const PostCheckout = ({ userID }: { userID: string }) => {
       toast({
         title: "Se esta procesando la compra.",
         status: "warning",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });
@@ -64,7 +64,7 @@ const PostCheckout = ({ userID }: { userID: string }) => {
         title: "Ocurrio un error en la compra.",
         description: "Volve a intentarlo en unos momentos.",
         status: "error",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });

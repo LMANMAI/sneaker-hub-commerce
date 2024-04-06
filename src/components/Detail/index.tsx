@@ -45,7 +45,7 @@ const BodyContent = () => {
         title: "Ocurrio un error al consultar el producto.",
         description: "Es posible que el producto no se encuentre disponible.",
         status: "warning",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });

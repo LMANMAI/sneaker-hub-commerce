@@ -8,9 +8,10 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { setUser, setError, selectUser } from "../../features/userSlice";
+import { setUser, selectUser } from "../../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { signAuthUser } from "../../functions/Sesion";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -20,6 +21,7 @@ interface IProps {
 }
 const Login: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
+  const toast = useToast();
   const current_user = useSelector(selectUser);
   const [load, setLoad] = useState<boolean>(false);
   const [user, setUserM] = useState({
@@ -46,21 +48,35 @@ const Login: React.FC<IProps> = (props) => {
     if (!current_user) {
       try {
         const response = await signAuthUser(user);
-        if (typeof response !== "string") {
-          dispatch(setUser(response));
+        console.log(response);
+        if (response.status === 200) {
+          dispatch(setUser(response.user));
           setLoad(false);
           setUserM({
             email: "",
             password: "",
           });
-          dispatch(setError(""));
         } else {
           setLoad(false);
+          toast({
+            title: `Error signing in: ${response.msg}`,
+            status: "error",
+            duration: 3500,
+            isClosable: true,
+            position: "bottom-right",
+          });
         }
-      } catch (error) {
+      } catch (error: any) {
         setLoad(false);
+        toast({
+          title: `Error signing in`,
+          description: error.message,
+          status: "error",
+          duration: 3500,
+          isClosable: true,
+          position: "bottom-right",
+        });
         console.error("Error signing in:", error);
-        dispatch(setError("Ocurrió un error"));
       }
     }
   };

@@ -100,17 +100,20 @@ const CheckOut = ({ user }: { user: any }) => {
   }, []);
 
   const checkPromotion = (basket: any) => {
-    let prevPriceWithPromotion: any;
-    basket.some((item: any) => {
-      if (item.hasPromotion) {
-        prevPriceWithPromotion = item.prevPrice * item.quantity;
-      } else {
-        prevPriceWithPromotion = 0;
-      }
-    });
+    let prevPriceWithPromotion: number = 0;
+    if (basket.length !== 0) {
+      basket.some((item: any) => {
+        if (item.hasPromotion) {
+          prevPriceWithPromotion = item.prevPrice * item.quantity;
+        } else {
+          prevPriceWithPromotion = 0;
+        }
+      });
+    } else return 0;
+
     return prevPriceWithPromotion;
   };
-
+  console.log(basket);
   return (
     <Box marginTop={"60px"}>
       <Text as="h2" margin={"20px 0px"} fontWeight={"bold"}>
@@ -303,7 +306,7 @@ const CheckOut = ({ user }: { user: any }) => {
                 <Text>Subtotal</Text>
                 <Text>
                   {totalBasket !== 0 &&
-                    (checkPromotion(basket) + totalBasket).toLocaleString(
+                    Number(checkPromotion(basket) + totalBasket).toLocaleString(
                       "es-AR",
                       {
                         style: "currency",
@@ -318,7 +321,7 @@ const CheckOut = ({ user }: { user: any }) => {
                 <Text>Descuentos</Text>
                 <Text>
                   {checkPromotion(basket) !== 0
-                    ? checkPromotion(basket).toLocaleString("es-AR", {
+                    ? Number(checkPromotion(basket)).toLocaleString("es-AR", {
                         style: "currency",
                         currency: "ARS",
                       })

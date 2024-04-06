@@ -52,7 +52,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
         title: "La cantidad ingresada excede el límite.",
         description: `El limite de unidades para este producto es de ${sneaker.limit}.`,
         status: "warning",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });
@@ -70,7 +70,7 @@ const Basket: React.FC<IProps> = ({ basketshows, setBasketShows }) => {
         description:
           "Es necesario que inicies sesion para completar la compra.",
         status: "warning",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });

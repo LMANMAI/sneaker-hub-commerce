@@ -87,9 +87,13 @@ export const signAuthUser = async (formData: any) => {
 
     localStorage.setItem("idCliente", user.idUsuario);
     const request = await getUserAuth(user.idUsuario);
-    return request;
-  } catch (error) {
-    console.error(error);
+    return { msg: "", user: request, status: 200 };
+  } catch (error: any) {
+    return {
+      msg: `Ocurrio un error inciando sesion: ${error.message}`,
+      user: {},
+      status: 500,
+    };
   }
 };
 

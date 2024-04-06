@@ -42,7 +42,7 @@ const Favorites = ({ userID }: { userID: string }) => {
         title: "Todos los elementos fueron eliminados.",
         description: "Eliminaste todos los favoritos con exito.",
         status: "success",
-        duration: 9000,
+        duration: 3500,
         isClosable: true,
         position: "bottom-right",
       });

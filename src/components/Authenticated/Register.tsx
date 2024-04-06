@@ -49,7 +49,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
         toast({
           title: "Se registro al usuario correctamente.",
           status: "success",
-          duration: 9000,
+          duration: 3500,
           isClosable: true,
           position: "bottom-right",
         });
@@ -65,7 +65,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           title: "El correo electrónico ya está registrado.",
           description: res.error,
           status: "warning",
-          duration: 9000,
+          duration: 3500,
           isClosable: true,
           position: "bottom-right",
         });
@@ -74,7 +74,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           title: "Contraseña incorrecta.",
           description: res.error,
           status: "warning",
-          duration: 9000,
+          duration: 3500,
           isClosable: true,
           position: "bottom-right",
         });
@@ -83,7 +83,7 @@ const Register: React.FC<IPropsFn> = ({ fn }) => {
           title: "Error al autenticar el cliente.",
           description: res.error,
           status: "error",
-          duration: 9000,
+          duration: 3500,
           isClosable: true,
           position: "bottom-right",
         });
