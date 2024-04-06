@@ -104,7 +104,8 @@ const CheckOut = ({ user }: { user: any }) => {
     if (basket.length !== 0) {
       basket.some((item: any) => {
         if (item.hasPromotion) {
-          prevPriceWithPromotion = item.prevPrice * item.quantity;
+          prevPriceWithPromotion =
+            (item.prevPrice - item.price) * item.quantity;
         } else {
           prevPriceWithPromotion = 0;
         }
