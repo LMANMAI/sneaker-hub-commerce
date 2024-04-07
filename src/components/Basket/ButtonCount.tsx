@@ -31,7 +31,7 @@ const ButtonCount = ({ product }: { product: ISneakerBasket }) => {
       status: "info",
       duration: 1500,
       isClosable: true,
-      position: "top",
+      position: "bottom-right",
     });
   };
 
