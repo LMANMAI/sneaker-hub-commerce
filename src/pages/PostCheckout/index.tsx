@@ -7,10 +7,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { clearBasket } from "../../features/sneakersSlice";
+
 const PostCheckout = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const currentUrl = window.location.href;
   const queryParams: Record<string, string> = {};
 
@@ -24,6 +27,9 @@ const PostCheckout = () => {
   }
 
   useEffect(() => {
+    dispatch(clearBasket());
+    sessionStorage.removeItem("basketState");
+    localStorage.removeItem("basketState");
     setTimeout(() => {
       navigate("/");
     }, 3000);
