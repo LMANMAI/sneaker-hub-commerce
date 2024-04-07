@@ -237,6 +237,8 @@ const Settings = ({ user }: { user: any }) => {
                   <RadioGroup
                     value={value}
                     onChange={setValue}
+                    display={"flex"}
+                    flexDirection={{ base: "column", md: "row" }}
                     defaultValue={
                       addressarray
                         .filter((item) => item.mainAddress === true)
@@ -248,8 +250,8 @@ const Settings = ({ user }: { user: any }) => {
                         <Radio name="direccion" value={`${item.id}`}>
                           <Stack
                             p={4}
-                            maxWidth={"600px"}
-                            minWidth={"400px"}
+                            maxWidth={"400px"}
+                            minWidth={"200px"}
                             direction="row"
                             alignItems="center"
                             justifyContent={"space-around"}

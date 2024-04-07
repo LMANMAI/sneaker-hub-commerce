@@ -48,7 +48,6 @@ const Login: React.FC<IProps> = (props) => {
     if (!current_user) {
       try {
         const response = await signAuthUser(user);
-        console.log(response);
         if (response.status === 200) {
           dispatch(setUser(response.user));
           setLoad(false);

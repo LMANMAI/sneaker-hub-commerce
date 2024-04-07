@@ -73,6 +73,10 @@ const CheckOut = ({ user }: { user: any }) => {
           quantity: item.quantity,
           price: item.price,
           productID: item._id,
+          userID: user.idUser,
+          productItemPosterPath: `${import.meta.env.VITE_URL_EP_CLOUD}${
+            item.posterPathImage
+          }`,
         };
       });
       const response = await instance.post(
@@ -114,7 +118,7 @@ const CheckOut = ({ user }: { user: any }) => {
 
     return prevPriceWithPromotion;
   };
-  console.log(basket);
+
   return (
     <Box marginTop={"60px"}>
       <Text as="h2" margin={"20px 0px"} fontWeight={"bold"}>
@@ -238,7 +242,7 @@ const CheckOut = ({ user }: { user: any }) => {
                         .map((item) => item.id)[0]
                     }
                     display={"flex"}
-                    flexDirection={"row"}
+                    flexDirection={{ base: "column", md: "row" }}
                   >
                     {addressarray.map((item) => {
                       return (
@@ -246,8 +250,8 @@ const CheckOut = ({ user }: { user: any }) => {
                           <Stack
                             p={4}
                             direction="row"
-                            maxWidth={"600px"}
-                            minWidth={"400px"}
+                            maxWidth={"400px"}
+                            minWidth={"200px"}
                           >
                             <Stack>
                               <Stack>
