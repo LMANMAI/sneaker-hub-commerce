@@ -8,7 +8,7 @@ import {
   PostCheckout,
   MyPurchases,
 } from "../pages";
-
+import ProtectedComponent from "./ProtectedComponent";
 import { BodyContent } from "../components";
 import { selectUser } from "../features/userSlice";
 import { useSelector } from "react-redux";
@@ -38,22 +38,35 @@ const RoutesComponent = () => {
       />
       <Route
         path="/checkout"
-        element={<CheckOut user={user || userState?.user || ""} />}
+        element={
+          <ProtectedComponent userId={userID || userState?.user?.idUser || ""}>
+            <CheckOut user={user || userState?.user || ""} />
+          </ProtectedComponent>
+        }
       />
       <Route
         path="/favoritos"
-        element={<Favorites userID={userID || userState?.user?.idUser || ""} />}
+        element={
+          <ProtectedComponent userId={userID || userState?.user?.idUser || ""}>
+            <Favorites userID={userID || userState?.user?.idUser || ""} />
+          </ProtectedComponent>
+        }
       />
       <Route
         path="/miscompras"
         element={
-          <MyPurchases userID={userID || userState?.user?.idUser || ""} />
+          <ProtectedComponent userId={userID || userState?.user?.idUser || ""}>
+            <MyPurchases userID={userID || userState?.user?.idUser || ""} />
+          </ProtectedComponent>
         }
       />
+
       <Route
         path="/postcheckout/:query"
         element={
-          <PostCheckout userID={userID || userState?.user?.idUser || ""} />
+          <ProtectedComponent userId={userID || userState?.user?.idUser || ""}>
+            <PostCheckout />
+          </ProtectedComponent>
         }
       />
     </Routes>

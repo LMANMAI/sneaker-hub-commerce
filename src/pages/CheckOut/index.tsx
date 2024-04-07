@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   Skeleton,
+  useToast,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -35,6 +36,8 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import instance from "../../config";
 
 const CheckOut = ({ user }: { user: any }) => {
+  const toast = useToast();
+
   initMercadoPago(import.meta.env.VITE_PUBLIC_KEY_MP as string, {
     locale: "es-AR",
   });
@@ -101,6 +104,39 @@ const CheckOut = ({ user }: { user: any }) => {
 
   useEffect(() => {
     getUserAddresses();
+    const currentUrl = window.location.href;
+    const queryParams: Record<string, string> = {};
+
+    if (currentUrl.includes("-?")) {
+      const queryString = currentUrl.split("?")[1];
+      const queryParamsArray = queryString.split("&");
+      queryParamsArray.forEach((param: any) => {
+        const [key, value] = param.split("=");
+        queryParams[key] = decodeURIComponent(value);
+      });
+    }
+
+    if (queryParams.status === "pending") {
+      toast({
+        title: "Se esta procesando la compra.",
+        status: "warning",
+        duration: 3500,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    } else if (
+      queryParams.status === "failure" ||
+      queryParams.status === "null"
+    ) {
+      toast({
+        title: "Ocurrio un error en la compra.",
+        description: "Volve a intentarlo en unos momentos.",
+        status: "error",
+        duration: 3500,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
   }, []);
 
   const checkPromotion = (basket: any) => {

@@ -1,17 +1,15 @@
-import { Stack, useToast } from "@chakra-ui/react";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setPurchases } from "../../functions/Products";
-import { selectBasket, clearBasket } from "../../features/sneakersSlice";
-import instance from "../../config";
-
-const PostCheckout = ({ userID }: { userID: string }) => {
+const PostCheckout = () => {
   const navigate = useNavigate();
-  const toast = useToast();
-  const dispatch = useDispatch();
-
-  const basket = useSelector(selectBasket);
 
   const currentUrl = window.location.href;
   const queryParams: Record<string, string> = {};
@@ -25,56 +23,26 @@ const PostCheckout = ({ userID }: { userID: string }) => {
     });
   }
 
-  const handleCompletePurchase = async () => {
-    if (queryParams.status === "approved") {
-      const response = await instance.post("/checkout", {
-        basket,
-      });
-      const request = await setPurchases(userID, basket);
-      if (response.status === 200 && request.status === 200) {
-        dispatch(clearBasket());
-        sessionStorage.removeItem("basketState");
-        localStorage.removeItem("basketState");
-
-        setTimeout(() => {
-          navigate("/");
-        }, 1300);
-      }
-      toast({
-        title: "Se realizo la compra correctamente.",
-        description: `Vas a poder visualizar la compra en Mis compras con el id: ${queryParams.merchant_order_id}.`,
-        status: "success",
-        duration: 3500,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    } else if (queryParams.status === "pending") {
-      toast({
-        title: "Se esta procesando la compra.",
-        status: "warning",
-        duration: 3500,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    } else if (
-      queryParams.status === "failure" ||
-      queryParams.status === "null"
-    ) {
-      toast({
-        title: "Ocurrio un error en la compra.",
-        description: "Volve a intentarlo en unos momentos.",
-        status: "error",
-        duration: 3500,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
-  };
-
   useEffect(() => {
-    handleCompletePurchase();
+    setTimeout(() => {
+      navigate("/");
+    }, 3000);
   }, []);
-  return <Stack marginTop={"60px"}></Stack>;
+  return (
+    <Stack marginTop={"60px"}>
+      <Card size={"md"}>
+        <CardHeader>
+          <Heading size="md">Se completo con exito la compra.</Heading>
+        </CardHeader>
+        <CardBody>
+          <Text>
+            Vas a poder visualizar la compra en Mis compras con el codigo:
+            {queryParams.merchant_order_id}.
+          </Text>
+        </CardBody>
+      </Card>
+    </Stack>
+  );
 };
 
 export default PostCheckout;

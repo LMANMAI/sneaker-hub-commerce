@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { Skeleton, Stack, Text, Image } from "@chakra-ui/react";
-import { getMyPurchases } from "../../functions/Products";
 import { Link } from "react-router-dom";
-
+import instance from "../../config";
 const MyPurchases = ({ userID }: { userID: string }) => {
   const [load, setLoad] = useState<boolean>(false);
   const [purchases, setPreviousPurchases] = useState<any[]>([]);
 
   const getFavouriteProducts = async () => {
     setLoad(true);
-    const result = await getMyPurchases(userID);
-    if (result.status === 200) {
+    const { data } = await instance(`checkout/${userID}`);
+    if (data.status === 200) {
       setLoad(false);
-      setPreviousPurchases(result.data);
+      setPreviousPurchases(data.orders);
     } else {
       setLoad(false);
       setPreviousPurchases([]);
@@ -24,14 +23,13 @@ const MyPurchases = ({ userID }: { userID: string }) => {
 
   const handleGetTotalPurchase = (products: any) => {
     const totalReducer = (accumulator: any, currentValue: any) =>
-      accumulator + currentValue.price;
+      accumulator + currentValue.unit_price;
     const total = products.reduce(totalReducer, 0);
     return total.toLocaleString("es-AR", {
       style: "currency",
       currency: "ARS",
     });
   };
-
   return (
     <Stack overflow="hidden" marginTop={"65px"}>
       <Text as="h1" fontSize="2.125rem" fontWeight="bold" paddingLeft={"10px"}>
@@ -52,37 +50,38 @@ const MyPurchases = ({ userID }: { userID: string }) => {
         >
           <Stack w="100%" justifyContent="center">
             <Stack spacing={0} overflowY="auto" overflowX="hidden">
-              {purchases?.map((item, index) => {
+              {purchases?.map((item) => {
                 return (
                   <Stack
                     marginY={5}
                     background={"rgba(0, 0, 0, 0.06)"}
                     padding={5}
                   >
-                    <Text>Compra #{index + 1}</Text>
-                    {item.sneaker.map((subitem: any) => {
+                    <Text>Compra #{item.orderId}</Text>
+                    {item.items.map((subitem: any) => {
                       return (
                         <Stack>
-                          <Link to={`/${subitem?._id}`} className="link_fav">
+                          <Link to={`/${subitem?.id}`} className="link_fav">
                             <Stack
-                              height={"160px"}
-                              width="160px"
+                              height={"100px"}
+                              width="100px"
                               p="10px"
                               overflow={"hidden"}
                             >
                               <Image
-                                src={`${import.meta.env.VITE_URL_EP_CLOUD}${
-                                  subitem.posterPathImage
-                                }`}
+                                src={`${subitem.picture_url}`}
                                 w={"100%"}
                                 h={"100%"}
                                 objectFit={"cover"}
                               />
                             </Stack>
                             <Stack p={2}>
-                              <Text fontSize="12px">{subitem.name}</Text>
+                              <Text fontSize="12px">{subitem.title}</Text>
+                              <Text fontSize="12px">
+                                Unidades: {subitem.quantity}
+                              </Text>
                               <Text>
-                                {subitem.price.toLocaleString("es-AR", {
+                                {subitem.unit_price.toLocaleString("es-AR", {
                                   style: "currency",
                                   currency: "ARS",
                                 })}
@@ -93,7 +92,7 @@ const MyPurchases = ({ userID }: { userID: string }) => {
                       );
                     })}
                     <Text>
-                      Total de la compra: {handleGetTotalPurchase(item.sneaker)}
+                      Total de la compra: {handleGetTotalPurchase(item.items)}
                     </Text>
                   </Stack>
                 );
